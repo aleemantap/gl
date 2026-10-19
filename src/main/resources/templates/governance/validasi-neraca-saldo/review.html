@@ -1,0 +1,368 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/main}"
+>
+  <head>
+    <title>Validasi Neraca Saldo</title>
+  </head>
+  <body>
+    <div layout:fragment="content">
+        <div class="container-xl">
+          
+             <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="mb-1">
+                Review Neraca Saldo
+            </h2>
+
+            <div class="text-muted">
+                Periksa saldo sebelum melakukan validasi
+            </div>
+        </div>
+
+        <a th:href="@{/governance/validasi-neraca-saldo}"
+           class="btn btn-secondary">
+            Kembali
+        </a>
+
+    </div>
+
+
+    <!-- INFORMASI SUBMISSION -->
+    <div class="card mb-4">
+
+        <div class="card-header">
+            <strong>Informasi Pengiriman</strong>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-3">
+
+                    <small class="text-muted">
+                        Periode
+                    </small>
+
+                    <div class="fw-bold"
+                         th:text="${#temporals.format(
+                             submission.periode,
+                             'MMMM yyyy'
+                         )}">
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <small class="text-muted">
+                        Unit
+                    </small>
+
+                    <div class="fw-bold"
+                         th:text="${submission.unitId}">
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <small class="text-muted">
+                        Dikirim Oleh
+                    </small>
+
+                    <div class="fw-bold"
+                         th:text="${submission.submittedBy}">
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <small class="text-muted">
+                        Tanggal Dikirim
+                    </small>
+
+                    <div class="fw-bold"
+                         th:text="${#temporals.format(
+                             submission.submittedAt,
+                             'dd MMM yyyy HH:mm'
+                         )}">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- NERACA SALDO -->
+    <div class="card mb-4">
+
+        <div class="card-header d-flex justify-content-between">
+
+            <strong>
+                Neraca Saldo
+            </strong>
+
+            <span class="badge bg-primary text-white"
+                  th:text="${#lists.size(rows) + ' Akun'}">
+            </span>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+               <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th width="60">#</th>
+                        <th>Kode Akun</th>
+                        <th>Nama Akun</th>
+                        <th class="text-end">Debit</th>
+                        <th class="text-end">Kredit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="row, stat : ${rows}">
+                        <td th:text="${stat.count}"></td>
+                        <td th:text="${row.accountCode}"></td>
+                        <td th:text="${row.accountName}"></td>
+                        <td class="text-end"
+                            th:text="${#numbers.formatDecimal(
+                                row.debit,
+                                0,
+                                'POINT',
+                                2,
+                                'COMMA'
+                            )}">
+                        </td>
+                        <td class="text-end"
+                            th:text="${#numbers.formatDecimal(
+                                row.credit,
+                                0,
+                                'POINT',
+                                2,
+                                'COMMA'
+                            )}">
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="fw-bold">
+                        <td colspan="3" class="text-end">
+                            TOTAL
+                        </td>
+                        <td class="text-end"
+                            th:text="${#numbers.formatDecimal(
+                                totalDebit,
+                                0,
+                                'POINT',
+                                2,
+                                'COMMA'
+                            )}">
+                        </td>
+                        <td class="text-end"
+                            th:text="${#numbers.formatDecimal(
+                                totalCredit,
+                                0,
+                                'POINT',
+                                2,
+                                'COMMA'
+                            )}">
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="p-3 border-top">
+                <div th:if="${selisih.compareTo(T(java.math.BigDecimal).ZERO) == 0}"
+                    class="alert alert-success mb-0">
+                    <strong> Balance</strong>
+                    <div>
+                        Total Debit dan Kredit sudah seimbang.
+                    </div>
+
+                    <div>
+                        Selisih:
+                        <strong>Rp 0,00</strong>
+                    </div>
+
+                </div>
+
+
+                <div th:if="${selisih.compareTo(T(java.math.BigDecimal).ZERO) != 0}"
+                    class="alert alert-danger mb-0">
+
+                    <strong>✕ Tidak Balance</strong>
+
+                    <div th:text="${balanceError}">
+                    </div>
+
+                    <div>
+                        Selisih:
+                        <strong
+                            th:text="${#numbers.formatDecimal(
+                                selisih,
+                                0,
+                                'POINT',
+                                2,
+                                'COMMA'
+                            )}">
+                        </strong>
+                    </div>
+                </div>
+                <!-- /// -->
+
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- CATATAN -->
+    <div class="card mb-4">
+
+        <div class="card-header">
+
+            <strong>
+                Catatan Validasi
+            </strong>
+
+        </div>
+
+        <div class="card-body">
+
+            <textarea
+                id="note"
+                name="note"
+                class="form-control"
+                rows="4"
+                placeholder="Tambahkan catatan jika diperlukan...">
+            </textarea>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTION -->
+    <div class="card">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <strong>
+                        Keputusan Validasi
+                    </strong>
+
+                    <div class="text-muted small">
+                        Pastikan saldo sudah sesuai sebelum melakukan validasi.
+                    </div>
+
+                </div>
+
+
+                <div class="d-flex gap-2">
+
+                        <!-- TOLAK -->
+                        <form
+                            th:action="@{/governance/validasi-neraca-saldo/reject/{id}(id=${submission.id})}"
+                            method="post"
+                            onsubmit="return submitReject(this);">
+
+                            <input
+                                type="hidden"
+                                name="note">
+
+                            <button
+                                type="submit"
+                                class="btn btn-danger">
+                                TOLAK
+                            </button>
+
+                        </form>
+
+
+                        <!-- VALIDASI -->
+                        <form
+                            th:action="@{/governance/validasi-neraca-saldo/validate/{id}(id=${submission.id})}"
+                            method="post"
+                            onsubmit="return submitValidate(this);">
+
+                            <input
+                                type="hidden"
+                                name="note">
+
+                            <button
+                                type="submit"
+                                class="btn btn-success"
+                                th:disabled="${selisih.compareTo(T(java.math.BigDecimal).ZERO) != 0}">
+                                VALIDASI
+                            </button>
+
+                        </form>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+        </div>         
+    </div>
+    <div layout:fragment="scripts">
+
+        <script>
+
+            // document.addEventListener("DOMContentLoaded", function () {
+
+            //     const note = document.getElementById("note");
+            //     const validateNote = document.getElementById("validateNote");
+            //     const rejectNote = document.getElementById("rejectNote");
+            //     const forms = document.querySelectorAll(
+            //             'form[action*="/validate/"], form[action*="/reject/"]'
+            //         );
+            //     forms.forEach(function(form) {
+            //         form.addEventListener("submit", function() {
+            //             validateNote.value = note.value;
+            //             rejectNote.value = note.value;
+            //         });
+            //     });
+
+            // });
+
+        </script>
+        
+        
+        <!-- <link th:href="@{/css/select2.min.css}" rel="stylesheet">
+        <link th:href="@{/css/select2-bootstrap-5-theme.min.css}" rel="stylesheet">
+        <script th:src="@{/js/select2.min.js}"></script>
+        <link th:href="@{/css/pemetaanAkun.css}" rel="stylesheet">
+        <link th:href="@{/css/inputJurnal.css}" rel="stylesheet">
+        <link th:href="@{/lib/DataTables/datatables.min.css}" rel="stylesheet">
+        <script th:src="@{/lib/DataTables/datatables.min.js}"></script>   
+        -->
+        <script th:src="@{/js/review-validasi-neraca-saldo.js}"></script>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,492 @@
+<div th:fragment="sidebar" class="sidebar-inner">
+
+    <!-- =====================================================
+         BRAND
+    ====================================================== -->
+
+    <div class="sidebar-brand">
+
+        <div class="sidebar-logo">
+            <img
+                th:src="@{/img/logo-gadai.png}"
+                alt="GL Gadai"
+            >
+        </div>
+        <div class="sidebar-brand-text">
+            <h2>GL — Gadai</h2>
+            <p>ADMIN CONSOLE</p>
+        </div>
+    </div>
+
+
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
+
+    <nav class="sidebar-nav">
+
+
+        <!-- =================================================
+             BERANDA
+        ================================================== -->
+
+        <div
+            class="menu-group open"
+            data-menu="beranda"
+        >
+
+            <div class="menu-title toggle-menu">
+
+                <div class="menu-title-left">
+                    <i class="ti ti-layout-grid"></i>
+                    <span>BERANDA</span>
+                </div>
+                <i class="ti ti-chevron-down arrow"></i>
+            </div>
+            <div class="submenu">
+                <a
+                    th:href="@{/dashboard}"
+                    class="menu-item active"
+                >
+                    <span>Dashboard</span>
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- =================================================
+             MASTER
+        ================================================== -->
+         <div
+            class="menu-group"
+            th:classappend="${activeGroup == 'master'} ? 'open' : ''"
+            data-menu="master"
+        >
+
+            <div class="menu-title toggle-menu">
+
+                <div class="menu-title-left">
+
+                    <!-- <img
+                        th:src="@{/img/database.png}"
+                        alt="Database"
+                    > -->
+               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-database">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M4 6a8 3 0 1 0 16 0a8 3 0 1 0 -16 0" />
+                    <path d="M4 6v6a8 3 0 0 0 16 0v-6" />
+                    <path d="M4 12v6a8 3 0 0 0 16 0v-6" />
+                </svg>
+                    <span>MASTER</span>
+
+                </div>
+
+                <i class="ti ti-chevron-down arrow"></i>
+
+            </div>
+
+
+            <div class="submenu">
+                <a 
+                    th:href="@{/parameter/gl-type-account}"
+                    class="menu-item"
+                    th:classappend="${activeMenu == 'gl-type-account'} ? 'active' : ''"
+                >
+                    <span>Type GL Account</span>
+                </a>
+                <a 
+                    th:href="@{/parameter/komponen}"
+                    class="menu-item"
+                    th:classappend="${activeMenu == 'komponen'} ? 'active' : ''"
+                >
+                    <span>Komponen</span>
+                </a>
+                <a 
+                    th:href="@{/parameter/cabang}"
+                    class="menu-item"
+                    th:classappend="${activeMenu == 'cabang'} ? 'active' : ''"
+                >
+                    <span>Cabang</span>
+                </a>
+                <!-- <a 
+                    th:href="@{/parameter/kategori-transaksi}"
+                    class="menu-item"
+                >
+                    <span>Kategori-Transaksi</span>
+                </a> -->
+               
+
+            </div>
+
+        </div>
+
+        <!-- =================================================
+             PARAMETER
+        ================================================== -->
+
+        <div
+            class="menu-group"
+            th:classappend="${activeGroup == 'parameter'} ? 'open' : ''"
+            data-menu="parameter"
+        >
+
+            <div class="menu-title toggle-menu">
+                <div class="menu-title-left">
+                    <img
+                        th:src="@{/img/parameter.png}"
+                        alt="Parameter"
+                    >
+                    <span>PARAMETER</span>
+                </div>
+                <i class="ti ti-chevron-down arrow"></i>
+            </div>
+
+
+            <div class="submenu">
+                <a
+                    th:href="@{/parameter/nomor-gl}"                  
+                    class="menu-item"
+                    th:classappend="${activeMenu == 'nomor-gl'} ? 'active' : ''"
+                >
+                    <span>Nomor GL</span>
+                </a>
+
+                <a
+                    th:href="@{/parameter/kode-transaksi}"
+                    class="menu-item"
+                    th:classappend="${activeMenu == 'kode-transaksi'} ? 'active' : ''"
+                >
+                    <span>Kode Transaksi</span>
+                </a>
+                <a
+                    th:href="@{/parameter/aturan-produk}"
+                    class="menu-item"
+                    th:classappend="${activeMenu == 'aturan-produk'} ? 'active' : ''"
+                >
+                    <span>Aturan Produk</span>
+                </a>
+
+
+                <a
+                    th:href="@{/parameter/pemetaan-akun}"
+                    class="menu-item"
+                    th:classappend="${activeMenu == 'pemetaan-akun'} ? 'active' : ''"
+                >
+                    <span>Pemetaan Akun (JournalId)</span>
+                </a> 
+                <!-- <a
+                    th:href="@{/parameter/mapping-gl-account-journal-id}"
+                    class="menu-item"
+                >
+                    <span>Mapping GL -JournalId</span>
+                </a> 
+                <a
+                    th:href="@{/parameter/mapping-kode-transaksi-journal-id}"
+                    class="menu-item"
+                >
+                    <span>Mapping TC - JournalId</span>
+                </a>  -->
+
+              
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             LAPORAN
+        ================================================== -->
+
+        <div
+            class="menu-group"
+            data-menu="laporan"
+            th:classappend="${activeGroup == 'laporan'} ? 'open' : ''"
+
+        >
+
+            <div class="menu-title toggle-menu">
+                <div class="menu-title-left">
+                    <img
+                        th:src="@{/img/laporan.png}"
+                        alt="Laporan"
+                    >
+                    <span>LAPORAN</span>
+                </div>
+                <i class="ti ti-chevron-right arrow"></i>
+            </div>
+            <div class="submenu">
+                <a
+                    th:href="@{/laporan/daftar-jurnal}"
+                    class="menu-item"
+                    th:classappend="${activeMenu == 'daftar-jurnal'} ? 'active' : ''"
+                >
+                    <span>Daftar Jurnal</span>
+                </a>
+                <a
+                    th:href="@{/laporan/buku-besar}"
+                    class="menu-item"
+                    th:classappend="${activeMenu == 'buku-besar'} ? 'active' : ''"
+                >
+                    <span>Buku Besar</span>
+                </a>
+                <a
+                    th:href="@{/laporan/neraca-saldo}"
+                    class="menu-item"
+                    th:classappend="${activeMenu == 'neraca-saldo'} ? 'active' : ''"
+
+                >
+                    <span>Neraca Saldo</span>
+                </a>
+
+
+                <a
+                    th:href="@{/laporan/log-kustodi-kas}"
+                    class="menu-item"
+                    th:classappend="${activeMenu == 'log-kustodi-kas'} ? 'active' : ''"
+                >
+                    <span>Log Kustodi Kas</span>
+                </a>
+
+
+                <a
+                    th:href="@{/laporan/rekonsiliasi-kas-teller}"
+                    class="menu-item"
+                    th:classappend="${activeMenu == 'rekonsiliasi-kas-teller'} ? 'active' : ''"
+                >
+                    <span>Rekonsiliasi Kas Teller</span>
+                </a>
+
+
+                <a
+                    th:href="@{/laporan/rekonsiliasi-sub-ledger}"
+                    class="menu-item"
+                    th:classappend="${activeMenu == 'rekonsiliasi-sub-ledger'} ? 'active' : ''"
+                >
+                    <span>Rekonsiliasi Sub Ledger</span>
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             OPERASIONAL
+        ================================================== -->
+
+        <div
+            class="menu-group"
+            data-menu="operasional"
+            th:classappend="${activeGroup == 'operasional'} ? 'open' : ''"
+        >
+
+            <div class="menu-title toggle-menu">
+
+                <div class="menu-title-left">
+                    <img
+                        th:src="@{/img/operasional.png}"
+                        alt="Operasional"
+                    >
+                    <span>OPERASIONAL</span>
+                </div>
+                <i class="ti ti-chevron-right arrow"></i>
+            </div>
+            <div class="submenu">
+                <a th:href="@{/operasional/persetujuan}" class="menu-item">
+                    <span>Persetujuan</span>
+                </a>
+                <a th:href="@{/operasional/log-transaksi-ditolak}"                     
+                th:classappend="${activeMenu == 'log-transaksi-ditolak'} ? 'active' : ''"
+                class="menu-item">
+                    <span>Log Transaksi Ditolak</span>
+                </a>
+                <a th:href="@{/operasional/input-jurnal-manual}"
+                th:classappend="${activeMenu == 'input-jurnal-manual'} ? 'active' : ''"
+                class="menu-item">
+                    <span>Input Jurnal Manual</span>
+                </a>
+            </div>
+        </div>
+
+
+
+        <!-- =================================================
+             GOVERNANCE
+        ================================================== -->
+
+        <div
+            class="menu-group"
+            data-menu="governance"
+            th:classappend="${activeGroup == 'governance'} ? 'open' : ''"
+        >
+
+            <div class="menu-title toggle-menu">
+
+                <div class="menu-title-left">
+
+                    <img
+                        th:src="@{/img/governance.png}"
+                        alt="Governance"
+                    >
+
+                    <span>GOVERNANCE</span>
+
+                </div>
+
+                <i class="ti ti-chevron-right arrow"></i>
+
+            </div>
+            <div class="submenu">
+                <a th:href="@{/governance/validasi-neraca-saldo}" class="menu-item" th:classappend="${activeMenu == 'validasi-neraca-saldo'} ? 'active' : ''">
+                    <span>Validasi Neraca Saldo</span>
+                </a>
+
+                <a th:href="@{/governance/keputusan-terbuka}" class="menu-item" th:classappend="${activeMenu == 'keputusan-terbuka'} ? 'active' : ''">
+                    <span>Keputusan Terbuka</span>
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             MANAGEMENT USER
+        ================================================== -->
+
+        <div
+            class="menu-group"
+            data-menu="management"
+            th:classappend="${activeGroup == 'management'} ? 'open' : ''"
+        >
+
+            <div class="menu-title toggle-menu">
+
+                <div class="menu-title-left">
+
+                    <img
+                        th:src="@{/img/managemet_user.png}"
+                        alt="Management Users"
+                    >
+
+                    <span>MANAGEMENT USERS</span>
+
+                </div>
+
+                <i class="ti ti-chevron-right arrow"></i>
+
+            </div>
+
+
+            <div class="submenu">
+
+                <a
+                    th:href="@{/management/users}"
+                    class="menu-item"
+                    th:classappend="${activeMenu == 'users'} ? 'active' : ''"
+                >
+                    <span>Users</span>
+                </a>
+                <a
+                    th:href="@{/management/groups}"
+                    class="menu-item"
+                    th:classappend="${activeMenu == 'groups'} ? 'active' : ''"
+                >
+                    <span>Group</span>
+                </a>
+                <!-- <a
+                    th:href="@{/management/api-client}"
+                    class="menu-item"
+                    th:classappend="${activeMenu == 'api-client'} ? 'active' : ''"
+                >
+                    <span>KEY API Client</span>
+                </a> -->
+                <!-- <a
+                    th:href="@{/management/group-approvals}"
+                    class="menu-item"
+                >
+                    <span>Approval Group</span>
+                </a> -->
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- =====================================================
+         USER PROFILE
+    ====================================================== -->
+
+    <div class="sidebar-profile">
+
+        <div class="user-profile">
+
+            <div class="avatar">
+                AD
+            </div>
+
+
+            <div class="user-info">
+
+                <div class="name">
+
+                    <span
+                        th:text="${currentUser.name}"
+                    >
+                        Admin
+                    </span>
+
+                </div>
+
+
+                <div class="location">
+                    <span
+                        th:text="${currentUser.userGroupName}"
+                    >
+                        Admin
+                    </span>
+                    <span class="separator">-</span>
+                    <span
+                        th:text="${currentUser.cabangName}"
+                    >
+                        Pusat
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- LOGOUT -->
+
+        <form
+            th:action="@{/logout}"
+            method="post"
+            class="logout-form"
+        >
+
+            <button
+                type="submit"
+                class="logout-button"
+            >
+
+                <i class="ti ti-logout"></i>
+
+                <span>Logout</span>
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>

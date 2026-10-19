@@ -1,0 +1,67 @@
+<div th:fragment="form">
+    <div class="modal modal-blur fade" id="componentModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">
+                        TAMBAH KOMPONEN
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="componentForm">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required">Nama Komponen</label>
+                                <input type="text" class="form-control" id="nm_komponen" name="nm_komponen" placeholder="Masukan Nama Cabang" required>
+                                <div class="invalid-feedback" id="nameError">Component name is required</div>
+                            </div>
+                            <input type="hidden" class="form-control" id="componentId" name="componentId"/>
+                           
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Kode Komponen</label>
+                                <input type="text" class="form-control" id="kd_komponen" name="kd_komponen" placeholder="Masukkan Kode Cabang" required>
+                                <!-- <div class="invalid-feedback" id="kd_komponenError"></div> -->
+                                <div class="invalid-feedback" id="codeError">Component code is required</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label required">Description</label>
+                                <textarea  class="form-control" id="description" name="description" rows="4" style="height:90px;" placeholder="Masukan Nama Cabang"></textarea>
+
+                                <div class="invalid-feedback" id="descriptionError">Description  is required</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="isActive" class="form-label">Status</label>
+                                <select class="form-control" id="isActiveC" name="isActiveC">
+                                    <option value="1">Active</option>
+                                    <option value="0">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link link-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary ms-auto" id="btnSubmit">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M12 5l0 14" />
+                                <path d="M5 12l14 0" />
+                            </svg>
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

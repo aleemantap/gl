@@ -1,0 +1,158 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/main}"
+>
+  <head>
+    <title>Detail Jurnal</title>
+  </head>
+  <body>
+     <div layout:fragment="content">
+          <div class="container-xl">                
+            <div class="filter-card">
+                <div class="row g-4 align-items-start">
+                    <!-- Periode -->
+                    <div class="col-lg-3 col-md-6">
+                        <label for="periode" class="filter-label">
+                            Periode Transaksi
+                        </label>
+                        <div class="position-relative">
+                            <i class="bi bi-calendar3 position-absolute"
+                            style="
+                                    left: 15px;
+                                    top: 50%;
+                                    transform: translateY(-50%);
+                                    color: #707780;
+                                    z-index: 2;
+                            "></i>
+                            <input
+                                type="date"
+                                id="periode"
+                                class="form-control ps-5"
+                               
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Cabang -->
+                    <div class="col-lg-3 col-md-6">
+                        <label for="cabang" class="filter-label">
+                            Cabang
+                        </label>
+
+                        <select id="cabang" class="form-select select2">
+                            <option value="">Semua Cabang</option>
+                            <th:block th:each="cabang : ${cabangList}">
+                                <option th:value="${cabang.id}" th:text="${cabang.namaCabang}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+                    <!-- Kode TC -->
+                    <div class="col-lg-3 col-md-6">
+                        <label for="kodeTc" class="filter-label">
+                            Kode TC
+                        </label>
+                        <select id="kodeTc" class="form-select select2">
+                            <option value="">Semua Kode TC</option>
+                            <th:block th:each="kt : ${kodeTransaksiList}">
+                                <option th:value="${kt.id}" th:text="${kt.kode + ' - ' + kt.namaTransaksi}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+                    <!-- Reversal -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="reversal-wrapper">
+                            <input
+                                type="checkbox"
+                                class="reversal-switch"
+                                id="reversal"
+                            >
+                            <label
+                                for="reversal"
+                                class="reversal-label"
+                            >
+                                Tampilkan Reversal
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr class="filter-divider">
+                <div class="filter-actions">
+                    <div class="left-actions">
+                        <button
+                            type="button"
+                            class="btn btn-filter"
+                            id="btn-filter"
+                        >
+                            <img th:src="@{/img/filter-1.png}" />
+                            Terapkan Filter
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-reset"
+                            id="btn-reset"
+                        >
+                            Reset
+                        </button>
+                    </div>
+                    <button
+                        type="button"
+                        class="btn btn-export"
+                        id="btn-export"
+                    >
+                        <img th:src="@{/img/download.png}" />
+                        Export Excel
+                    </button>
+                </div>
+            </div>           
+            <div class="row row-deck row-cards"  style="margin-top:20px;">            
+              <div class="col-12">
+                <div class="card">
+                  <div class="table-responsive">
+                    <table id="table-daftar-jurnal" class="table table-striped  card-table table-vcenter text-nowrap datatable">
+                      <thead>
+                        <tr>
+                          <th class="w-1">
+                            Journal No
+                          </th>
+                          <th>Tanggal/Waktu</th>
+                          <th>Cabang/TC</th>
+                          <th>GL Account</th>
+                          <th>Keterangan</th>
+                          <th>D/K</th>
+                          <th>Nominal</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>                       
+                      </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="6" class="text-end">
+                                    <b>TOTAL TRANSAKSI HALAMAN INI Rp.</b>
+                                </th>
+                                <th id="total-amount"></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+         
+    </div>
+    <div layout:fragment="scripts">
+     
+        <link th:href="@{/css/select2.min.css}" rel="stylesheet">
+        <link th:href="@{/css/select2-bootstrap-5-theme.min.css}" rel="stylesheet">
+        <script th:src="@{/js/select2.min.js}"></script>
+        <link th:href="@{/css/daftar-jurnal.css}" rel="stylesheet">
+        <link th:href="@{/lib/DataTables/datatables.min.css}" rel="stylesheet">
+        <script th:src="@{/lib/DataTables/datatables.min.js}"></script>   
+        <script th:src="@{/js/laporan/daftar-jurnal.js}"></script>       
+    </div>
+  </body>
+</html>

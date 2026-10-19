@@ -1,0 +1,253 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/main}"
+>
+  <head>
+    <title>Validasi Neraca Saldo - DETAIL</title>
+  </head>
+  <body>
+    <div layout:fragment="content">
+       <div class="container-xl">
+
+
+              <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="mb-1">
+                Detail Neraca Saldo
+            </h2>
+
+            <div class="text-muted">
+                Rincian Neraca Saldo yang telah divalidasi
+            </div>
+        </div>
+
+        <a th:href="@{/governance/validasi-neraca-saldo}"
+           class="btn btn-outline-secondary">
+            Kembali
+        </a>
+
+    </div>
+
+
+    <!-- Informasi Submission -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white">
+            <h5 class="mb-0">
+                Informasi
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-3">
+                    <small class="text-muted">
+                        Periode
+                    </small>
+
+                    <div class="fw-semibold"
+                         th:text="${#temporals.format(
+                             submission.periode,
+                             'MMMM yyyy'
+                         )}">
+                        Agustus 2026
+                    </div>
+                </div>
+
+
+                <div class="col-md-3">
+                    <small class="text-muted">
+                        Unit
+                    </small>
+
+                    <div class="fw-semibold">
+                        Unit ID:
+                        <span th:text="${submission.unitId}">
+                            2
+                        </span>
+                    </div>
+                </div>
+
+
+                <div class="col-md-3">
+                    <small class="text-muted">
+                        Status
+                    </small>
+
+                    <div>
+                        <span class="badge bg-success"
+                              th:text="${submission.status}">
+                            VALID
+                        </span>
+                    </div>
+                </div>
+
+
+                <div class="col-md-3">
+                    <small class="text-muted">
+                        Divalidasi Oleh
+                    </small>
+
+                    <div class="fw-semibold"
+                         th:text="${submission.validatedBy}">
+                        Admin Pusat
+                    </div>
+
+                    <small class="text-muted"
+                           th:text="${#temporals.format(
+                               submission.validatedAt,
+                               'dd MMM yyyy HH:mm'
+                           )}">
+                        09 Sep 2026 23:38
+                    </small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Neraca Saldo -->
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-white">
+
+            <h5 class="mb-0">
+                Neraca Saldo
+            </h5>
+
+        </div>
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover mb-0">
+
+                    <thead>
+
+                        <tr>
+                            <th width="60">#</th>
+                            <th>Kode Akun</th>
+                            <th>Nama Akun</th>
+                            <th class="text-end">Debit</th>
+                            <th class="text-end">Kredit</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr th:each="row, stat : ${rows}">
+
+                            <td th:text="${stat.count}">
+                                1
+                            </td>
+
+                            <td th:text="${row.accountCode}">
+                                110101
+                            </td>
+
+                            <td th:text="${row.accountName}">
+                                Kas
+                            </td>
+
+                            <td class="text-end"
+                                th:text="${#numbers.formatDecimal(
+                                    row.debit,
+                                    0,
+                                    'POINT',
+                                    2,
+                                    'COMMA'
+                                )}">
+                                0,00
+                            </td>
+
+                            <td class="text-end"
+                                th:text="${#numbers.formatDecimal(
+                                    row.credit,
+                                    0,
+                                    'POINT',
+                                    2,
+                                    'COMMA'
+                                )}">
+                                985.000,00
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                    <tfoot>
+
+                        <tr class="fw-bold">
+
+                            <td colspan="3"
+                                class="text-end">
+                                TOTAL
+                            </td>
+
+                            <td class="text-end"
+                                th:text="${#numbers.formatDecimal(
+                                    totalDebit,
+                                    0,
+                                    'POINT',
+                                    2,
+                                    'COMMA'
+                                )}">
+                                1.000.000,00
+                            </td>
+
+                            <td class="text-end"
+                                th:text="${#numbers.formatDecimal(
+                                    totalCredit,
+                                    0,
+                                    'POINT',
+                                    2,
+                                    'COMMA'
+                                )}">
+                                1.000.000,00
+                            </td>
+
+                        </tr>
+
+                    </tfoot>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Balance -->
+
+    <div class="alert alert-success mt-4"
+         th:if="${selisih.compareTo(T(java.math.BigDecimal).ZERO) == 0}">
+
+        <strong>✓ Balance</strong>
+
+        <div>
+            Total Debit dan Kredit sudah seimbang.
+        </div>
+
+    </div>
+
+
+       </div> 
+    </div>
+
+</body>
+
+</html>

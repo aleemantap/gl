@@ -1,0 +1,56 @@
+<div th:fragment="add">
+    <div class="modal modal-blur fade" id="modal-cabang" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalReportTitle">
+                        TAMBAH CABANG
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formCabang">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required">Nama Cabang</label>
+                                <input type="text" class="form-control" id="nm_cabang" name="nm_cabang" placeholder="Masukan Nama Cabang" required>
+                                <div class="invalid-feedback" id="nm_cabangError"></div>
+                            </div>
+                            <input type="hidden" class="form-control" id="cb_id" name="cb_id"/>
+                           
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Kode Cabang</label>
+                                <input type="text" class="form-control" id="kd_cabang" name="kd_cabang" placeholder="Masukkan Kode Cabang" required>
+                                <div class="invalid-feedback" id="kd_cabangError"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label required">Alamat</label>
+                                <textarea  class="form-control" id="al_cabang" name="al_cabang" rows="4" style="height:90px;" placeholder="Masukan Nama Cabang"></textarea>
+
+                                <div class="invalid-feedback" id="al_cabangError"></div>
+                            </div>
+                        </div>
+
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link link-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary ms-auto" id="btnSubmitCabang">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M12 5l0 14" />
+                                <path d="M5 12l14 0" />
+                            </svg>
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

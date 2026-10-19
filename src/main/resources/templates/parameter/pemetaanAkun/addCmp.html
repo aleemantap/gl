@@ -1,0 +1,73 @@
+<div th:fragment="addCmp">
+    <div class="modal modal-blur fade" id="modal3" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle3">
+                        Tambah Component Rule
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="form3">
+                    <div class="modal-body  modal2-body">
+                        <div class="row">
+                           
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label required">Nomor GL</label>
+                                <select class="form-select select2" id="nomor-gl-cmp" name="nomor-gl-cmp">
+                                       <option value="">-- Pilih Nomor Account GL --</option>
+                                        <option
+                                            th:each="gl : ${noAccGelList}"
+                                            th:value="${gl.id}"
+                                            th:text="${gl.nomorGl + ' - ' + gl.namaGlAccount}">
+                                        </option>
+                                </select>
+                                
+                                <input type="hidden" class="form-control" id="jurnal_id_cmp" name="jurnal_id_cmp"/>
+                                <div class="invalid-feedback" id="nomor-gl-cmpError"></div>
+                            </div>
+                            <div class="col-md-12 mb-3">                                    
+                                <label class="form-label">D/K</label>
+                                <select id="dk-cmp" class="form-control">
+                                    <option value="D">Debit</option>
+                                    <option value="K">Kredit</option>
+                                </select>
+                                <div class="invalid-feedback" id="dk-cmpError"></div>
+                            </div> 
+                            <div class="col-md-12 mb-3">                                    
+                                <label class="form-label">Component Rule Product</label>
+                                <select id="component-rule-cmp" class="form-control">
+                                </select>
+                                <div class="invalid-feedback" id="component-rule-cmpError"></div>
+                            </div>
+                            <div class="col-md-12 mb-3">                                    
+                                <label class="form-label">Type Pergerakan Cash</label>
+                                <select id="type-pergerakan-cash" class="form-control">
+                                    <option value="IN">IN</option>
+                                    <option value="OUT">OUT</option>
+                                    <option value="NONE">NONE</option>
+                                </select>
+                                <div class="invalid-feedback" id="type-pergerakan-cash-cmpError"></div>
+                            </div>
+                            <div class="col-md-12 mb-3">                                    
+                                <label class="form-label">Status</label>
+                                <select id="sts-cmp" class="form-control">
+                                    <option value="1">Aktif</option>
+                                    <option value="0">InAktif</option>
+                                </select>
+                                <div class="invalid-feedback" id="sts-cmpError"></div>
+                            </div>                           
+                        </div>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary" id="btnSubmit3">
+                            <strong>Simpan</strong>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

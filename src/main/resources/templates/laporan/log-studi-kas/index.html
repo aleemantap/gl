@@ -1,0 +1,158 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/main}"
+>
+  <head>
+    <title>Log Kustodi Kas</title>
+  </head>
+  <body>
+     <div layout:fragment="content">
+          <div class="container-xl">                
+            <div class="filter-card">
+                <div class="row g-4 align-items-start">
+                  
+                    <div class="col-lg-12 col-md-12">
+                        <div class="row mb-3">
+                            <div class="col-lg-6 col-md-12">
+                                <label class="filter-label">
+                                    <i class="bi bi-calendar-range"></i> Periode Transaksi
+                                </label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <!-- Periode From -->
+                                    <div class="position-relative flex-grow-1">
+                                        <i class="bi bi-calendar3 position-absolute"
+                                        style="left: 15px; top: 50%; transform: translateY(-50%); color: #707780; z-index: 2;">
+                                        </i>
+                                        <input type="date" id="tanggalDari" class="form-control ps-5"
+                                            th:value="${tanggalDari}">
+                                    </div>
+                                    
+                                    <!-- Tulisan "s/d" di tengah -->
+                                    <span class="fw-bold text-muted mx-1" style="font-size: 0.9rem; white-space: nowrap;">s/d</span>
+                                    
+                                    <!-- Periode To -->
+                                    <div class="position-relative flex-grow-1">
+                                        <i class="bi bi-calendar3 position-absolute"
+                                        style="left: 15px; top: 50%; transform: translateY(-50%); color: #707780; z-index: 2;">
+                                        </i>
+                                        <input type="date" id="tanggalSampai" class="form-control ps-5"
+                                            th:value="${tanggalSampai}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cabang -->
+                    <div class="col-lg-6 col-md-6">
+                        <label for="cabang" class="filter-label">
+                            Cabang
+                        </label>
+                        <select id="branchCode" class="form-select select2">
+                            <option value="">Semua Cabang</option>                           
+                            <option th:each="cabang : ${cabangList}" 
+                                    th:value="${cabang.kodeCabang}" 
+                                    th:text="${cabang.kodeCabang} + ' - ' + ${cabang.namaCabang}">
+                            </option>
+                            
+                        </select>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6">
+                        <label for="arah" class="filter-label">
+                            Arah Kas
+                        </label>
+                        <select id="arahKas" class="form-select select2">
+                            <option value="">Pilih</option>                           
+                            <option value="IN">Kas In</option>                           
+                            <option value="OUT">Kas Out</option>  
+                        </select>
+                    </div>
+                    
+                    <!-- Reversal -->
+                    <div class="col-lg-3 col-md-6">
+                        
+                    </div>
+                </div>
+                 <hr class="filter-divider">
+                <div class="filter-actions">
+                    <div class="left-actions">
+                        <button
+                            type="button"
+                            class="btn btn-filter"
+                            id="btnFilter"
+                        >
+                            <img th:src="@{/img/filter-1.png}" />
+                            Terapkan Filter
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-reset"
+                            id="btnReset"
+                        >
+                            Reset
+                        </button> 
+                    </div>
+                    <button
+                        type="button"
+                        class="btn btn-export"
+                        id="btn-export-exc"
+                    >
+                        <img th:src="@{/img/download.png}" />
+                        Export Excel
+                    </button> 
+                </div>
+               
+
+            </div>          
+            
+            <div class="row row-deck row-cards"  style="margin-top:20px;">            
+              <div class="col-12">
+                <div class="card">
+                    <div class="card-header" xstyle="padding:6px 6px !important;">
+                        <h3 class="card-title" style="font-weight: 800;">
+                           Log Kustodi Kas Report
+                        </h3>
+                    </div> 
+                  <div class="table-responsive" style="overflow-x:hidden;padding-bottom: 20px;">
+                    <table id="logKustodiKasTable" class="table table-striped  card-table table-vcenter text-nowrap datatable">
+                      <thead>
+                        <tr>
+                           <th class="">
+                                <input type="checkbox" style="margin-left:12px;height: 1.2rem !important; width: 1.2rem !important;" id="check-all">
+                           </th>                            
+                            <th>Waktu TRX Gadai</th>
+                            <th>Waktu DB GL</th>
+                            <th>Arah</th>
+                            <th>Nominal</th>
+                            <th>TellerID</th>
+                            <th>Keterangan</th>
+                            <th>Detail</th>
+                          
+                        </tr>
+                      </thead>
+                    
+                      <tbody>                       
+                      </tbody>
+                     
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+         
+    </div>
+    <div layout:fragment="scripts">     
+        <link th:href="@{/css/select2.min.css}" rel="stylesheet">
+        <link th:href="@{/css/select2-bootstrap-5-theme.min.css}" rel="stylesheet">
+        <script th:src="@{/js/select2.min.js}"></script>
+        <link th:href="@{/css/daftar-jurnal.css}" rel="stylesheet">
+        <link th:href="@{/lib/DataTables/datatables.min.css}" rel="stylesheet">
+        <script th:src="@{/lib/DataTables/datatables.min.js}"></script>   
+        <script th:src="@{/js/laporan/log-kustodi-kas.js}"></script>       
+    </div>
+  </body>
+</html>

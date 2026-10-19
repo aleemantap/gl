@@ -1,0 +1,96 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/main}"
+>
+  <head>
+    <title>Aturan Produk</title>
+  </head>
+  <body>
+    <div layout:fragment="content">
+          <div class="container-xl">
+            <div class="card">  
+             <div class="" style="padding:20px;">
+                <div class="row mb-3 align-items-center">
+                <input type="hidden" id="produk-id" th:value="${productId}" />
+                  
+                  <!-- KOLOM KIRI: Input & Filter Status -->
+                  <div class="col-lg-6">
+                    <div class="row g-2">
+                      <!-- <div class="col-md-7">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Search by code or name...">
+                      </div>
+                      <div class="col-md-5">
+                        <select id="statusFilter" class="form-control">
+                          <option value="">All Status</option>
+                          <option value="true">Active</option>
+                          <option value="false">Inactive</option>
+                        </select>
+                      </div> -->
+                    </div>
+                  </div>
+
+                  <!-- KOLOM KANAN: Tombol Filter & Tambah (Rata Kanan) -->
+                  <div class="col-lg-6 mt-2 mt-lg-0">
+                    <div class="d-flex justify-content-end gap-2">
+                      <!-- <button class="btn btn-primary btn-primary-yellow" onclick="applyFilters()">Apply Filter</button> -->
+                      <!-- <button class="btn btn-secondary btn-primary-grey" onclick="resetFilters()">Reset</button> -->
+                      <button class="btn btn-success btn-primary-black" id="btn-add-produk-rule">Add</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+                
+              <div class="row row-deck row-cards p-4"  style="margin-top:0px;">  
+                <input type="hidden" class="form-control" id="nama-produk-temp" th:value="${namaProduk}" readonly>
+           
+                <div class="col-lg-12">
+                  <div class="card">                    
+                        <div class="table-responsive"  style="overflow-x:hidden;padding-bottom: 10px;">
+                            <table id="table-detail-produk-rule" class="table table-striped card-table table-vcenter text-nowrap datatable">
+                                <thead>
+                                    <tr>
+                                      <th>#</th>
+                                      <th>Version</th>
+                                      <th>Berlaku Dari</th>
+                                      <th>Berlaku Sampai</th>
+                                      <th>Status</th>
+                                      <!-- <th>J.C</th> -->
+                                      <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                            <tbody>                       
+                            </tbody>
+                            </table>
+                        </div>
+                  </div>
+                </div>              
+              </div>
+            </div>
+
+            <!-- KOMPONEN -->
+            <div th:replace="~{parameter/aturanProdukDetail/component :: component}"></div>  
+
+            <!-- JURNAL -->
+            <div th:replace="~{parameter/aturanProdukDetail/journal :: journal}"></div>  
+           
+            
+           
+            <div th:replace="~{parameter/aturanProdukDetail/modalRule :: modalRule}"></div> 
+            <div th:replace="~{parameter/aturanProdukDetail/modalComponent :: modalComponent}"></div>  
+            <div th:replace="~{parameter/aturanProdukDetail/modalJournal :: modalJournal}"></div>
+          </div>
+          
+    </div>
+    <div layout:fragment="scripts">
+          <link th:href="@{/css/aturanProdukRule.css}" rel="stylesheet">
+          <link th:href="@{/lib/DataTables/datatables.min.css}" rel="stylesheet">
+          <script th:src="@{/lib/DataTables/datatables.min.js}"></script>   
+          <script th:src="@{/js/parameter/aturan-produk-detail.js}"></script>
+          <script th:src="@{/js/parameter/aturan-produk-detail-component.js}"></script>
+          <!-- <script th:src="@{/js/parameter/aturan-produk-detail-journal.js}"></script> -->
+      </div>
+  </body>
+</html>

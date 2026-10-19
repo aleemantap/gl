@@ -1,0 +1,50 @@
+<div th:fragment="add2">
+    <div class="modal modal-blur fade" id="modal-api-2" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle2">
+                        Client Secret
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formApiClient2">
+               
+                <div class="modal-body">
+                  
+                    <div class="mb-3" id="secretWrapper" style="display:none;">
+                        <label class="form-label">
+                            Client Secret
+                        </label>
+
+                        <div class="input-group">
+                            <input type="text"
+                                class="form-control"
+                                id="clientSecret"
+                                readonly>
+
+                            <button class="btn btn-outline-secondary"
+                                    type="button"
+                                    id="btnCopySecret">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon-copy" width="1em" height="1em" fill="currentColor">
+                                <path d="M280 64h-160c-26.5 0-48 21.5-48 48v224c0 26.5 21.5 48 48 48h160c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zm16 272c0 8.8-7.2 16-16 16h-160c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16h160c8.8 0 16 7.2 16 16v224zM392 160h-16c-8.8 0-16 7.2-16 16s7.2 16 16 16h16c8.8 0 16 7.2 16 16v224c0 8.8-7.2 16-16 16h-160c-8.8 0-16-7.2-16-16v-16c0-8.8-7.2-16-16-16s-16 7.2-16 16v16c0 26.5 21.5 48 48 48h160c26.5 0 48-21.5 48-48V208c0-26.5-21.5-48-48-48z"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="form-hint text-danger">
+                            Simpan secret ini sekarang. Secret tidak akan
+                            ditampilkan kembali.
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

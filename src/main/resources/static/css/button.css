@@ -1,0 +1,38 @@
+.btn-primary{
+    background-color: #FED255 !important;
+    color:black; 
+}
+.btn-primary-text{
+    font-weight: 700;
+    color: #735A00;
+}
+
+.btn-primary-yellow {
+  background-color: #FFE08E !important;
+  border-radius  : 0px !important;
+  font-size: 14px;
+  color:#152434;
+  font-weight: 700;
+}
+.btn-primary-yellow2{
+  background-color: #FFE08E !important;
+  border-radius  : 0px !important;
+  font-size: 14px;
+  color:#152434;
+  font-weight: 600;
+}
+.btn-primary-black {
+  background-color: #152434 !important;
+  border-radius  : 4px !important;
+  font-size: 14px;
+  color: aliceblue;
+  font-weight: 700;
+}
+.btn-primary-grey {
+  background-color: #eff1f3 !important;
+  border-radius  : 2px !important;
+  font-size: 14px;
+  color: rgb(8, 16, 23);
+  font-weight: 700;
+}
+

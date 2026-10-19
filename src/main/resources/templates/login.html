@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Login - GL Gadai</title>
+    <link th:href="@{/img/logo-gadai.png}" rel="icon">
+    <link href="/css/tabler.min.css" rel="stylesheet">
+    <style>
+        @import url('https://rsms.me/inter/inter.css');
+        :root {
+            --tblr-font-sans-serif: 'Inter Var', -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            --primary-dark: #152434;
+            --primary-dark-hover: #1d3349;
+            --gold: #ECC246;
+            --gold-button: #FFE08E;
+            --background: #FBFAF7;
+            --white: #ffffff;
+            --text-primary: #1a2332;
+            --text-secondary: #6c7a91;
+            --text-muted: #94A4B7;
+            --border: #e5e7eb;
+            --success: #28a745;
+            --danger: #dc3545;
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        html { width: 100%; min-height: 100%; }
+        body {
+            margin: 0; padding: 0;
+            width: 100%; min-height: 100%;
+            font-family: var(--tblr-font-sans-serif);
+            font-feature-settings: "cv03", "cv04", "cv11";
+            background: var(--background);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+        .split-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow: hidden;
+        }
+        .left-section {
+            position: relative;
+            flex: 1 1 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+            padding: 60px 50px;
+            background: var(--primary-dark);
+            overflow: hidden;
+        }
+        .left-section::before {
+            content: "";
+            position: absolute;
+            width: 650px; height: 650px;
+            top: -350px; right: -300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .left-section::after {
+            content: "";
+            position: absolute;
+            width: 500px; height: 500px;
+            bottom: -300px; left: -250px;
+            background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .prolog-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 520px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            color: white;
+            animation: fadeInLeft 0.7s ease-out;
+        }
+        .brand-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .brand-icon {
+            width: 52px; height: 52px;
+            flex: 0 0 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            backdrop-filter: blur(10px);
+        }
+        .brand-icon img { width: 34px; height: 34px; object-fit: contain; }
+        .brand-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: .4px;
+            color: white;
+        }
+        .description-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 45px;
+        }
+        .subtitle1 {
+            margin: 0;
+            max-width: 500px;
+            font-size: 26px;
+            line-height: 1.45;
+            font-weight: 500;
+            color: var(--gold);
+        }
+        .subtitle2 {
+            margin: 0;
+            max-width: 500px;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+        .stats-wrapper {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .stat-item { min-width: 0; }
+        .stat-title {
+            margin-bottom: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            color: rgba(255,255,255,.5);
+        }
+        .stat-label {
+            font-size: 13px;
+            line-height: 1.5;
+            color: rgba(255,255,255,.6);
+        }
+        .footer-wrapper { padding-top: 5px; }
+        .footer-wrapper p {
+            margin: 0;
+            font-size: 11px;
+            letter-spacing: .3px;
+            color: rgba(255,255,255,.3);
+        }
+        .right-section {
+            flex: 1 1 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+            padding: 50px;
+            background: var(--background);
+            overflow-y: auto;
+            animation: fadeInRight 0.7s ease-out;
+        }
+        .login-wrapper {
+            width: 100%;
+            max-width: 470px;
+        }
+        .login-header { margin-bottom: 25px; }
+        .welcome-text {
+            margin-bottom: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+        }
+        .login-header h2 {
+            margin: 0 0 7px;
+            font-size: 30px;
+            line-height: 1.2;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .login-header p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+        .login-card {
+            width: 100%;
+            padding: 30px;
+            background: var(--white);
+            border: 1px solid #f0f0f0;
+            border-radius: var(--radius-md);
+            box-shadow: 0 8px 30px rgba(21,36,52,.04);
+        }
+        .login-card .card-body { padding: 0; }
+        .alert {
+            margin-bottom: 20px;
+            padding: 11px 14px;
+            border: 0;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .alert-danger { background: #fef2f2; color: #991b1b; }
+        .alert-success { background: #f0fdf4; color: #166534; }
+        .form-label {
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .form-control {
+            width: 100%;
+            min-height: 44px;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+        .form-control:focus {
+            border-color: var(--primary-dark);
+            box-shadow: 0 0 0 3px rgba(21,36,52,.08);
+        }
+        .form-control::placeholder { color: #a0aec0; font-size: 13px; }
+        .form-control:disabled { opacity: 0.6; cursor: not-allowed; }
+        .input-icon { position: relative; }
+        .input-icon .form-control { padding-left: 44px; }
+        .input-icon-addon {
+            position: absolute;
+            left: 0; top: 0;
+            width: 42px; height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a0aec0;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .password-toggle {
+            position: absolute;
+            top: 0; right: 0;
+            width: 44px; height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: #a0aec0;
+            cursor: pointer;
+            z-index: 5;
+        }
+        .password-toggle:hover { color: var(--primary-dark); }
+        .password-toggle:disabled { cursor: not-allowed; opacity: 0.5; }
+        .form-check-label { font-size: 13px; }
+        .forgot-password {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color .2s ease;
+        }
+        .forgot-password:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        .login-button {
+            width: 100%;
+            min-height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 16px;
+            border: 0;
+            border-radius: var(--radius-md);
+            background: var(--primary-dark);
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+            position: relative;
+        }
+        .login-button:hover:not(:disabled) {
+            background: var(--primary-dark-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(21,36,52,.18);
+        }
+        .login-button:active:not(:disabled) { transform: translateY(0); }
+        .login-button:disabled {
+            opacity: 0.8;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .login-button .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2.5px solid rgba(255,255,255,0.3);
+            border-top: 2.5px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        .login-button.loading .spinner { display: inline-block; }
+        .login-button.loading .btn-text { display: none; }
+        .login-button.loading .btn-icon { display: none; }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .server-status-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 18px;
+        }
+        .server-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 13px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            font-size: 11px;
+            color: #44474c;
+        }
+        .status-dot {
+            width: 8px; height: 8px;
+            flex: 0 0 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 6px rgba(40,167,69,.5);
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-25px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(25px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        /* Loading overlay untuk disable seluruh form */
+        .loading-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.7);
+            border-radius: var(--radius-md);
+            z-index: 10;
+            align-items: center;
+            justify-content: center;
+        }
+        .loading-overlay.active {
+            display: flex;
+        }
+        .loading-overlay .spinner-large {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(21,36,52,0.1);
+            border-top: 4px solid var(--primary-dark);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        .login-card {
+            position: relative;
+        }
+        @media (max-width: 1100px) {
+            .left-section { padding: 45px 35px; }
+            .right-section { padding: 40px 35px; }
+            .subtitle1 { font-size: 23px; }
+            .subtitle2 { font-size: 14px; }
+            .login-header h2 { font-size: 27px; }
+            .login-card { padding: 26px; }
+        }
+        @media (max-width: 900px) {
+            .split-container {
+                flex-direction: column;
+                min-height: 100vh;
+                min-height: 100dvh;
+                overflow: visible;
+            }
+            .left-section {
+                flex: none;
+                width: 100%;
+                padding: 40px 30px;
+            }
+            .prolog-content {
+                max-width: 700px;
+                margin: 0 auto;
+                gap: 22px;
+            }
+            .description-wrapper { margin-top: 20px; }
+            .right-section {
+                flex: none;
+                width: 100%;
+                padding: 40px 30px 50px;
+                overflow: visible;
+            }
+            .login-wrapper {
+                max-width: 520px;
+                margin: 0 auto;
+            }
+        }
+        @media (max-width: 576px) {
+            body { background: var(--background); }
+            .split-container {
+                display: block;
+                width: 100%;
+                min-height: 100vh;
+                min-height: 100dvh;
+                overflow: visible;
+            }
+            .left-section {
+                width: 100%;
+                padding: 24px 18px 28px;
+                overflow: hidden;
+            }
+            .prolog-content {
+                max-width: 100%;
+                gap: 0;
+            }
+            .brand-wrapper { gap: 10px; }
+            .brand-icon {
+                width: 42px; height: 42px;
+                flex-basis: 42px;
+                border-radius: 11px;
+            }
+            .brand-icon img { width: 28px; height: 28px; }
+            .brand-text { font-size: 17px; }
+            .description-wrapper {
+                margin-top: 22px;
+                gap: 8px;
+            }
+            .subtitle1 {
+                max-width: 100%;
+                font-size: 20px;
+                line-height: 1.45;
+            }
+            .subtitle2 {
+                max-width: 100%;
+                font-size: 13px;
+                line-height: 1.6;
+            }
+            .stats-wrapper, .footer-wrapper { display: none; }
+            .right-section {
+                width: 100%;
+                padding: 28px 18px 40px;
+                background: var(--background);
+            }
+            .login-wrapper {
+                width: 100%;
+                max-width: 100%;
+            }
+            .login-header { margin-bottom: 18px; }
+            .welcome-text { display: none; }
+            .login-header h2 {
+                margin-bottom: 6px;
+                font-size: 24px;
+                line-height: 1.25;
+            }
+            .login-header p {
+                font-size: 13px;
+                line-height: 1.5;
+            }
+            .login-card {
+                padding: 20px 16px;
+                border-radius: 9px;
+                box-shadow: 0 5px 20px rgba(21,36,52,.04);
+            }
+            .form-label { font-size: 12px; }
+            .form-control { min-height: 46px; font-size: 14px; }
+            .login-button { min-height: 46px; }
+            .server-status-wrapper { margin-top: 15px; }
+        }
+        @media (max-width: 380px) {
+            .left-section { padding: 20px 15px 24px; }
+            .right-section { padding: 22px 15px 30px; }
+            .subtitle1 { font-size: 18px; }
+            .subtitle2 { font-size: 12px; }
+            .login-header h2 { font-size: 22px; }
+            .login-header p { font-size: 12px; }
+            .login-card { padding: 18px 14px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="split-container">
+    <section class="left-section">
+        <div class="prolog-content">
+            <div class="brand-wrapper">
+                <div class="brand-icon">
+                    <img th:src="@{/img/logo-gadai.png}" alt="GL Gadai">
+                </div>
+                <span class="brand-text">GL-Gadai</span>
+            </div>
+            <div class="description-wrapper">
+                <p class="subtitle1">Standalone General Ledger service untuk Gadai</p>
+                <p class="subtitle2">Sistem pembukuan terintegrasi yang dirancang untuk presisi finansial maksimal. Kelola transaksi harian, pelaporan audit, dan integritas data dalam satu ledger digital yang aman.</p>
+            </div>
+            <div class="stats-wrapper">
+                <div class="stat-item">
+                    <div class="stat-title">INTEGRITAS DATA</div>
+                    <div class="stat-label">Double-entry bookkeeping standar</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-title">KEAMANAN</div>
+                    <div class="stat-label">Audit trail real-time untuk setiap entri jurnal.</div>
+                </div>
+            </div>
+            <div class="footer-wrapper">
+                <p>© 2024 GL — Gadai. All rights reserved.</p>
+            </div>
+        </div>
+    </section>
+    <section class="right-section">
+        <div class="login-wrapper">
+            <div class="login-header">
+                <div class="welcome-text">GENERAL LEDGER</div>
+                <h2>Selamat Datang</h2>
+                <p>Silakan masuk untuk mengakses dasbor akuntansi Anda.</p>
+            </div>
+            <form th:action="@{/authenticate}" method="post" class="login-card" id="loginForm">
+                <!-- Loading Overlay -->
+                <div class="loading-overlay" id="loadingOverlay">
+                    <div class="spinner-large"></div>
+                </div>
+                
+                <div class="card-body">
+                    <div th:if="${param.error}" class="alert alert-danger" role="alert">
+                        <div th:if="${param.error[0] == 'inactive'}">
+                            <strong>Account Inactive!</strong> Your account is inactive. Please contact administrator.
+                        </div>
+                        <div th:unless="${param.error[0] == 'inactive'}">
+                            <strong>Login Failed!</strong> Invalid email or password. Please try again.
+                        </div>
+                    </div>
+                    <div th:if="${param.logout}" class="alert alert-success" role="alert">
+                        <strong>Success!</strong> You have been signed out successfully.
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label required" for="email">Email atau Username</label>
+                        <div class="input-icon">
+                            <span class="input-icon-addon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z"/>
+                                    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/>
+                                    <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
+                                </svg>
+                            </span>
+                            <input id="email" name="email" autofocus required type="text" value="" class="form-control" placeholder="Username" autocomplete="username">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label required" for="password">Kata Sandi</label>
+                        <div class="input-icon">
+                            <span class="input-icon-addon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z"/>
+                                    <path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6z"/>
+                                    <path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/>
+                                    <path d="M8 11v-4a4 4 0 1 1 8 0v4"/>
+                                </svg>
+                            </span>
+                            <input id="password" name="password" type="password" value="" class="form-control" placeholder="Password" autocomplete="current-password" required>
+                            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('password')" aria-label="Toggle password visibility">
+                                <svg id="password-eye-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z"/>
+                                    <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/>
+                                    <path d="M21 12c-2.4 4.5 -6 7.5 -9 7.5s-6.6 -3 -9 -7.5c2.4 -4.5 6 -7.5 9 -7.5s6.6 3 9 7.5"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label class="form-check mb-0">
+                                <input type="checkbox" class="form-check-input" name="remember-me" id="remember-me">
+                                <span class="form-check-label">Ingat Saya</span>
+                            </label>
+                            <a href="/forgot-password" class="forgot-password">Lupa password?</a>
+                        </div>
+                    </div>
+                    <div class="form-footer">
+                        <button type="submit" class="login-button" id="loginButton">
+                            <span class="spinner"></span>
+                            <span class="btn-text">Masuk</span>
+                            <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z"/>
+                                <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"/>
+                                <path d="M9 12h12l-3 -3"/>
+                                <path d="M18 15l3 -3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="server-status-wrapper">
+                <div class="server-status">
+                    <span class="status-dot"></span>
+                    <span>Server Status: <strong>Online</strong></span>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script src="/js/tabler.min.js"></script>
+<script>
+    function togglePasswordVisibility(inputId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById('password-eye-icon');
+        if (!input || !icon) return;
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.innerHTML = `
+                <path stroke="none" d="M0 0h24v24H0z"/>
+                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/>
+                <path d="M21 12c-2.4 4.5 -6 7.5 -9 7.5s-6.6 -3 -9 -7.5c2.4 -4.5 -6.6 -7.5 -9 -7.5s-6.6 3 -9 7.5"/>
+                <path d="M3 3l18 18"/>
+            `;
+        } else {
+            input.type = 'password';
+            icon.innerHTML = `
+                <path stroke="none" d="M0 0h24v24H0z"/>
+                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/>
+                <path d="M21 12c-2.4 4.5 -6 7.5 -9 7.5s-6.6 -3 -9 -7.5c2.4 -4.5 6 -7.5 9 -7.5s6.6 3 9 7.5"/>
+            `;
+        }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+        const button = document.getElementById('loginButton');
+        const overlay = document.getElementById('loadingOverlay');
+        
+        // Validasi
+        if (!email.value.trim() || !password.value.trim()) {
+            e.preventDefault();
+            if (!email.value.trim()) {
+                email.focus();
+                email.style.borderColor = '#dc3545';
+                setTimeout(() => { email.style.borderColor = ''; }, 3000);
+            } else if (!password.value.trim()) {
+                password.focus();
+                password.style.borderColor = '#dc3545';
+                setTimeout(() => { password.style.borderColor = ''; }, 3000);
+            }
+            return;
+        }
+        
+        // Tampilkan loading
+        e.preventDefault(); // Cegah submit dulu
+        
+        // button.classList.add('loading');
+        button.disabled = true;
+        overlay.classList.add('active');
+        
+        // Submit form setelah spinner muncul (0.5 detik)
+        setTimeout(() => {
+            e.target.submit();
+        }, 500);
+    });
+</script>
+</body>
+</html>

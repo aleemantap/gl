@@ -1,0 +1,168 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/main}"
+>
+  <head>
+    <title>API Client List</title>
+  </head>
+  <body>
+    <div layout:fragment="content">
+    
+     <div class="container-xl">
+            <div class="row g-2 align-items-center">
+              <div class="col">
+                <!-- Page pre-title -->
+                <div class="page-title">
+                 Manajemen Key API Client
+                </div>
+                <h2 class="page-pretitle">
+                  <!-- Kelola hak akses dan perizinan personel sistem GL Gadai. -->
+                </h2>
+              </div>
+              <!-- Page title actions -->
+              <div class="col-auto ms-auto d-print-none">
+                <div class="btn-list">
+                  <!-- <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-report">
+                    +
+                    Tambah API Client
+                  </a> -->
+                 <!-- btn-add-client -->
+                   <button
+                        type="button"
+                        class="btn btn-primary fs-3 fw-bold"
+                        id="btn-add-client"
+                    >
+                        + Tambah Key API Client
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-primary-grey"
+                        id="btn-export"
+                    >
+                        Export 
+                    </button>
+                </div>
+              </div>
+            </div>
+
+             <div class="row mb-3 align-items-end">
+
+                        <!-- BAGIAN KIRI -->
+                        <div class="col-md-12">
+                            <!-- Tombol Toggle Filter -->
+                            <div class="row mb-2">
+                                <div class="col-12">
+                                    <button type="button" 
+                                            class="btn btn-outline-primary btn-sm" 
+                                            id="toggleFilterBtn">
+                                        <i class="ti ti-chevron-down" id="toggleIcon"></i>
+                                        <span id="toggleText">Sembunyikan Filter</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Container Filter -->
+                            <div id="filterContainer">
+                                <div class="row">
+                                   
+                                    <div class="col-md-4">
+                                        <label class="form-label">Client Name</label>
+                                        <input type="text"
+                                            class="form-control form-control"
+                                            id="client_name"
+                                            placeholder="Client Name">
+                                    </div>
+
+                                    
+                                    <div class="col-md-4">
+                                        <label class="form-label">Client ID</label>
+                                        <input type="text"
+                                            class="form-control form-control"
+                                            id="client_id"
+                                            placeholder="Client ID">
+                                    </div> 
+                                    <div class="col-md-4">
+                                        <label class="form-label">Status</label>
+                                        <select name="status" id="status" class="form-select">
+                                            <option value="">--Pilih--</option>
+                                            <option value="1">Active</option>
+                                            <option value="0">Tidak</option>
+                                        </select>
+                                    </div> 
+                                </div>
+                                
+                                <div class="row mt-0">
+                                    <!-- Action -->
+                                    <div class="col-md-4">
+                                        <div class="d-flex gap-2" style="margin-top: 2em;">
+                                            <button type="button"
+                                                    class="btn btn-primary btn-md"
+                                                    id="btnFilter">
+                                                <i class="ti ti-filter"></i>
+                                                Filter
+                                            </button>
+
+                                            <button type="button"
+                                                    class="btn btn-outline-secondary btn-sm"
+                                                    id="btnResetFilter">
+                                                <i class="ti ti-refresh"></i>
+                                                Reset
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                  </div>
+            
+            <div style="margin-top:20px;" class="row row-deck row-cards">
+              <div class="col-12">
+                <div class="card">                 
+                    <div class="table-responsive" style="overflow-x:hidden;padding-bottom: 20px;">
+                        <table id="table-api-client" class="table card-table table-striped table-vcenter text-nowrap datatable">
+                            <thead> 
+                                <tr>
+                                    <!-- <th>No</th> -->
+                                    <!-- <th></th> -->
+                                    <th>Client Name</th>
+                                    <th>Client ID</th>
+                                    <th>Status</th>
+                                    <th>Expired</th>
+                                    <th>Last Used</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>                        
+                            </tbody>                    
+                        </table>
+                    </div>
+                </div>
+              </div>
+            </div>
+
+             <div th:replace="~{management/api_client/add :: add}"></div>
+             <div th:replace="~{management/api_client/add2 :: add2}"></div>
+          </div>
+       
+    </div>
+    <div layout:fragment="scripts">
+        <style>
+          .dt-paging {
+            margin-bottom: 20px !important;
+          }
+            input[readonly] {
+                background-color: #e9ecef;
+                color: #6c757d;
+                cursor: not-allowed;
+                opacity: 0.85;
+            }
+        </style>
+        <link th:href="@{/lib/DataTables/datatables.min.css}" rel="stylesheet">
+        <script th:src="@{/lib/DataTables/datatables.min.js}"></script>   
+        <script th:src="@{/js/management/api-client-list.js}"></script>
+    </div>
+  </body>
+</html>

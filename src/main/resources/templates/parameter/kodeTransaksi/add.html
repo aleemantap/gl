@@ -1,0 +1,53 @@
+<div th:fragment="add">
+    <div class="modal modal-blur fade" id="modal-tc" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                            <path d="M16 19h6" />
+                            <path d="M19 16v6" />
+                            <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
+                        </svg>
+                        TAMBAH ACCOUNT GL
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formTC">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label required">KODE MNEMONIK</label>
+                                <input type="text" class="form-control" id="kode" name="kode" placeholder="Masukkan Kode Mnemonik" required>
+                                <div class="invalid-feedback" id="kodeError"></div>
+                            </div>
+                            <input type="hidden" class="form-control" id="tc_id" name="gl_id"/>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label required">Nama Transaksi</label>
+                                <input type="text" class="form-control" id="namaTransaksi" name="namaTransaksi" placeholder="Masukkan Nama Transaksi" required>
+                                <div class="invalid-feedback" id="namaTransaksiError"></div>
+                            </div>                           
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link link-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary ms-auto" id="btn-submit-tc">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M12 5l0 14" />
+                                <path d="M5 12l14 0" />
+                            </svg>
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

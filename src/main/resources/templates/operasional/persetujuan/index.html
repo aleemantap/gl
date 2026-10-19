@@ -1,0 +1,780 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/main}"
+>
+  <head>
+    <title>Persetujuan</title>
+  </head>
+  <body>
+    <div layout:fragment="content">
+        <div class="container-xl">
+           
+            
+    <!-- Header -->
+    <div class="mb-4">
+        <h2 class="mb-1">Persetujuan Operasional</h2>
+        <p class="text-muted mb-0">
+            Review dan otorisasi pembalikan jurnal serta dispute kas
+            untuk menjaga integritas GL dan kontrol audit.
+        </p>
+    </div>
+
+
+    <!-- Summary -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="text-muted small">
+                        PERMINTAAN MENUNGGU
+                    </div>
+
+                    <div class="fs-2 fw-bold"
+                         th:text="${jumlahMenunggu}">
+                        0
+                    </div>
+
+                    <div class="text-muted small">
+                        Menunggu persetujuan
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="text-muted small">
+                        PEMBALIKAN
+                    </div>
+
+                    <div class="fs-2 fw-bold"
+                         th:text="${requests.size()}">
+                        0
+                    </div>
+
+                    <div class="text-muted small">
+                        Total permintaan
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="text-muted small">
+                        KONTROL OPERASIONAL
+                    </div>
+
+                    <div class="fs-2 fw-bold">
+                        GL
+                    </div>
+
+                    <div class="text-muted small">
+                        Audit & authorization
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mb-4 persetujuan-tabs border-bottom mb-4" id="approvalTabs">
+    
+       <li class="nav-item">
+            <button class="nav-link active d-flex align-items-center gap-2 px-3 py-2"
+                    data-bs-toggle="tab"
+                    data-bs-target="#reversalTab"
+                    type="button">
+
+                <i class="bi bi-arrow-counterclockwise"></i>
+
+                <span>Permintaan Pembalikan</span>
+
+                <span class="badge rounded-pill bg-success text-white"
+                    th:text="${jumlahMenunggu}">
+                    0
+                </span>
+
+            </button>
+        </li>
+
+        <li class="nav-item">
+            <button class="nav-link d-flex align-items-center gap-2 px-3 py-2"
+                    data-bs-toggle="tab"
+                    data-bs-target="#disputeTab"
+                    type="button">
+
+                <i class="bi bi-exclamation-triangle"></i>
+
+                <span>Dispute Kas</span>
+
+                <span class="badge rounded-pill bg-success text-white">
+                    0
+                </span>
+
+            </button>
+        </li>
+
+    </ul>
+
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+
+        <!-- ========================================= -->
+        <!-- REVERSAL -->
+        <!-- ========================================= -->
+
+        <div class="tab-pane fade show active"
+             id="reversalTab">
+
+            <div class="card border-0 shadow-sm">
+
+               <div class="card-header bg-white py-3" style="position: relative;">
+                    <div>
+                        <h5 class="mb-1">Permintaan Pembalikan Jurnal</h5>
+                        <small class="text-muted">
+                            Daftar permintaan pembalikan yang memerlukan otorisasi.
+                        </small>
+                    </div>
+
+                    <button
+                        class="btn btn-primary-grey"
+                        id="btn-export"
+                        style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%);"
+                    >
+                        Export
+                    </button>
+                </div>
+
+                <div class="card-body p-0">
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle mb-0">
+
+                            <thead class="table-light">
+
+                            <tr>
+                                <th class="px-3">No. Jurnal Asli</th>
+                                <th>Diminta Oleh</th>
+                                <th>Alasan &amp; Deskripsi</th>
+                                <th>Tanggal</th>
+                                <th>Status</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                            <!-- Jika tidak ada data -->
+                            <tr th:if="${#lists.isEmpty(requests)}">
+
+                                <td colspan="6"
+                                    class="text-center text-muted py-5">
+
+                                    Belum ada permintaan pembalikan.
+
+                                </td>
+
+                            </tr>
+
+
+                            <!-- Data -->
+                            <tr th:each="request : ${requests}"
+                                th:id="'request-' + ${request.id}">
+
+                                <!-- Journal -->
+                                <td class="px-3">
+
+                                    <div class="fw-semibold"
+                                         th:text="${request.journalNo}">
+                                        GL-JRN-000012
+                                    </div>
+
+                                    <small class="text-muted"
+                                           th:text="${request.transactionNo}">
+                                        TRX-000001
+                                    </small>
+
+                                </td>
+
+
+                                <!-- Requested By -->
+                                <td>
+
+                                    <div class="fw-semibold"
+                                         th:text="${request.requestedBy}">
+                                        Budi Santoso
+                                    </div>
+
+                                    <small class="text-muted">
+
+                                        <span th:if="${request.cabangCode != null}"
+                                              th:text="${request.cabangCode}">
+                                            MNT
+                                        </span>
+
+                                        <span th:if="${request.cabangCode != null}">
+                                            -
+                                        </span>
+
+                                        <span th:text="${request.cabangName}">
+                                            Cabang Menteng
+                                        </span>
+
+                                    </small>
+
+                                </td>
+
+
+                                <!-- Reason -->
+                                <td>
+
+                                    <div class="fw-semibold"
+                                         th:text="${request.reason}">
+                                        Salah input nominal
+                                    </div>
+
+                                    <small class="text-muted"
+                                           th:text="${request.description}">
+                                        Salah input nominal pada transaksi pelunasan gadai emas.
+                                    </small>
+
+                                </td>
+
+
+                                <!-- Date -->
+                                <td>
+
+                                    <div th:text="${#temporals.format(
+                                            request.requestedAt,
+                                            'dd-MM-yyyy'
+                                         )}">
+                                        20-09-2026
+                                    </div>
+
+                                    <small class="text-muted"
+                                           th:text="${#temporals.format(
+                                               request.requestedAt,
+                                               'HH:mm'
+                                           )}">
+                                        10:30
+                                    </small>
+
+                                </td>
+
+
+                                <!-- Status -->
+                                <td>
+
+                                    <span th:if="${request.status.name() == 'MENUNGGU'}"
+                                          class="badge bg-warning text-white">
+                                        MENUNGGU
+                                    </span>
+
+                                    <span th:if="${request.status.name() == 'DISETUJUI'}"
+                                          class="badge bg-success text-white">
+                                        DISETUJUI
+                                    </span>
+
+                                    <span th:if="${request.status.name() == 'DITOLAK'}"
+                                          class="badge bg-danger text-white">
+                                        DITOLAK
+                                    </span>
+
+                                </td>
+
+
+                                <!-- Action -->
+                                <td class="text-center">
+
+                                    <div th:if="${request.status.name() == 'MENUNGGU'}"
+                                         class="d-flex justify-content-center gap-1">
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-primary"
+                                                th:onclick="'showReversalDetail(' + ${request.id} + ')'">
+
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                            <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                                            </svg>
+                                            Review
+
+                                        </button> 
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-success btn-approve"
+                                                th:data-id="${request.id}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-check me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                <path d="M5 12l5 5l10 -10" />
+                                                </svg> 
+                                            Setujui
+                                        </button>
+
+                                          <button type="button"
+                                                class="btn btn-sm btn-outline-danger btn-reject"
+                                                th:attr="data-id=${request.id}"
+                                                th:if="${request.status.name() == 'MENUNGGU'}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-x me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                                                    <path d="M10 10l4 4m0 -4l-4 4" />
+                                                </svg>
+                                            Tolak
+                                        </button>
+
+                                    </div>
+
+                                    <span th:if="${request.status.name() != 'MENUNGGU'}"
+                                          class="text-red large">
+                                        Selesai
+                                    </span>
+
+                                </td>
+
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================= -->
+        <!-- DISPUTE KAS -->
+        <!-- ========================================= -->
+
+        <div class="tab-pane fade"
+             id="disputeTab">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body text-center py-5">
+
+                    <h5>Dispute Kas</h5>
+
+                    <p class="text-muted mb-0">
+                        Modul dispute kas akan dikembangkan pada tahap berikutnya.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+        </div>
+   
+            <!-- ========================================= -->
+            <!-- REJECT MODAL -->
+            <!-- ========================================= -->
+
+            <!-- Modal Detail Reversal -->
+            <div class="modal fade"
+                id="reversalDetailModal"
+                tabindex="-1"
+                aria-hidden="true">
+
+                <div class="modal-dialog modal-xl modal-dialog-scrollable">
+
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+
+                            <div>
+                                <h5 class="modal-title fw-semibold">
+                                    <i class="bi bi-arrow-counterclockwise me-2"></i>
+                                    Detail Permintaan Pembalikan
+                                </h5>
+
+                                <small class="text-muted">
+                                    Review jurnal sebelum memberikan persetujuan
+                                </small>
+                            </div>
+
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal">
+                            </button>
+
+                        </div>
+
+                        <div class="modal-body">
+
+                            <!-- Loading -->
+                            <div id="reversalDetailLoading"
+                                class="text-center py-5">
+
+                                <div class="spinner-border text-primary"
+                                    role="status">
+                                </div>
+
+                                <div class="mt-2 text-muted">
+                                    Memuat detail...
+                                </div>
+
+                            </div>
+
+
+                            <!-- Content -->
+                            <div id="reversalDetailContent"
+                                style="display:none;">
+
+                                <!-- Informasi Request -->
+                                <div class="card border-0 bg-light mb-3">
+
+                                    <div class="card-body">
+
+                                        <div class="row g-3">
+
+                                            <div class="col-md-4">
+                                                <small class="text-muted">
+                                                    Jurnal Asli
+                                                </small>
+
+                                                <div id="detailJournalNo"
+                                                    class="fw-semibold">
+                                                    -
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <small class="text-muted">
+                                                    Transaction No
+                                                </small>
+
+                                                <div id="detailTransactionNo">
+                                                    -
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <small class="text-muted">
+                                                    Cabang
+                                                </small>
+
+                                                <div id="detailCabang">
+                                                    -
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <small class="text-muted">
+                                                    Diminta Oleh
+                                                </small>
+
+                                                <div id="detailRequestedBy">
+                                                    -
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <small class="text-muted">
+                                                    Tanggal Permintaan
+                                                </small>
+
+                                                <div id="detailRequestedAt">
+                                                    -
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <small class="text-muted">
+                                                    Status
+                                                </small>
+
+                                                <div>
+                                                    <span id="detailStatus"
+                                                        class="badge bg-warning text-white">
+                                                        MENUNGGU
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Alasan -->
+                                <div class="card mb-3">
+
+                                    <div class="card-body">
+
+                                        <h6 class="fw-semibold mb-2">
+                                            <i class="bi bi-chat-left-text me-2"></i>
+                                            Alasan Pembalikan
+                                        </h6>
+
+                                        <div id="detailReason"
+                                            class="fw-semibold mb-1">
+                                            -
+                                        </div>
+
+                                        <div id="detailDescription"
+                                            class="text-muted">
+                                            -
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Journal Detail -->
+                                <div class="card mb-3">
+
+                                    <div class="card-body">
+
+                                        <h6 class="fw-semibold mb-3">
+                                            <i class="bi bi-journal-text me-2"></i>
+                                            Jurnal Asli
+                                        </h6>
+
+                                        <div class="table-responsive">
+
+                                            <table class="table table-sm table-hover align-middle">
+
+                                                <thead class="table-light">
+
+                                                    <tr>
+                                                        <th style="width: 28%;">GL Account</th>
+                                                        <th class="text-center" style="width: 8%;">D/K</th>
+                                                        <th class="text-end" style="width: 20%;">Nominal</th>
+                                                        <th>Keterangan</th>
+                                                    </tr>
+
+                                                </thead>
+
+                                                <tbody id="detailJournalBody">
+                                                </tbody>
+
+                                                <tfoot class="table-light">
+
+                                                    <tr>
+                                                        <th colspan="2"
+                                                            class="text-end">
+                                                            Total Debit
+                                                        </th>
+
+                                                        <th id="detailTotalDebit"
+                                                            class="text-end">
+                                                            Rp 0
+                                                        </th>
+
+                                                        <th></th>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th colspan="2"
+                                                            class="text-end">
+                                                            Total Kredit
+                                                        </th>
+
+                                                        <th id="detailTotalCredit"
+                                                            class="text-end">
+                                                            Rp 0
+                                                        </th>
+
+                                                        <th></th>
+                                                    </tr>
+
+                                                </tfoot>
+
+                                            </table>
+
+                                        </div>
+
+                                        <div id="detailBalance"
+                                            class="alert mt-3 mb-0">
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Cash Movement -->
+                                <div class="card">
+
+                                    <div class="card-body">
+
+                                        <h6 class="fw-semibold mb-3">
+                                            <i class="bi bi-cash-stack me-2"></i>
+                                            Pergerakan Kas
+                                        </h6>
+
+                                        <div class="table-responsive">
+
+                                            <table class="table table-sm align-middle">
+
+                                                <thead class="table-light">
+
+                                                    <tr>
+                                                        <th>Direction</th>
+                                                        <th class="text-end">
+                                                            Nominal
+                                                        </th>
+                                                        <th>Kas Point</th>
+                                                        <th>Counterparty</th>
+                                                        <th>Keterangan</th>
+                                                    </tr>
+
+                                                </thead>
+
+                                                <tbody id="detailCashBody">
+                                                </tbody>
+
+                                            </table>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer">
+
+                            <button type="button"
+                                    class="btn btn-light"
+                                    data-bs-dismiss="modal">
+                                Tutup
+                            </button>
+
+                            <button type="button"
+                                    id="detailRejectButton"
+                                    class="btn btn-outline-danger">
+                                <i class="bi bi-x-lg me-1"></i>
+                                Tolak
+                            </button>
+
+                            <button type="button"
+                                    id="detailApproveButton"
+                                    class="btn btn-success">
+                                <i class="bi bi-check-lg me-1"></i>
+                                Setujui Pembalikan
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal fade"
+                id="rejectModal"
+                tabindex="-1"
+                aria-hidden="true">
+
+                <div class="modal-dialog">
+
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+
+                            <h5 class="modal-title">
+                                <i class="bi bi-x-circle me-2"></i>
+                                Tolak Permintaan Pembalikan
+                            </h5>
+
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal">
+                            </button>
+
+                        </div>
+
+                        <div class="modal-body">
+
+                            <div class="mb-3">
+
+                                <label class="form-label fw-semibold">
+                                    Alasan Penolakan
+                                </label>
+
+                                <textarea
+                                    id="rejectionReason"
+                                    class="form-control"
+                                    rows="4"
+                                    placeholder="Masukkan alasan penolakan..."></textarea>
+
+                                <div id="rejectError"
+                                    class="alert alert-danger mt-2 d-none">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer">
+
+                            <button type="button"
+                                    class="btn btn-light"
+                                    data-bs-dismiss="modal">
+                                Batal
+                            </button>
+
+                            <button type="button"
+                                    id="confirmReject"
+                                    class="btn btn-danger">
+
+                                <i class="bi bi-x-lg me-1"></i>
+                                Tolak Permintaan
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- //// -->
+        </div>         
+    </div>
+    <div layout:fragment="scripts">
+        <!-- Tambahkan SheetJS untuk membaca Excel -->
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script> -->
+        <link th:href="@{/css/select2.min.css}" rel="stylesheet">
+        <link th:href="@{/css/select2-bootstrap-5-theme.min.css}" rel="stylesheet">
+        <script th:src="@{/js/select2.min.js}"></script>
+        <!-- <link th:href="@{/css/pemetaanAkun.css}" rel="stylesheet"> -->
+        <link th:href="@{/css/persetujuan.css}" rel="stylesheet">
+        <link th:href="@{/lib/DataTables/datatables.min.css}" rel="stylesheet">
+        <script th:src="@{/lib/DataTables/datatables.min.js}"></script>   
+        <script th:src="@{/js/operasional/persetujuan.js}"></script>
+      
+    </div>
+  </body>
+</html>

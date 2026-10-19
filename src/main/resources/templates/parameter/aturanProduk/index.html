@@ -1,0 +1,154 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/main}"
+>
+  <head>
+    <title>Aturan Produk</title>
+  </head>
+  <body>
+    <div layout:fragment="content">
+          <div class="container-xl">
+            <div class="card">  
+             <div class="" style="padding:20px;">
+                <div class="row mb-3 align-items-center">
+                  
+                  <!-- KOLOM KIRI: Input & Filter Status -->
+                  <div class="col-lg-6">
+                    <div class="row g-2">
+                      <div class="col-md-7">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Search by code or name...">
+                      </div>
+                      <div class="col-md-5">
+                        <select id="statusFilter" class="form-control">
+                          <option value="">All Status</option>
+                          <option value="true">Active</option>
+                          <option value="false">Inactive</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- KOLOM KANAN: Tombol Filter & Tambah (Rata Kanan) -->
+                  <div class="col-lg-6 mt-2 mt-lg-0">
+                    <div class="d-flex justify-content-end gap-2">
+                      <button class="btn btn-primary btn-primary-yellow" onclick="applyFilters()">Apply Filter</button>
+                      <button class="btn btn-secondary btn-primary-grey" onclick="resetFilters()">Reset</button>
+                      <button class="btn btn-primary-secondary"  id="btn-export1">Export</button> 
+                      <button class="btn btn-success btn-primary-black" id="btn-add-produk">Add</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+                
+              <div class="row row-deck row-cards p-4"  style="margin-top:0px;">             
+                <div class="col-lg-8">
+                  <div class="card">
+                    
+                    <div class="table-responsive" style="overflow-x:hidden;padding-bottom: 10px;">
+                      <table id="table-master-produk"  class="table table-striped card-table table-vcenter text-nowrap datatable">
+                        <thead>
+                          <tr>
+                           
+                            <th>KODE</th>
+                            <th>NAMA PRODUK</th>
+                            <!-- <th>STATUS</th> -->
+                            <th>TOTAL RULE</th>
+                            <th>CONFIG</th>
+                            <th>AKSI</th>
+                          </tr>
+                        </thead>
+                        <tbody>                       
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                  <div class="card">
+                    
+                      <fieldset class="form-fieldset" id="form-fieldset1" style="background: #fff !important;margin-bottom: 0rem;border: 0px;">
+                        <div class="mb-3">
+                          <input type="hidden" class="form-control" id="produk-id">
+                          <label class="form-label required fw-semibold">Kode Produk</label>
+                          <input type="text" class="form-control" id="kodeProduk" autocomplete="off" disabled>
+                          <div class="invalid-feedback" id="kodeProdukError"></div>
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label required fw-semibold">Nama Produk</label>
+                          <input type="text" class="form-control" id="namaProduk" autocomplete="off" disabled>
+                          <div class="invalid-feedback" id="namaProdukError"></div>
+                        </div>
+                        <!-- <div class="mb-5">
+                          <label class="row">
+                            <span class="col fw-semibold">Aktive</span>
+                            <span class="col-auto">
+                              <label class="form-check form-check-single form-switch">
+                                <input class="form-check-input" type="checkbox" id="isActive" checked="" disabled>
+                              </label>
+                            </span>
+                          </label>
+                        </div> -->
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-5">
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-secondary" id="batal-1" disabled><i class="ti ti-square-x" style="font-size: 22px;"></i>Batal</button>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-success " id="btnSubmitProduk" disabled><i class="ti ti-device-floppy" style="font-size: 22px;"></i>Simpan</button>
+                            </div>
+                        </div>                        
+                                            
+                      </fieldset>                 
+                  </div>
+                </div>
+              </div>
+
+            </div>
+             
+           
+            
+             <!-- <div class="card" style="margin-top: 20px;">
+               <div class="card-header">
+                  DETAIL
+                </div>
+                <div class="row row-deck row-cards"  style="margin-top:20px;">
+                    <div class="col-lg-12">
+                    <div class="card">
+                      
+                      <div class="table-responsive">
+                        <table id="table-detail-produk" class="table table-striped card-table table-vcenter text-nowrap datatable">
+                          <thead>
+                            <tr>
+                              <th>KODE PRODUK</th>
+                              <th>BUNGA</th>
+                              <th>ADMIN FEE</th>
+                              <th>PROVISI</th>
+                              <th>TENOR</th>
+                              <th>AKSI</th>
+                            </tr>
+                          </thead>
+                          <tbody>                       
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div> -->
+
+          </div>
+          <div th:replace="~{parameter/aturanProduk/detail :: detail}"></div>
+    </div>
+    <div layout:fragment="scripts">
+          <link th:href="@{/css/aturanProduk.css}" rel="stylesheet">
+          <link th:href="@{/lib/DataTables/datatables.min.css}" rel="stylesheet">
+          <script th:src="@{/lib/DataTables/datatables.min.js}"></script>   
+          <script th:src="@{/js/parameter/aturan-produk.js}"></script>
+      </div>
+  </body>
+</html>

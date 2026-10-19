@@ -1,0 +1,74 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/main}"
+>
+  <head>
+    <title>Pemetaan Akun</title>
+  </head>
+  <body>
+    <div layout:fragment="content">
+        <div class="container-xl">
+            <div class="card">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs" role="tablist">
+                        
+                        <li class="nav-item tab-pem-akun" role="presentation">
+                            <a href="#tabs-2" class="nav-link active" data-bs-toggle="tab" aria-selected="false" role="tab">
+                                TAB 1: JOURNALID <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-narrow-right">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M5 12l14 0" />
+                                <path d="M15 16l4 -4" />
+                                <path d="M15 8l4 4" />
+                            </svg> GL ACCOUNT
+                            </a>
+                        </li>
+                        <li class="nav-item tab-pem-akun" role="presentation">
+                            <a href="#tabs-1" class="nav-link" data-bs-toggle="tab" aria-selected="true" role="tab" tabindex="-1">
+                            TAB 2: KODE TRANSAKSI <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-narrow-right">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M5 12l14 0" />
+                                <path d="M15 16l4 -4" />
+                                <path d="M15 8l4 4" />
+                            </svg> JOURNALID
+                            </a>
+                        </li>
+                       
+                    </ul>
+                </div>
+                <div class="card-body">
+                <div class="tab-content">
+                    <div class="tab-pane  active show" id="tabs-2" role="tabpanel">
+                        <div th:replace="~{parameter/pemetaanAkun/tab2 :: tab2}"></div>  
+                    </div>
+                    <div class="tab-pane" id="tabs-1" role="tabpanel">
+                        <div th:replace="~{parameter/pemetaanAkun/tab1 :: tab1}"></div>
+                    </div>
+                  
+                </div>
+                </div>
+            </div>    
+        </div>  
+        <div th:replace="~{parameter/pemetaanAkun/add1 :: add1}"></div>    
+        <div th:replace="~{parameter/pemetaanAkun/add2 :: add2}"></div>     
+        <div th:replace="~{parameter/pemetaanAkun/addCmp :: addCmp}"></div>   
+    </div>
+    <div layout:fragment="scripts">
+     
+        <link th:href="@{/css/select2.min.css}" rel="stylesheet">
+        <link th:href="@{/css/select2-bootstrap-5-theme.min.css}" rel="stylesheet">
+        <script th:src="@{/js/select2.min.js}"></script>
+
+        
+
+        <link th:href="@{/css/pemetaanAkun.css}" rel="stylesheet">
+        <link th:href="@{/lib/DataTables/datatables.min.css}" rel="stylesheet">
+        <script th:src="@{/lib/DataTables/datatables.min.js}"></script>   
+        
+
+        <script th:src="@{/js/parameter/pemetaan-akun1.js}"></script>
+        <script th:src="@{/js/parameter/pemetaan-akun2.js}"></script>
+    </div>
+  </body>
+</html>

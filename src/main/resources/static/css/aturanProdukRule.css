@@ -1,0 +1,10 @@
+.modal3-dialog {
+    max-width: 95vw !important;
+    width: 95vw;
+}
+
+.modal3-body {
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}

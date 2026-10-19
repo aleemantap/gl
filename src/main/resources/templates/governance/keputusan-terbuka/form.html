@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
+
+<head>
+    <title>Keputusan</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+    <div class="container-fluid">
+
+        <div class="mb-4">
+
+            <h2
+                th:text="${keputusan.id == null
+                    ? 'Tambah Keputusan'
+                    : 'Edit Keputusan'}">
+                Tambah Keputusan
+            </h2>
+
+            <div class="text-muted">
+                Catat isu atau keputusan strategis
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-body">
+
+                <form th:action="@{/governance/keputusan-terbuka/save}"
+                      th:object="${keputusan}"
+                      method="post">
+
+
+                    <input type="hidden"
+                           th:field="*{id}">
+
+
+                    <!-- Judul -->
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Keputusan / Isu
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{judul}"
+                               placeholder="Contoh: Pengakuan Pendapatan Bunga"
+                               required>
+
+                    </div>
+
+
+                    <!-- Deskripsi -->
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Deskripsi
+                        </label>
+
+                        <textarea class="form-control"
+                                  rows="4"
+                                  th:field="*{deskripsi}"
+                                  placeholder="Jelaskan isu atau keputusan yang dibahas">
+                        </textarea>
+
+                    </div>
+
+
+                    <div class="row">
+
+
+                        <!-- Kategori -->
+                        <div class="col-md-4">
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Kategori
+                                </label>
+
+                                <input type="text"
+                                       class="form-control"
+                                       th:field="*{kategori}"
+                                       placeholder="AKUNTANSI"
+                                       required>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Owner -->
+                        <div class="col-md-4">
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Pemilik
+                                </label>
+
+                                <input type="text"
+                                       class="form-control"
+                                       th:field="*{ownerName}"
+                                       placeholder="Contoh: Head of Finance">
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Tanggal -->
+                        <div class="col-md-4">
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Tanggal
+                                </label>
+
+                                <input type="date"
+                                       class="form-control"
+                                       th:field="*{tanggal}"
+                                       required>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Rule Reference -->
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Tautan Aturan
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{ruleReference}"
+                               placeholder="Contoh: F-042: Revenue Standard">
+
+                    </div>
+
+
+                    <!-- Status -->
+                    <div class="mb-4">
+
+                        <label class="form-label">
+                            Status
+                        </label>
+
+                        <select class="form-select"
+                                th:field="*{status}">
+
+                            <option
+                                th:each="status : ${statusList}"
+                                th:value="${status}"
+                                th:text="${status}">
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Button -->
+                    <div class="d-flex gap-2">
+
+                        <button type="submit"
+                                class="btn btn-primary">
+
+                            <i class="bi bi-save"></i>
+                            Simpan
+
+                        </button>
+
+
+                        <a th:href="@{/governance/keputusan-terbuka}"
+                           class="btn btn-secondary">
+                            Batal
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

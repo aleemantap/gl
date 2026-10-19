@@ -1,0 +1,120 @@
+<!doctype html>
+<html layout:decorate="~{layouts/main}">
+  <head>
+    <title>Kategori</title>
+  </head>
+  <body>    
+    <div layout:fragment="header">
+        <!-- <div th:replace="~{layouts/header/header-gl :: header}"></div> -->
+         <div th:replace="~{layouts/header :: header}"></div>
+    </div>
+    <div layout:fragment="content">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+              <div class="col">
+                <div class="gl-container">
+                  <h2 class="gl-title">Type GL Account</h2>                 
+                </div>
+              </div>             
+              <div class="col-auto ms-auto d-print-none">
+                <div class="btn-list" style="margin-top:85px;">
+                  <a href="#" class="btn btn-primary d-none d-sm-inline-block btn-primary-text" id="btnTambah">
+                   + TAMBAH
+                  </a>    
+                  <button
+                            type="button"
+                            class="btn btn-primary-grey"
+                            id="btn-export-type"
+                        >
+                            <img style="margin-right: 6px;" th:src="@{/img/download.png}" />Export
+                            
+                  </button> 
+                </div>
+              </div>              
+            </div>
+            <div class="row mb-3 align-items-end">
+                  <!-- BAGIAN KIRI -->
+                  <div class="col-md-12">
+                      <!-- Tombol Toggle Filter -->
+                      <div class="row mb-2">
+                          <div class="col-12">
+                              <button type="button" 
+                                      class="btn btn-outline-primary btn-sm" 
+                                      id="toggleFilterBtn">
+                                  <i class="ti ti-chevron-down" id="toggleIcon"></i>
+                                  <span id="toggleText">Sembunyikan Filter</span>
+                              </button>
+                          </div>
+                      </div>
+
+                      <!-- Container Filter -->
+                      <div id="filterContainer">
+                            <div class="row">
+                               <div class="col-md-4">
+                                  <label class="form-label">Kategori</label>
+                                  <input type="text"
+                                      class="form-control form-control"
+                                      id="filterKategori"
+                                      placeholder="Name">
+                                </div>
+                            </div>
+                          
+                          <div class="row mt-2">
+                              <div class="col-md-4">
+                                  <div class="d-flex gap-2" style="margin-top: 2em;">
+                                      <button type="button"
+                                              class="btn btn-primary btn-md"
+                                              id="btnFilter">
+                                          <i class="ti ti-filter"></i>
+                                          Filter
+                                      </button>
+
+                                      <button type="button"
+                                              class="btn btn-outline-secondary btn-sm"
+                                              id="btnResetFilter">
+                                          <i class="ti ti-refresh"></i>
+                                          Reset
+                                      </button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+            </div>
+
+            <div class="row row-deck row-cards"  style="margin-top:20px;">
+          
+              <div class="col-12">
+                <div class="card">
+                  <div class="table-responsive" style="overflow-x:hidden;padding-bottom: 20px;">
+                    <table id="table-kategori-gl-type" class="table table-striped card-table table-vcenter text-nowrap datatable">
+                      <thead>
+                        <tr>
+                          <th class="">
+                              <input type="checkbox" style="margin-left:12px;height: 1.2rem !important; width: 1.2rem !important;" id="check-all">
+                          </th>  
+                          <th>Nama Type</th>
+                          <th>Keterangan</th>
+                          <th>Aksi</th> 
+                        </tr>
+                      </thead>
+                      <tbody>
+                      </tbody>
+                    </table>
+                  </div>         
+                </div>
+              </div>
+            </div>
+        </div>       
+        <div th:replace="~{parameter/gl-type-account/add :: add}"></div>
+    </div>
+   
+   
+    <div layout:fragment="scripts">
+        <link th:href="@{/lib/DataTables/datatables.min.css}" rel="stylesheet">
+        <script th:src="@{/lib/DataTables/datatables.min.js}"></script>   
+        <script th:src="@{/js/parameter/gl-type.js}"></script>
+    </div>
+  </body>
+</html>

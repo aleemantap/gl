@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div th:fragment="import">
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <!-- ===================================================== -->
+            <!-- LANGKAH 1 -->
+            <!-- ===================================================== -->
+
+            <div class="import-section">
+
+                <h2 class="import-title">
+                    Langkah 1: Unduh Template
+                </h2>
+
+                <div class="import-divider"></div>
+
+                <div class="template-box">
+
+                    <div class="template-info">
+
+                        <i class="ti ti-file-spreadsheet template-icon"></i>
+
+                        <div>
+                            <div class="template-title">
+                                Template Jurnal Pembayaran
+                            </div>
+
+                            <div class="template-description">
+                                Gunakan template ini untuk menghindari kesalahan format data.
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <a
+                        th:href="@{/templates/template_pembayaran.xlsx}"
+                        class="btn btn-primary template-button">
+                        <i class="ti ti-download me-1"></i>
+
+                        Unduh Template (.xlsx)
+
+                    </a>
+
+                </div>
+
+                <div class="import-divider"></div>
+                
+                <div class="template-box">
+
+                    <div class="template-info">
+
+                        <i class="ti ti-file-spreadsheet template-icon"></i>
+
+                        <div>
+                            <div class="template-title">
+                                Template Jurnal Pencairan
+                            </div>
+
+                            <div class="template-description">
+                                Gunakan template ini untuk menghindari kesalahan format data.
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <a
+                        th:href="@{/templates/template_pencairan.xlsx}"
+                        class="btn btn-primary template-button">
+
+                        <i class="ti ti-download me-1"></i>
+
+                        Unduh Template (.xlsx)
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- ===================================================== -->
+            <!-- LANGKAH 2 -->
+            <!-- ===================================================== -->
+
+            <div class="import-section">
+                <h2 class="import-title">
+                    Langkah 2: Unggah File
+                </h2>
+                <div class="import-divider"></div>
+                <!-- Upload Area -->
+                <div id="uploadArea" class="upload-area">
+                    <input
+                        type="file"
+                        id="fileInput"
+                        class="d-none"
+                        accept=".xlsx,.csv">
+                    <i class="ti ti-cloud-upload upload-icon"></i>
+                    <div class="upload-title">
+                        Klik atau tarik file ke sini untuk mengunggah
+                    </div>
+                    <div class="upload-description">
+                        Mendukung format .xlsx, .csv (Maks. 10MB)
+                    </div>
+                    
+                </div>
+            </div>
+
+
+            <!-- ===================================================== -->
+            <!-- PREVIEW -->
+            <!-- ===================================================== -->
+
+            				<div class="import-section">
+
+                    <h2 class="import-title">
+                        Pratinjau Data
+                        <span id="rowCount" class="badge bg-white ms-2" style="font-size: 14px;">0 Baris</span>
+                    </h2>
+
+                    <div class="import-divider"></div>
+
+                    <!-- Loading State -->
+                    <div id="loadingPreview" style="display: none; text-align: center; padding: 40px;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <div class="mt-2">Sedang membaca file...</div>
+                    </div>
+
+                    <!-- Preview Table -->
+                    <div id="previewArea" class="preview-area">
+                        <i class="ti ti-table preview-icon"></i>
+                        <div class="preview-text">
+                            Unggah file untuk melihat pratinjau jurnal sebelum posting.
+                        </div>
+                    </div>
+
+                    <!-- Informasi tambahan -->
+                    <div id="fileInfo" style="display: none; margin-top: 12px; padding: 12px; background: #f8f9fa; border-radius: 6px;">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Nama File:</strong> <span id="fileName"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Ukuran:</strong> <span id="fileSize"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Total Baris:</strong> <span id="totalRows">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+           
+        </div>
+
+
+        <!-- ========================================================= -->
+        <!-- FOOTER -->
+        <!-- ========================================================= -->
+
+        <div class="card-footer import-footer">
+
+            <button
+                type="button"
+                class="btn btn-outline-dark">
+
+                Batal
+
+            </button>
+
+            <button
+                type="button"
+                id="btnPosting"
+                class="btn btn-secondary"
+                disabled>
+
+                Posting Hasil Impor
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================= -->
+    <!-- CSS -->
+    <!-- ============================================================= -->
+
+  
+
+    <!-- ============================================================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ============================================================= -->
+
+   <script>
+
+    // const uploadArea = document.getElementById("uploadArea");
+    // const fileInput = document.getElementById("fileInput");
+    // const btnPosting = document.getElementById("btnPosting");
+
+
+   
+    // function resetUploadArea() {
+
+    //     uploadArea.innerHTML = `
+
+    //         <input
+    //             type="file"
+    //             id="fileInput"
+    //             class="d-none"
+    //             accept=".xlsx,.csv">
+
+    //         <i class="ti ti-cloud-upload upload-icon"></i>
+
+    //         <div class="upload-title">
+    //             Klik atau tarik file ke sini untuk mengunggah
+    //         </div>
+
+    //         <div class="upload-description">
+    //             Mendukung format .xlsx, .csv (Maks. 10MB)
+    //         </div>
+
+    //     `;
+
+    //     /*
+    //      * Karena input dibuat ulang,
+    //      * ambil kembali element-nya
+    //      */
+    //     const newFileInput = document.getElementById("fileInput");
+
+    //     newFileInput.addEventListener("change", handleFile);
+
+
+    //     /*
+    //      * Posting kembali disabled
+    //      */
+    //     btnPosting.disabled = true;
+
+    //     btnPosting.classList.remove("btn-primary");
+    //     btnPosting.classList.add("btn-secondary");
+    // }
+
+
+    // function handleFile() {
+
+    //     if (this.files.length === 0) {
+    //         return;
+    //     }
+
+    //     const file = this.files[0];
+
+    //     console.log("File:", file.name);
+
+
+    //     /*
+    //      * Tampilkan file yang dipilih
+    //      */
+    //     uploadArea.innerHTML = `
+
+    //         <input
+    //             type="file"
+    //             id="fileInput"
+    //             class="d-none"
+    //             accept=".xlsx,.csv">
+
+    //         <button
+    //             type="button"
+    //             class="file-remove-btn"
+    //             id="btnRemoveFile"
+    //             title="Hapus file">
+
+    //             <i class="ti ti-x"></i>
+
+    //         </button>
+
+
+    //         <i class="ti ti-file-spreadsheet upload-icon"></i>
+
+    //         <div class="upload-title">
+    //             ${file.name}
+    //         </div>
+
+    //         <div class="upload-description">
+    //             File berhasil dipilih
+    //         </div>
+
+    //     `;
+
+
+    //     /*
+    //      * Aktifkan posting
+    //      */
+    //     btnPosting.disabled = false;
+
+    //     btnPosting.classList.remove("btn-secondary");
+    //     btnPosting.classList.add("btn-primary");
+
+
+    //     /*
+    //      * Tombol hapus
+    //      */
+    //     document
+    //         .getElementById("btnRemoveFile")
+    //         .addEventListener("click", function (e) {
+
+    //             e.stopPropagation();
+
+    //             resetUploadArea();
+
+    //         });
+
+    // }
+
+
+    // uploadArea.addEventListener("click", function (e) {
+
+    //     if (e.target.closest(".file-remove-btn")) {
+    //         return;
+    //     }
+
+    //     document.getElementById("fileInput").click();
+
+    // });
+
+
+    // fileInput.addEventListener("change", handleFile);
+
+
+    // uploadArea.addEventListener("dragover", function (e) {
+
+    //     e.preventDefault();
+
+    //     uploadArea.classList.add("dragover");
+
+    // });
+
+
+    // uploadArea.addEventListener("dragleave", function () {
+
+    //     uploadArea.classList.remove("dragover");
+
+    // });
+    // uploadArea.addEventListener("drop", function (e) {
+
+    //     e.preventDefault();
+    //     uploadArea.classList.remove("dragover");
+    //     const files = e.dataTransfer.files;
+    //     if (files.length > 0) {
+
+    //         const input = document.getElementById("fileInput");
+
+    //         input.files = files;
+
+    //         handleFile.call(input);
+
+    //     }
+
+    // });
+
+</script>
+
+</div>
+</body>
+</html>

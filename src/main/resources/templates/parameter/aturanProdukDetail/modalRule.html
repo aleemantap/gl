@@ -1,0 +1,200 @@
+<div th:fragment="modalRule">
+    <!-- Tambahkan class modal-dialog-scrollable agar modal memiliki scrollbar internal -->
+    <div class="modal modal-blur fade" id="modal-detail-rule" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable modal3x-dialog" role="document">
+            <div class="modal-content">
+                
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewModalLabel">Form Product Rule</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <!-- Modal Body (Scrollable) -->
+                <div class="modal-body p-4 modal3x-body">
+                    <form id="productRuleForm">
+                        <input type="hidden" id="ruleId" name="id">
+
+                        <!-- SECTION 1: Informasi Dasar -->
+                        <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                <h6 class="card-title mb-0 fw-bold">1. Informasi Dasar Produk</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="" class="form-label fw-bold">Nama Produk <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="produk" th:value="${namaProduk}" readonly>
+
+                                </div> 
+                               <input type="hidden" 
+                                    class="form-control" 
+                                    id="productId" 
+                                    name="productId" 
+                                    th:value="${productId}" />                            
+
+                                <div class="mb-0">
+                                    <label for="ruleVersion" class="form-label fw-bold">Rule Version <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="ruleVersion" name="ruleVersion" value="1" min="1" required>
+                                    <div class="invalid-feedback" id="ruleVersionError"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 2: Masa Berlaku -->
+                        <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                <h6 class="card-title mb-0 fw-bold">2. Masa Berlaku Rule</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label for="effectiveFrom" class="form-label fw-bold">Effective From <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" id="effectiveFrom" name="effectiveFrom" required>
+                                        <div class="invalid-feedback" id="effectiveFromError"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="effectiveTo" class="form-label fw-bold">Effective To</label>
+                                        <input type="date" class="form-control" id="effectiveTo" name="effectiveTo">
+                                        <div class="invalid-feedback" id="effectiveToError"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 3: Pengaturan Bunga -->
+                        <!-- <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                <h6 class="card-title mb-0 fw-bold">3. Pengaturan Bunga</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="interestRate" class="form-label fw-bold">Interest Rate</label>
+                                    <input type="number" step="0.0001" class="form-control" id="interestRate" name="interestRate" placeholder="0.0000">
+                                    <div class="invalid-feedback" id="interestRateError"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="interestPeriodDays" class="form-label fw-bold">Interest Period</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="interestPeriodDays" name="interestPeriodDays" placeholder="0">
+                                        <span class="input-group-text">hari</span>
+                                    </div>
+                                    <div class="invalid-feedback" id="interestPeriodDaysError"></div>
+                                </div>
+
+                                <div class="mb-0">
+                                    <label for="interestMethod" class="form-label fw-bold">Interest Method</label>
+                                    <select class="form-select" id="interestMethod" name="interestMethod">
+                                        <option value="">Pilih Method</option>
+                                        <option value="FLAT">FLAT</option>
+                                        <option value="EFFECTIVE">EFFECTIVE</option>
+                                        <option value="ANNUITY">ANNUITY</option>
+                                    </select>
+                                    <div class="invalid-feedback" id="interestMethodError"></div>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <!-- SECTION 4: Biaya Administrasi -->
+                        <!-- <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                <h6 class="card-title mb-0 fw-bold">4. Biaya Administrasi</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label for="adminType" class="form-label fw-bold">Admin Type</label>
+                                        <select class="form-select" id="adminType" name="adminType">
+                                            <option value="">Pilih Type</option>
+                                            <option value="FIXED">FIXED</option>
+                                            <option value="PERCENTAGE">PERCENTAGE</option>
+                                        </select>
+                                        <div class="invalid-feedback" id="adminTypeError"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="adminValue" class="form-label fw-bold">Admin Value</label>
+                                        <input type="number" step="0.01" class="form-control" id="adminValue" name="adminValue" placeholder="0.00">
+                                        <div class="invalid-feedback" id="adminValueError"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <!-- SECTION 5: Biaya Provisi -->
+                        <!-- <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                <h6 class="card-title mb-0 fw-bold">5. Biaya Provisi</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label for="provisionType" class="form-label fw-bold">Provision Type</label>
+                                        <select class="form-select" id="provisionType" name="provisionType">
+                                            <option value="">Pilih Type</option>
+                                            <option value="FIXED">FIXED</option>
+                                            <option value="PERCENTAGE">PERCENTAGE</option>
+                                        </select>
+                                        <div class="invalid-feedback" id="provisionTypeError"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="provisionValue" class="form-label fw-bold">Provision Value</label>
+                                        <input type="number" step="0.0001" class="form-control" id="provisionValue" name="provisionValue" placeholder="0.0000">
+                                        <div class="invalid-feedback" id="provisionValueError"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <!-- SECTION 6: Tenor & Lelang -->
+                        <div class="card mb-0">
+                            <div class="card-header bg-light">
+                                <h6 class="card-title mb-0 fw-bold">3. Ketentuan Tenor & Lelang</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label for="tenorMinDays" class="form-label fw-bold">Tenor Minimum</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="tenorMinDays" name="tenorMinDays" placeholder="0">
+                                            <span class="input-group-text">hari</span>
+                                        </div>
+                                        <div class="invalid-feedback" id="tenorMinDaysError"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="tenorMaxDays" class="form-label fw-bold">Tenor Maksimum</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="tenorMaxDays" name="tenorMaxDays" placeholder="0">
+                                            <span class="input-group-text">hari</span>
+                                        </div>
+                                        <div class="invalid-feedback" id="tenorMaxDaysError"></div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-0">
+                                    <label for="auctionTriggerDays" class="form-label fw-bold">Auction Trigger</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="auctionTriggerDays" name="auctionTriggerDays" placeholder="0">
+                                        <span class="input-group-text">hari</span>
+                                    </div>
+                                    <div class="invalid-feedback" id="auctionTriggerDaysError"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Batal
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnSaveProductRule">
+                        <i class="fas fa-save"></i> Simpan
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

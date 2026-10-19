@@ -1,0 +1,42 @@
+<div th:fragment="add">
+    <div class="modal modal-blur fade" id="modal-kategori-transaksi" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalReportTitle">
+                        TAMBAH 
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formKategoriTransaksi"> 
+                    <div class="modal-body">
+                        <input type="hidden" id="id" name="id">
+                        <div class="mb-3">
+                            <label for="code" class="form-label">Kode Transaksi</label>
+                            <input type="text" class="form-control" id="kode-transaksi" name="kode-transaksi">
+                            <div class="invalid-feedback" id="kode-transaksiError"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                            <div class="invalid-feedback" id="nameError"></div>
+                        </div>
+                       
+                        <div class="mb-3">
+                            <label for="note" class="form-label">Deskripsi</label>
+                            <input type="text" class="form-control" id="deskripsi" name="deskripsi">
+                            <div class="invalid-feedback" id="deskripsiError"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link link-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary ms-auto" id="btnSubmitKT">
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,211 @@
+        
+        
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.06);
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 11px 20px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            background: #206bc4;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* .summary {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+        } */
+         .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .summary-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 18px;
+        }
+
+        .summary-title {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .summary-value {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .status {
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .match {
+            color: #2fb344;
+        }
+
+        .selisih {
+            color: #d63939;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 11px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+        th {
+            background: #f8f9fa;
+        }
+
+        .amount {
+            text-align: right;
+        }
+
+
+        .direction-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .badge-in {
+            background: #e6f7ed;
+            color: #218739;
+        }
+
+        .badge-out {
+            background: #fdeaea;
+            color: #c92a2a;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .status-match {
+            background: #e6f7ed;
+            color: #218739;
+        }
+
+        .status-selisih {
+            background: #fdeaea;
+            color: #c92a2a;
+        }
+
+        .status-pending {
+            background: #fff4d6;
+            color: #a66b00;
+        }
+
+        .reconciliation-result {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .difference-row {
+            font-size: 17px;
+        }
+
+        .action-footer {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .btn-save {
+            background: #2fb344;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 22px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-save:disabled {
+            background: #adb5bd;
+            cursor: not-allowed;
+        }
+
+        .alert {
+            padding: 13px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .alert-success {
+            background: #e6f7ed;
+            color: #218739;
+            border: 1px solid #b7e4c7;
+        }
+
+        .alert-error {
+            background: #fdeaea;
+            color: #c92a2a;
+            border: 1px solid #f5c2c2;
+        }

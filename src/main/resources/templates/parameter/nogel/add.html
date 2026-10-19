@@ -1,0 +1,81 @@
+<div th:fragment="add">
+    <div class="modal modal-blur fade" id="modal-gl" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalReportTitle">
+                       + TAMBAH ACCOUNT GL
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formGlAccount">
+                    <div class="modal-body">
+                        <div class="row">
+                            <!-- Nomor GL -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required">Nomor GL</label>
+                                <input type="text" class="form-control" id="nomorGl" name="nomorGl" placeholder="Masukkan Nomor GL" required>
+                                <div class="invalid-feedback" id="nomorGlError"></div>
+                            </div>
+                            <input type="hidden" class="form-control" id="gl_id" name="gl_id"/>
+                              
+                            <!-- Nama GL Account -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required">Nama GL Account</label>
+                                <input type="text" class="form-control" id="namaGlAccount" name="namaGlAccount" placeholder="Masukkan Nama GL Account" required>
+                                <div class="invalid-feedback" id="namaGlAccountError"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- Kategori -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required">Type GL</label>
+                                <select class="form-select" id="type_gl" name="type_gl" required>
+                                    <option value="">Pilih</option>
+                                    <th:block th:each="kategori : ${glTypeList}">
+                                          <option th:value="${kategori.id}"
+                                                  th:text="${kategori.name}">
+                                          </option>
+                                    </th:block>
+                                </select>
+                                <div class="invalid-feedback" id="type_glError"></div>
+                            </div>
+
+                            <!-- Debit Kredit -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required">Saldo Normal</label>
+                                <select class="form-select" id="saldoNormal" name="saldoNormal" required>
+                                    <option value="">Pilih Tipe</option>
+                                    <option value="D">DEBIT</option>
+                                    <option value="K">KREDIT</option>
+                                </select> 
+                                <div class="invalid-feedback" id="saldoNormalError"></div>
+                            </div>
+                        </div>
+                        <!-- <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required">Cabang</label>
+                                <select class="form-select" id="cabangId" name="cabangId" required>
+                                    <option value="">Pilih Cabang</option>
+                                </select>
+                                <div class="invalid-feedback" id="cabangIdError"></div>
+                            </div>
+                        </div> -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link link-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary ms-auto" id="btnSubmit">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M12 5l0 14" />
+                                <path d="M5 12l14 0" />
+                            </svg>
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

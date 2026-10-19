@@ -1,0 +1,57 @@
+<div th:fragment="modalJournal">
+    <!-- Tambahkan class modal-dialog-scrollable agar modal memiliki scrollbar internal -->
+    <div class="modal modal-blur fade" id="modal-detail-rule-journal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable modal3x-dialog" role="document">
+            <div class="modal-content">
+                
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewModalLabelJournal">Form Product Rule Journal</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+
+
+                <!-- Modal Body (Scrollable) -->
+                <div class="modal-body p-4 modal3x-body">
+                    <form id="journalForm">
+                        <input type="hidden" class="form-control" id="id_tabel_prj" name="id_tabel_prj" required>
+                        <input type="hidden" id="productRuleJournalId" name="productRuleJournalId">
+                        
+                       
+                        <div class="mb-3">
+                            <label for="journalId" class="form-label">Journal ID/Code *</label>
+                            <!-- <input type="text" class="form-control" id="journalId_j" name="journalId_j" required> -->
+                                <select class="form-select" id="journalId_j" name="journalId_j" required>
+                                    <option value="">Pilih JOURNALID</option>
+                                    <!-- Opsi akan diisi oleh jQuery -->
+                                </select>   
+                        </div>
+                        <div class="mb-3">
+                            <label for="sequenceNo" class="form-label">Sequence No</label>
+                            <input type="number" class="form-control" id="sequenceNo" name="sequenceNo" value="1" min="1">
+                        </div>
+                        <div class="mb-3">
+                            <label for="isActive" class="form-label">Status</label>
+                            <select class="form-control" id="isActiveJournal" name="isActiveJournal">
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Batal
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnSaveRuleJournal">
+                        <i class="fas fa-save"></i> Simpan
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

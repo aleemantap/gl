@@ -1,0 +1,80 @@
+<div th:fragment="add1">
+    <div class="modal modal-blur fade" id="modal1" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle1"> 
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                            <path d="M16 19h6" />
+                            <path d="M19 16v6" />
+                            <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
+                        </svg>
+                        Tambah Pemetaan TC
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="form1">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label required">KODE TRANSAKSI</label>
+                                <select class="form-select select2" id="kodeTransaksi" name="kodeTransaksi" required>
+                                    <option value="">Pilih KODE TRANSAKSI</option>
+                                     <th:block th:each="kt : ${kodeTransaksiList}">
+                                        <option th:value="${kt.id}" th:text="${kt.kode + ' - ' + kt.namaTransaksi}"></option>
+                                     </th:block>
+                                </select>
+                                <div class="invalid-feedback" id="kodeTransaksiError"></div>
+                            </div>
+                            <input type="hidden" class="form-control" id="jr_tk_id" name="jr_tk_id"/>
+                        </div>
+
+                        <div class="row">
+                            <!-- Kategori -->
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label required">CABANG</label>
+                                <select class="form-select  select2" id="cabangId"  name="cabangId" required>
+                                    <option value="">Pilih Cabang</option>
+                                    <th:block th:each="cabang : ${cabangList}">
+                                        <option th:value="${cabang.id}" th:text="${cabang.kodeCabang + ' - ' + cabang.namaCabang}"></option>
+                                    </th:block> 
+                                </select>
+                                <div class="invalid-feedback" id="cabangError"></div>
+                            </div>
+
+                        </div>
+
+                       <div class="row align-items-end">
+                            <!-- JournalID Select -->
+                            <div class="col-md-9 mb-3">
+                                <label class="form-label required">JOURNALID</label>
+                                <select class="form-select" id="journalCode" name="journalCode" required>
+                                    <option value="">Pilih JOURNALID</option>
+                                    <!-- Opsi akan diisi oleh jQuery -->
+                                </select>
+                                <div class="invalid-feedback" id="journalIdError"></div>
+                            </div>
+
+                            <!-- Tombol Buat JournalID Baru -->
+                            <div class="col-md-3 mb-3">
+                                <!-- <a href="#" class="btn-journal-new">
+                                    + Buat JournalID Baru
+                                </a> -->
+                            </div>
+                        </div>
+                          
+                    </div>
+                    <div class="modal-footer d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary bold" id="btnSubmit1">
+                            <strong>Simpan Pemetaan</strong>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

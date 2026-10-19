@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div th:fragment="form">
+        <div class="row">
+            <div class="col-12">
+                <div class="mb-3">
+                    <label class="form-label">Select Type Form</label>
+                    <select class="form-select mb-3 select2" id="jenisForm" name="jenisForm">
+                        <option value="pencairan" selected>Pencairan</option>
+                        <option value="pembayaran">Pembayaran</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row row-deck row-cards">
+            <div class="col-12">
+                <form class="card" id="formTransaksiGL">
+                    
+                    <!-- HEADER -->
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title mb-1" style="font-weight: 800;">
+                                INPUT TRANSAKSI GL <span id="tll" style="color:chocolate; font-style: italic;">PEMBAYARAN</span>
+                            </h3>
+                            <div class="text-secondary">
+                                Silakan lengkapi data transaksi General Ledger
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <!-- ================= TRANSACTION ================= -->
+                        <div class="mb-4">
+                            <h4 class="mb-3">
+                                <i class="ti ti-file-invoice me-2"></i>
+                                Transaction Information
+                            </h4>
+                            <div class="row">
+                                <!-- Transaction No -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Transaction No</label>
+                                    <input type="text" class="form-control" id="transactionNo" name="transactionNo" placeholder="Nomor transaksi">
+                                </div>
+
+                                <!-- Transaction Code -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Transaction Code</label>
+                                    <select class="form-select select2" id="tranCode" name="tranCode">
+                                        <option value="">Pilih Kode Transaksi</option>
+                                        <th:block th:each="pr : ${kodeTransaksiList}">
+                                            <option  th:data-code="${pr.kode}" th:value="${pr.id}" th:text="${pr.kode} + ' - ' + ${pr.namaTransaksi}"></option>
+                                        </th:block>
+                                    </select>
+                                </div>
+
+                                <!-- Occurred At -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Tanggal occurredAt</label>
+                                    <input   type="datetime-local" class="form-control" id="occurredAt" name="occurredAt" placeholder="occurredAt">
+                                </div>
+
+                                <!-- Idempotency Key -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Idempotency Key</label>
+                                    <input type="text" class="form-control" id="idempotencyKey" name="idempotencyKey" placeholder="idempotencyKey">
+                                </div>
+
+                                <!-- Product -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Product</label>
+                                    <select class="form-select select2" id="productCode" name="productCode">
+                                        <option value="">Pilih Product</option>
+                                        <th:block th:each="pr : ${productList}">
+                                            <option th:data-code="${pr.productCode}"  th:value="${pr.id}" th:text="${pr.productCode} + ' - ' + ${pr.productName}"></option>
+                                        </th:block>
+                                    </select>
+                                </div>
+
+                                <!-- Branch -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Branch</label>
+                                    <select class="form-select select2" id="branchCode" name="branchCode">
+                                        <option value="">Pilih Cabang</option>
+                                        <th:block th:each="cabang : ${cabangList}">
+                                            <option th:data-code="${cabang.kodeCabang}" th:value="${cabang.id}" th:text="${cabang.kodeCabang} + ' - ' + ${cabang.namaCabang}"></option>
+                                        </th:block>
+                                       
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ================= CUSTOMER ================= -->
+                        <div class="mb-4" id="counterparty_div">
+                            <h4 class="mb-3">
+                                <i class="ti ti-user me-2"></i>
+                                Counterparty Information
+                            </h4>
+                            <div class="row">
+                                <!-- Customer ID -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Ref-Counterparty</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="customerId" name="customerId" placeholder="ID Customer">
+                                    </div>
+                                </div>
+
+                                <!-- Customer Name -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Nama  Counterparty</label>
+                                    <input type="text" class="form-control" id="customerName" name="customerName" placeholder="Nama customer">
+                                </div>
+
+                                <div class="col-md-6 mb-3" xstyle="display: none;">
+                                    <label class="form-label">Type  Counterparty </label>
+                                    <input type="text" class="form-control" id="customerType" name="customerType" value="CUSTOMER" placeholder="Type customer">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ================= AMOUNT ================= -->
+                        <div class="mb-4" id="am_inf_pencairan">
+                            <h4 class="mb-3">
+                                <i class="ti ti-cash me-2"></i>
+                                Amount Information
+                            </h4>
+                            <!-- <div class="row" id="am_inf_pembayaran"> 
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Repayment Amount</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" class="form-control text-end" id="repaymentAmount" name="repaymentAmount" placeholder="0">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Interest Amount</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" class="form-control text-end" id="interestAmount" name="interestAmount" placeholder="0">
+                                    </div>
+                                </div>
+                            </div>  -->
+                            <div class="row">                     
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Loan Amount</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" class="form-control text-end currency-input rupiah-input" id="loan_amount" name="loan_amount" placeholder="0">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Admin Cost</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" class="form-control text-end currency-input rupiah-input" id="adminCost" name="adminCost" placeholder="0">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Provision</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" class="form-control text-end currency-input rupiah-input" id="provision" name="provision" placeholder="0">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Customer Cash</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" class="form-control text-end currency-input rupiah-input" id="customer_cash" name="customer_cash" placeholder="0">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Customer Bank</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" class="form-control text-end currency-input rupiah-input" id="customer_bank" name="customer_bank" placeholder="0">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Code Bank</label>
+                                    <div class="input-group">
+                                        
+                                        <input type="text" class="form-control" id="code_bank" name="code_bank" placeholder="contoh : 002">
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="row">
+                                <!-- Admin in Advance -->
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="admin_in_advance" name="admin_in_advance" value="true">
+                                        <label class="form-check-label" for="admin_in_advance">
+                                            <strong>Admin in Advance</strong>
+                                            <div class="text-muted small">Potong biaya admin di depan (saat pencairan)</div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Provision in Advance -->
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="provision_in_advance" name="provision_in_advance" value="true">
+                                        <label class="form-check-label" for="provision_in_advance">
+                                            <strong>Provision in Advance</strong>
+                                            <div class="text-muted small">Potong biaya provisi di depan (saat pencairan)</div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+
+
+                        <!-- collateral information ---> 
+                        <div class="mb-2" id="collateral_inf_pencairan">
+                            <h4 class="mb-3">
+                                <i class="ti ti-cash-banknote me-2"></i>
+                                Collateral Information
+                            </h4>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Collateral Type (Barang Gadai)</label>
+                                    <input type="text" class="form-control"  id="collateral_type" name="collateral_type" placeholder="Contoh : Emas">
+                                </div>
+                                <!-- <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Harga Taksiran</label>
+                                    <input type="text" class="form-control text-end currency-input rupiah-input" id="appraised_value" name="appraised_value" placeholder="Harga Taksiran">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Loan To Value (Rasio Pinjaman) Dalam (%)</label>
+                                    <input type="text" class="form-control" id="ltv" name="ltv" placeholder="Loan To Value">
+                                </div> -->
+                            </div>
+                        </div>
+
+
+
+                         <!-- ================= PAY<ENT INFOR<ATION ================= -->
+                        <div class="mb-4" id="am_inf_pembayaran">
+                            <h4 class="mb-3">
+                                <i class="ti ti-cash me-2"></i>
+                                Payment Information
+                            </h4>       
+                            <div class="row">  
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Principal Payment</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" class="form-control text-end currency-input rupiah-input" id="principal_payment" name="principal_payment" placeholder="0">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Interest Amount</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" class="form-control text-end currency-input rupiah-input" id="interest_amount" name="interest_amount" placeholder="0">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Total Jumlah Payment</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" class="form-control text-end currency-input rupiah-input" id="payment_amount" name="payment_amount" placeholder="0">
+                                    </div>
+                                </div>                                
+                            </div>   
+                        </div>
+
+                        
+
+                        <!-- ================= TELLER ================= -->
+                        <div class="mb-2">
+                            <h4 class="mb-3">
+                                <i class="ti ti-user-dollar me-2"></i>
+                                Teller Information
+                            </h4>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Teller ID</label>
+                                    <input type="number" class="form-control" id="teller" name="teller" placeholder="ID Teller">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label required">Kas Point</label>
+                                    <input type="text" class="form-control" id="kasPoint" name="kasPoint" placeholder="Kas Point">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FOOTER -->
+                    <div class="card-footer d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-outline-secondary" id="resetBtn">
+                            <i class="ti ti-refresh me-1"></i> Reset
+                        </button>
+                        <button type="button" class="btn btn-primary" id="submitBtn">
+                            <i class="ti ti-device-floppy me-1"></i> Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

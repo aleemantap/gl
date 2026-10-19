@@ -1,0 +1,251 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/main}"
+>
+  <head>
+    <title>Buku Besar</title>
+  </head>
+  <body>
+     <div layout:fragment="content">
+          <div class="container-xl">                
+            <div class="filter-card">
+                <div class="row g-4 align-items-start">
+                  
+                    <div class="col-lg-12 col-md-12">
+                        <div class="row mb-3">
+                            <div class="col-lg-6 col-md-12">
+                                <label class="filter-label">
+                                    <i class="bi bi-calendar-range"></i> Periode Transaksi
+                                </label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <!-- Periode From -->
+                                    <div class="position-relative flex-grow-1">
+                                        <i class="bi bi-calendar3 position-absolute"
+                                        style="left: 15px; top: 50%; transform: translateY(-50%); color: #707780; z-index: 2;">
+                                        </i>
+                                        <input type="date" id="tanggalDari" class="form-control ps-5"
+                                            th:value="${tanggalDari}">
+                                    </div>
+                                    
+                                    <!-- Tulisan "s/d" di tengah -->
+                                    <span class="fw-bold text-muted mx-1" style="font-size: 0.9rem; white-space: nowrap;">s/d</span>
+                                    
+                                    <!-- Periode To -->
+                                    <div class="position-relative flex-grow-1">
+                                        <i class="bi bi-calendar3 position-absolute"
+                                        style="left: 15px; top: 50%; transform: translateY(-50%); color: #707780; z-index: 2;">
+                                        </i>
+                                        <input type="date" id="tanggalSampai" class="form-control ps-5"
+                                            th:value="${tanggalSampai}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cabang -->
+                    <div class="col-lg-6 col-md-6">
+                        <label for="cabang" class="filter-label">
+                            Cabang
+                        </label>
+                        <select id="branchCode" class="form-select select2">
+                            <option value="">Semua Cabang</option>                           
+                            <option th:each="cabang : ${cabangList}" 
+                                    th:value="${cabang.kodeCabang}" 
+                                    th:text="${cabang.kodeCabang} + ' - ' + ${cabang.namaCabang}">
+                            </option>
+                            
+                        </select>
+                    </div>
+                    <!-- Akun GL    -->
+                    <div class="col-lg-6 col-md-6">
+                        <label for="glAccountId" class="filter-label">
+                           Akun GL   
+                        </label>
+                        <select id="glAccountId" class="form-select select2">
+                            <option value="">Semua Account</option>
+                            <th:block th:each="kt : ${glAccount}">
+                                <option th:value="${kt.id}" th:text="${kt.nomorGl + ' - ' + kt.namaGlAccount}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+                    <!-- Reversal -->
+                    <div class="col-lg-3 col-md-6">
+                        
+                    </div>
+                </div>
+             
+                <div class="filter-actions">
+                    <div class="left-actions">
+                        <button
+                            type="button"
+                            class="btn btn-filter"
+                            id="btnCari"
+                        >
+                            <img th:src="@{/img/filter-1.png}" />
+                            Terapkan Filter
+                        </button>
+                        <!-- <button
+                            type="button"
+                            class="btn btn-reset"
+                            id="btnReset"
+                        >
+                            Reset
+                        </button> -->
+                    </div>
+                    <button
+                        type="button"
+                        class="btn btn-export"
+                        id="btn-export"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <path d="M8 13l3 4"/>
+                        <path d="M11 13l-3 4"/>
+                        </svg>
+                        <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <text x="7" y="17" font-size="6" font-family="Arial, sans-serif" font-weight="bold" fill="currentColor" stroke="none">PDF</text>
+                        </svg> -->
+                        Export 
+                    </button> 
+                </div>
+                <hr class="filter-divider">
+
+                 <div class="row mb-3">
+                    <!-- SALDO AWAL -->
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="text-muted">
+                                    Saldo Awal
+                                </div>
+                                <div class="fs-2 fw-bold"
+                                    id="saldoAwal">
+                                    0,00
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- TOTAL DEBIT -->
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="text-muted">
+                                    Total Debit
+                                </div>
+                                <div class="fs-2 fw-bold"
+                                    id="totalDebit">
+                                    0,00
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- TOTAL KREDIT -->
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="text-muted">
+                                    Total Kredit
+                                </div>
+                                <div class="fs-2 fw-bold"
+                                    id="totalKredit">
+                                    0,00
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- SALDO AKHIR -->
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="text-muted">
+                                    Saldo Akhir
+                                </div>
+                                <div class="fs-2 fw-bold"
+                                    id="saldoAkhir">
+                                    0,00
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>          
+            
+            <div class="row row-deck row-cards"  style="margin-top:20px;">            
+              <div class="col-12">
+                <div class="card">
+                    <!-- <div class="card-header" style="padding:5px 5px !important;">
+                        <h3 class="card-title" style="font-weight: 800;">
+                            Mutasi Buku Besar
+                        </h3>
+                    </div>  -->
+
+                     <div class="card-header">
+                        <h3 class="card-title"  style="font-weight: 800;"> Mutasi Buku Besar</h3>
+                    </div>
+                  <div class="table-responsive" style="overflow-x:hidden;padding-bottom: 20px;">
+                    <table id="tableBukuBesar" class="table table-striped  card-table table-vcenter text-nowrap datatable">
+                      <thead>
+                        <tr>
+                           <th class="">
+                                <input type="checkbox" style="margin-left:12px;height: 1.2rem !important; width: 1.2rem !important;" id="check-all">
+                           </th>    
+                           <th class="w-1">
+                            Account GL
+                           </th>
+                            <th class="w-1">
+                            Branch
+                           </th>
+                           <th class="w-1">
+                            TransactionDate
+                          </th>
+                          <th>Journal No</th>
+                          <th>TransactionNo</th>
+                          <th>transactionCode</th>
+                          <th>D/K</th>                          
+                          <th class="text-end">Jumlah</th>
+                          <th class="text-end">Saldo Berjalan</th>
+                          <!-- <th>Keterangan</th>   -->
+                        </tr>
+                      </thead>
+                    
+                      <tbody>                       
+                      </tbody>
+                        <!-- <tfoot>
+                            <tr>
+                                <th colspan="6" class="text-end">
+                                    <b>TOTAL TRANSAKSI HALAMAN INI Rp.</b>
+                                </th>
+                                <th id="total-amount"></th>
+                                <th></th>
+                            </tr>
+                        </tfoot> -->
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+         
+    </div>
+    <div layout:fragment="scripts">     
+        <link th:href="@{/css/select2.min.css}" rel="stylesheet">
+        <link th:href="@{/css/select2-bootstrap-5-theme.min.css}" rel="stylesheet">
+        <script th:src="@{/js/select2.min.js}"></script>
+        <link th:href="@{/css/daftar-jurnal.css}" rel="stylesheet">
+        <link th:href="@{/lib/DataTables/datatables.min.css}" rel="stylesheet">
+        <script th:src="@{/lib/DataTables/datatables.min.js}"></script>   
+        <script th:src="@{/js/laporan/buku-besar.js}"></script>       
+    </div>
+  </body>
+</html>
+

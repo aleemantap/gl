@@ -1,0 +1,248 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/main}"
+>
+  <head>
+    <title>Transaki Ditolak</title>
+  </head>
+  <body>
+    <div layout:fragment="content">
+
+        <div class="container-xl">
+
+            <!-- =========================
+                TABLE
+            ========================== -->
+
+            <div class="row row-deck row-cards mt-3">
+                <div class="col-12">
+
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="mb-0">Log Transaksi Ditolak</h4>
+                        </div>
+                        <div class="card-body">
+                            <!-- Filter Section -->
+                            <div class="row mb-3 g-3">
+                                <div class="col-md-3">
+                                    <label for="statusFilter" class="form-label">Status</label>
+                                    <select id="statusFilter" class="form-select">
+                                        <option value="">All Status</option>
+                                        <option th:each="status : ${statuses}"
+                                                th:value="${status}"
+                                                th:text="${status}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="fromDateFilter" class="form-label">From Date</label>
+                                    <input type="date" id="fromDateFilter" class="form-control">
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="toDateFilter" class="form-label">To Date</label>
+                                    <input type="date" id="toDateFilter" class="form-control">
+                                </div>
+
+                                <div class="col-md-3 d-flex align-items-end gap-2 flex-wrap mt-3 mt-md-0">
+                                    <button id="applyFilters" class="btn btn-primary">
+                                        <i class="fas fa-filter"></i> Apply Filters
+                                    </button>
+                                    <button id="clearFilters" class="btn btn-secondary">
+                                        <i class="fas fa-undo"></i> Clear
+                                    </button>
+                                    <button class="btn btn-primary-grey" id="btn-export">
+                                        Export
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Table -->
+                            <div class="table-responsive">
+                                <table id="transactionTable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th class="">
+                                                <input type="checkbox" style="margin-left:12px;height: 1.2rem !important; width: 1.2rem !important;" id="check-all">
+                                            </th>  
+                                            <th>Transaction Time</th>
+                                            <th>Branch Code</th>
+                                            <th>Transaction No</th>
+                                            <th>Transaction Code</th>
+                                            <th>Rejection Reason</th>
+                                            <th>Payload</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- =========================
+            PAYLOAD MODAL
+        ========================== -->
+
+        <!-- Modal Payload -->
+        <div class="modal fade" id="payloadModal" tabindex="-1" aria-labelledby="payloadModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="payloadModalLabel">
+                            <i class="fas fa-code"></i> Payload Details
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <strong>Transaction No:</strong> 
+                            <span id="modalTransactionNo" class="text-primary"></span>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Payload:</strong>
+                            <div id="payloadContent" style="background: #f8f9fa; padding: 15px; border-radius: 5px; border: 1px solid #dee2e6;">
+                                <pre id="payloadJson"></pre>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <button id="copyPayloadBtn" class="btn btn-sm btn-secondary">
+                                <i class="fas fa-copy"></i> Copy to Clipboard
+                            </button>
+                            <button id="formatPayloadBtn" class="btn btn-sm btn-success">
+                                <i class="fas fa-code"></i> Format JSON
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+
+    </div>
+    <div layout:fragment="scripts">
+        <style>
+         .table-responsive {
+            overflow-x: hidden !important;
+         }   
+        /* .dataTables_wrapper .dataTables_filter {
+            float: right;
+        }
+        .dataTables_wrapper .dataTables_filter input {
+            margin-left: 0.5em;
+            border-radius: 0.25rem;
+            border: 1px solid #ced4da;
+            padding: 0.375rem 0.75rem;
+        }
+        .card-header {
+            border-radius: 0.25rem 0.25rem 0 0;
+        }
+        .badge {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+        }
+        .table-responsive {
+            margin-top: 1rem;
+        }
+        .dataTables_processing {
+            background: rgba(255, 255, 255, 0.8) !important;
+        }
+        @media (max-width: 768px) {
+            .dataTables_wrapper .dataTables_filter {
+                float: none;
+                text-align: left;
+            }
+            .dataTables_wrapper .dataTables_length {
+                float: none;
+                margin-bottom: 1rem;
+            }
+        } */
+
+        #payloadJson.json-formatted {
+            color: #333 !important;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        #payloadJson.json-formatted .string { 
+            color: #008000; 
+        }
+        #payloadJson.json-formatted .number { 
+            color: #0000FF; 
+        }
+        #payloadJson.json-formatted .boolean { 
+            color: #0000FF; 
+        }
+        #payloadJson.json-formatted .null { 
+            color: #FF0000; 
+        }
+        #payloadJson.json-formatted .key { 
+            color: #A52A2A; 
+        }
+
+        .btn-view-payload {
+            white-space: nowrap;
+        }
+
+        .modal-lg {
+            max-width: 800px;
+        }
+
+        #payloadContent {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+
+        /* Perbaikan Latar Belakang dan Warna Teks untuk Elemen PRE */
+        #payloadJson {
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 400px;
+            overflow: auto;
+            background-color: #ffffff !important;
+            color: #212529 !important;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        /* Custom scrollbar */
+        #payloadJson::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        #payloadJson::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        #payloadJson::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        #payloadJson::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        </style>
+        
+        <link th:href="@{/css/select2.min.css}" rel="stylesheet">
+        <link th:href="@{/css/select2-bootstrap-5-theme.min.css}" rel="stylesheet">
+        <script th:src="@{/js/select2.min.js}"></script>
+        <link th:href="@{/lib/DataTables/datatables.min.css}" rel="stylesheet">
+        <script th:src="@{/lib/DataTables/datatables.min.js}"></script>   
+        <script th:src="@{/js/laporan/transaksi-ditolak.js}"></script>
+    </div>
+  </body>
+</html>

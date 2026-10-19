@@ -1,0 +1,74 @@
+<div th:fragment="add">
+    <div class="modal modal-blur fade" id="modal-api" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">
+                        TAMBAH DATA CLIENT API
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formApiClient">
+               
+                <div class="modal-body">
+                    <input type="hidden" id="api_id" name="api_id"/>
+                    <div class="mb-3">
+                        <label class="form-label">Client Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="clientName" name="clientName" required maxlength="255"/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Client ID <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="clientId" name="clientId" readonly required maxlength="100"/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="description" name="description" maxlength="500" rows="2"></textarea>
+                    </div>
+                    <!-- <div class="mb-3" id="secretWrapper" style="display:none;">
+                        <label class="form-label">
+                            Client Secret
+                        </label>
+
+                        <div class="input-group">
+                            <input type="text"
+                                class="form-control"
+                                id="clientSecret"
+                                readonly>
+
+                            <button class="btn btn-outline-secondary"
+                                    type="button"
+                                    id="btnCopySecret">
+                                <i class="fa fa-copy"></i>
+                            </button>
+                        </div>
+
+                        <div class="form-hint text-danger">
+                            Simpan secret ini sekarang. Secret tidak akan
+                            ditampilkan kembali.
+                        </div>
+                    </div> -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Expired At <span class="text-danger">*</span></label>
+                            <input type="datetime-local" class="form-control" id="expiredAt" name="expiredAt"/>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" id="active" name="active">
+                                <option value="">==Pilih==</option>
+                                <option value="true">Aktif</option>
+                                <option value="false">Nonaktif</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" id="simpan-client-api" class="btn btn-primary">Simpan</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

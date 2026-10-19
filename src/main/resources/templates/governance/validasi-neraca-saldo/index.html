@@ -1,0 +1,496 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/main}"
+>
+  <head>
+    <title>Validasi Neraca Saldo</title>
+  </head>
+  <body>
+      <div layout:fragment="content">
+        <div class="container-xl">
+          
+             <!-- HEADER -->
+            <div class="page-header mb-4">
+                <div>
+                    <h2 class="page-title">
+                        Neraca Saldo
+                    </h2>
+                    <div class="text-muted">
+                        Monitoring dan validasi neraca saldo unit kerja
+                    </div>
+                </div>
+                <div class="ms-auto">
+                    <div class="badge bg-blue-lt p-2">
+                        Periode:
+                        <strong
+                            th:text="${#temporals.format(periode, 'MMMM yyyy')}">
+                            Oktober 2023
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <form th:action="@{/governance/validasi-neraca-saldo}"
+                method="get"
+                class="d-flex align-items-end gap-2 mb-4">
+
+                <div>
+                    <label class="form-label">
+                        Periode
+                    </label>
+
+                    <input type="month"
+                        name="periode"
+                        id="periode"
+                        class="form-control"
+                        th:value="${periodeInput}">
+                </div>
+
+                <div>
+                    <button type="submit"
+                            class="btn btn-primary">
+                        Tampilkan
+                    </button>
+                </div>
+
+            </form>
+   
+
+            <div class="row g-3 mb-4">
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-muted small">
+                    DATA MENUNGGU
+                </div>
+
+                <div class="fs-2 fw-bold"
+                     th:text="${waiting}">
+                    0
+                </div>
+
+                <div class="small text-muted">
+                    Menunggu validasi
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-muted small">
+                    SUDAH VALID
+                </div>
+
+                <div class="fs-2 fw-bold"
+                     th:text="${validUnit}">
+                    0
+                </div>
+
+                <div class="small text-muted">
+                    Unit sudah divalidasi
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-muted small">
+                    TOTAL UNIT
+                </div>
+
+                <div class="fs-2 fw-bold"
+                     th:text="${totalUnit}">
+                    0
+                </div>
+
+                <div class="small text-muted">
+                    Unit dalam periode
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+
+                <div class="text-muted small">
+                    PROGRESS KONSOLIDASI
+                </div>
+
+                <div class="fs-2 fw-bold">
+                    <span th:text="${progress}">0</span>%
+                </div>
+
+                <div class="progress mt-2"
+                     style="height: 7px;">
+
+                    <div class="progress-bar"
+                         role="progressbar"
+                         th:style="'width:' + ${progress} + '%'">
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+        
+
+
+             <!-- MAIN -->
+              <div class="row row-cards">
+                  <!-- ANTRIAN VALIDASI -->
+                  <div class="col-lg-8">
+                      <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h3 class="card-title mb-0">
+                                    Antrian Validasi
+                                </h3>
+
+                                <button class="btn btn-primary-grey" id="btn-export">Export</button>
+                            </div>
+                          <div class="table-responsive">
+                              <table class="table table-vcenter card-table">
+                                  <thead>
+                                  <tr>
+                                      <th>Periode</th>
+                                      <th>Unit Pengirim</th>
+                                      <th>Dikirim Oleh</th>
+
+                                      <th>Tanggal Dikirim</th>
+
+                                      <th>Status</th>
+
+                                      <th class="text-end">
+                                          Aksi
+                                      </th>
+
+                                  </tr>
+
+                                  </thead>
+
+                                  <tbody>
+
+                                  <tr th:each="item : ${submissions}">
+
+                                      <!-- PERIODE -->
+                                      <td>
+
+                                          <span
+                                              th:text="${#temporals.format(item.periode, 'MMM yyyy')}">
+                                              Okt 2023
+                                          </span>
+
+                                      </td>
+
+
+                                      <!-- UNIT -->
+                                      <td>
+                                        <div class="fw-semibold"
+                                            th:text="${item.namaCabang}">
+                                            Cabang Jakarta Pusat
+                                        </div>
+
+                                        <small class="text-muted"
+                                            th:text="${item.kodeCabang}">
+                                            0001
+                                        </small>
+                                    </td>
+
+
+                                      <!-- SUBMITTED BY -->
+                                      <td
+                                          th:text="${item.submittedBy}">
+                                          Rina Wijaya
+                                      </td>
+
+
+                                      <!-- DATE -->
+                                      <td>
+
+                                          <span
+                                              th:if="${item.submittedAt != null}"
+                                              th:text="${#temporals.format(item.submittedAt, 'dd MMM yyyy HH:mm')}">
+                                              02 Nov 2023 09:15
+                                          </span>
+
+                                      </td>
+
+
+                                      <!-- STATUS -->
+                                      <td>
+
+                                          <span
+                                              th:switch="${item.status}">
+
+                                              <span
+                                                  th:case="${T(com.project.gl.model.enums.NeracaSaldoStatus).MENUNGGU}"
+                                                  class="badge bg-yellow-lt">
+                                                  Menunggu
+                                              </span>
+
+                                              <span
+                                                  th:case="${T(com.project.gl.model.enums.NeracaSaldoStatus).VALID}"
+                                                  class="badge bg-green-lt">
+                                                  Valid
+                                              </span>
+
+                                              <span
+                                                  th:case="${T(com.project.gl.model.enums.NeracaSaldoStatus).DITOLAK}"
+                                                  class="badge bg-red-lt">
+                                                  Ditolak
+                                              </span>
+                                          </span>
+                                      </td>
+                                      <!-- ACTION -->
+                                      <td class="text-end">
+                                          <a
+                                              th:if="${item.status.name() == 'MENUNGGU'}"
+                                              th:href="@{/governance/validasi-neraca-saldo/review/{id}(id=${item.id})}"
+                                              class="btn btn-sm btn-primary">
+                                              Buka Review
+                                          </a>
+                                          <a
+                                              th:if="${item.status.name() != 'MENUNGGU'}"
+                                              th:href="@{/governance/validasi-neraca-saldo/detail/{id}(id=${item.id})}"
+                                              class="btn btn-sm btn-outline-secondary">
+                                              Detail
+                                          </a>
+                                      </td>
+                                  </tr>
+                                  <!-- EMPTY -->
+                                  <tr th:if="${#lists.isEmpty(submissions)}">
+                                      <td
+                                          colspan="6"
+                                          class="text-center text-muted py-4">
+
+                                          Tidak ada data antrian.
+
+                                      </td>
+
+                                  </tr>
+
+                                  </tbody>
+
+                              </table>
+
+                          </div>
+
+                      </div>
+
+                  </div>
+
+
+                  <!-- RIWAYAT -->
+                  <div class="col-lg-4">
+
+                      <!-- <div class="card">
+
+                          <div class="card-header">
+
+                              <h3 class="card-title">
+                                  Riwayat Validasi Terakhir
+                              </h3>
+
+                          </div>
+
+
+                          <div class="list-group list-group-flush">
+
+                              <div
+                                  class="list-group-item"
+                                  th:each="history : ${recentValidations}">
+
+                                  <div class="d-flex">
+
+                                      <div>
+
+                                          <div class="fw-bold">
+
+                                              <span
+                                                  th:text="${history.status}">
+                                                  VALID
+                                              </span>
+
+                                          </div>
+
+                                          <div class="text-muted small">
+
+                                              Oleh:
+                                              <span
+                                                  th:text="${history.validatedBy}">
+                                                  Admin Pusat
+                                              </span>
+
+                                          </div>
+
+                                          <div class="text-muted small">
+
+                                              <span
+                                                  th:text="${#temporals.format(history.validatedAt, 'dd MMM yyyy HH:mm')}">
+                                                  02 Nov 2023 09:30
+                                              </span>
+
+                                          </div>
+
+                                      </div>
+
+                                  </div>
+
+
+                                  <div
+                                      class="mt-2 small"
+                                      th:if="${history.note != null}"
+                                      th:text="${history.note}">
+
+                                      Semua saldo sudah sesuai.
+
+                                  </div>
+
+                              </div>
+
+
+                              <div
+                                  th:if="${#lists.isEmpty(recentValidations)}"
+                                  class="list-group-item text-muted text-center">
+
+                                  Belum ada riwayat validasi.
+
+                              </div>
+
+                          </div>
+
+                      </div> -->
+
+
+                      <div class="card border-0 shadow-sm h-100">
+
+    <div class="card-header bg-white py-3">
+        <h5 class="mb-0">
+            Riwayat Validasi Terakhir
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        <div th:if="${#lists.isEmpty(recentValidations)}"
+             class="text-center text-muted py-4">
+
+            Belum ada riwayat validasi.
+
+        </div>
+
+        <div th:each="item : ${recentValidations}"
+             class="pb-3 mb-3 border-bottom">
+
+            <div class="d-flex justify-content-between align-items-start">
+
+                <div>
+
+                    <div class="fw-semibold"
+                         th:text="${item.namaCabang}">
+                        Cabang 2
+                    </div>
+
+                    <small class="text-muted">
+                        Kode:
+                        <span th:text="${item.kodeCabang}">
+                            0002
+                        </span>
+                    </small>
+
+                </div>
+
+                <span th:if="${item.status.name() == 'VALID'}"
+                      class="badge bg-success text-white">
+                    VALID
+                </span>
+
+                <span th:if="${item.status.name() == 'DITOLAK'}"
+                      class="badge bg-danger">
+                    DITOLAK
+                </span>
+
+            </div>
+
+            <div class="small text-muted mt-2">
+
+                <span th:text="${item.validatedBy}">
+                    Admin Pusat
+                </span>
+
+                ·
+
+                <span th:text="${#temporals.format(
+                    item.validatedAt,
+                    'dd MMM yyyy HH:mm'
+                )}">
+                    09 Sep 2026 23:38
+                </span>
+
+            </div>
+
+            <div th:if="${item.note != null
+                         and !#strings.isEmpty(item.note)}"
+                 class="small mt-2">
+
+                <span th:text="${item.note}">
+                    Catatan validasi
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+                  </div>
+
+              </div>
+
+
+        </div>         
+    </div>
+    <div layout:fragment="scripts">
+        <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script> -->
+        <!-- <script>
+        flatpickr("#periode", {
+            locale: "id",
+            plugins: [
+                new monthSelectPlugin({
+                    shorthand: true,
+                    dateFormat: "Y-m",
+                    altFormat: "F Y"
+                })
+            ]
+        });
+        </script> -->
+        <!-- Tambahkan SheetJS untuk membaca Excel -->
+        <link th:href="@{/css/select2.min.css}" rel="stylesheet">
+        <link th:href="@{/css/select2-bootstrap-5-theme.min.css}" rel="stylesheet">
+        <script th:src="@{/js/select2.min.js}"></script>
+        <!-- <link th:href="@{/css/pemetaanAkun.css}" rel="stylesheet"> -->
+        <!-- <link th:href="@{/css/inputJurnal.css}" rel="stylesheet"> -->
+        <link th:href="@{/lib/DataTables/datatables.min.css}" rel="stylesheet">
+        <script th:src="@{/lib/DataTables/datatables.min.js}"></script>   
+        <!-- <script th:src="@{/js/operasional/input-manual-form.js}"></script> -->
+        <!-- <script th:src="@{/js/operasional/input-import-form.js}"></script> -->
+        <!-- <script th:src="@{/js/parameter/pemetaan-akun2.js}"></script> -->
+    </div>
+  </body>
+</html>

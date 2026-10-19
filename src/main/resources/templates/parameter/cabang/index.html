@@ -1,0 +1,110 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/main}"
+>
+  <head>
+    <title>Cabang</title>
+  </head>
+  <body>
+    <div layout:fragment="content">
+
+        <div class="container-xl">
+          <div class="filter-card">
+                <div class="row g-4 align-items-start">
+                    <!-- Cabang -->
+                    <div class="col-lg-3 col-md-6">
+                        <label for="cabang" class="filter-label">
+                            Cabang
+                        </label>
+                        <input type="text" class="form-control" id="namaCabang" name="namaCabang" placeholder="Nama Cabang" >
+                    </div>
+                    <!-- Kode TC -->
+                    <div class="col-lg-3 col-md-6">
+                        <label for="kodeTc" class="filter-label">
+                            Kode Cabang
+                        </label>
+                        <input type="text" class="form-control" id="kodeCabang" name="kodeCabang" placeholder="Kode Cabang" >
+                    </div>
+                </div>
+                <hr class="filter-divider">
+                <div class="filter-actions">
+                    <div class="left-actions">
+                        <button
+                            type="button"
+                            class="btn btn-filter"
+                            id="btn-filter"
+                        >
+                            <img th:src="@{/img/filter-1.png}" />
+                            Terapkan Filter
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-reset"
+                            id="btn-reset"
+                        >
+                            Reset
+                        </button>
+                    </div>
+                    <div class="right-actions">
+                        <button
+                            type="button"
+                            class="btn btn-export"
+                            id="btn-add"
+                        >
+                        + Tambah Cabang
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-primary-grey"
+                            id="btn-export-cabang"
+                        >
+                            <img style="margin-right: 6px;" th:src="@{/img/download.png}" />Export
+                            
+                        </button>
+                    </div>
+                   
+                </div>
+            </div>    
+          
+
+
+            <div class="row row-deck row-cards"  style="margin-top:20px;"> 
+                <div class="col-12">
+                  <div class="card">
+                    <div class="table-responsive" style="overflow-x:hidden;padding-bottom: 20px;">
+                      <table id="table-cabang" class="table  table-striped  card-table table-vcenter text-nowrap datatable">
+                        <thead>
+                          <tr>
+                            <th class="">
+                              <input type="checkbox" style="margin-left:1rem;height: 1.2rem !important; width: 1.2rem !important;" id="check-all">
+                            </th>  
+                            <th>Kode Cabang</th>
+                            <th>Nama Cabang</th>
+                            <th>Alamat</th>
+                            <th>Aksi</th> 
+                          </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                      </table>
+                    </div>         
+                  </div>
+                </div>			  
+            </div>
+         </div>  
+     
+         <div th:replace="~{parameter/cabang/add :: add}"></div>
+     </div>  
+     <div layout:fragment="scripts">
+            <link th:href="@{/css/select2.min.css}" rel="stylesheet">
+            <link th:href="@{/css/select2-bootstrap-5-theme.min.css}" rel="stylesheet">
+            <script th:src="@{/js/select2.min.js}"></script>
+            <link th:href="@{/css/daftar-jurnal.css}" rel="stylesheet">
+            <link th:href="@{/lib/DataTables/datatables.min.css}" rel="stylesheet">
+            <script th:src="@{/lib/DataTables/datatables.min.js}"></script>   
+            <script th:src="@{/js/parameter/cabang.js}"></script>
+        </div>  
+  </body>
+</html>

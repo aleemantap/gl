@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="base-url" th:content="@{/}">
+    <link th:href="@{/img/logo-gadai.png}" rel="icon">
+    <title layout:title-pattern="$CONTENT_TITLE"></title>
+    <link th:href="@{/css/tabler.min.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link th:href="@{/css/custom.css}" rel="stylesheet">
+    <link th:href="@{/css/button.css}" rel="stylesheet">
+    <link th:href="@{/css/pace-theme-default.min.css}" rel="stylesheet">
+    <script th:src="@{/js/pace.min.js}"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+    <!-- Custom CSS - Timpa style default di sini -->
+    <style>
+        /* Ubah warna progress bar */
+        .pace .pace-progress {
+            background: #0c131a !important; /* Ganti dengan warna favorit */
+            height: 3px !important; /* Ubah ketebalan */
+        }
+        
+        /* Sembunyikan spinner/animasi tambahan (jika ada) */
+        .pace .pace-activity {
+            display: none !important;
+        }
+        
+        /* Tambahan: efek shadow */
+        .pace .pace-progress {
+            box-shadow: 0 2px 10px rgba(79, 172, 254, 0.5);
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="page">
+
+    <!-- =====================================================
+         MOBILE SIDEBAR OVERLAY
+    ====================================================== -->
+    <div
+        id="sidebar-overlay"
+        class="sidebar-overlay"
+    ></div>
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+    <aside
+        id="main-sidebar"
+        class="sidebar"
+    >
+
+        <div th:replace="~{layouts/sidebar :: sidebar}"></div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN WRAPPER
+    ====================================================== -->
+    <div class="page-wrapper">
+
+        <!-- HEADER -->
+        <div layout:fragment="header">
+
+            <div th:replace="~{layouts/header :: header}"></div>
+
+        </div>
+
+
+        <!-- CONTENT -->
+        <div
+            class="page-body"
+            layout:fragment="content"
+        >
+        </div>
+
+
+        <!-- FOOTER -->
+        <footer class="footer footer-transparent d-print-none">
+        </footer>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+====================================================== -->
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/js/global.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/tabler.min.js}"></script>
+<!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    /*
+    |--------------------------------------------------------------------------
+    | SIDEBAR MOBILE
+    |--------------------------------------------------------------------------
+    */
+    const sidebar = document.getElementById("main-sidebar");
+    const overlay = document.getElementById("sidebar-overlay");
+    const sidebarToggle = document.getElementById("sidebar-toggle");
+    
+    function openSidebar() {
+        if (!sidebar) return;
+        sidebar.classList.add("mobile-open");
+        if (overlay) {
+            overlay.classList.add("show");
+        }
+        document.body.classList.add("sidebar-open");
+    }
+    
+    function closeSidebar() {
+        if (!sidebar) return;
+        sidebar.classList.remove("mobile-open");
+        if (overlay) {
+            overlay.classList.remove("show");
+        }
+        document.body.classList.remove("sidebar-open");
+    }
+
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener("click", function (e) {
+            e.preventDefault();
+            if (sidebar.classList.contains("mobile-open")) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+    }
+
+    if (overlay) {
+        overlay.addEventListener("click", function () {
+            closeSidebar();
+        });
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | MENU ACCORDION
+    |--------------------------------------------------------------------------
+    */
+
+      document.querySelectorAll(".toggle-menu").forEach(function(menu) {
+        menu.addEventListener("click", function(e) {
+            e.preventDefault();
+
+            const currentGroup = this.closest(".menu-group");
+            if (!currentGroup) return;
+
+            // Tutup menu lain
+            document.querySelectorAll(".menu-group").forEach(function(group) {
+                if (group !== currentGroup) {
+                    group.classList.remove("open");
+                }
+            });
+
+            // Toggle menu aktif
+            currentGroup.classList.toggle("open");
+        });
+    });
+
+
+
+     /*
+    |--------------------------------------------------------------------------
+    | AUTO OPEN ACTIVE MENU (FIX)
+    |--------------------------------------------------------------------------
+    */
+    function openActiveMenu() {
+        // Cari semua menu item yang aktif
+        const activeItems = document.querySelectorAll('.menu-item.active');
+        
+        activeItems.forEach(function(activeItem) {
+            // Cari menu group induk dari item aktif
+            const parentGroup = activeItem.closest('.menu-group');
+            if (parentGroup) {
+                // Tambahkan class open ke menu group
+                parentGroup.classList.add('open');
+            }
+        });
+    }
+
+    // Panggil fungsi untuk membuka menu yang aktif
+    openActiveMenu();
+
+
+
+   /*
+    |--------------------------------------------------------------------------
+    | CLOSE SIDEBAR WHEN CLICK MENU ON MOBILE
+    |--------------------------------------------------------------------------
+    */
+
+    document.querySelectorAll(".sidebar .menu-item").forEach(function(item) {
+        item.addEventListener("click", function() {
+            if (window.innerWidth < 992) {
+                closeSidebar();
+            }
+        });
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ESC CLOSE SIDEBAR
+    |--------------------------------------------------------------------------
+    */
+
+    document.addEventListener("keydown", function(e) {
+        if (e.key === "Escape") {
+            closeSidebar();
+        }
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RESET MOBILE SIDEBAR WHEN RESIZE
+    |--------------------------------------------------------------------------
+    */
+
+    window.addEventListener("resize", function() {
+        if (window.innerWidth >= 992) {
+            closeSidebar();
+        }
+    });
+
+
+});
+
+</script>
+
+
+<div layout:fragment="scripts"></div>
+
+</body>
+</html>

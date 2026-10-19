@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div th:fragment="tab1">                
+        <div class="d-flex align-items-center justify-content-between gap-3" style="margin-top:50px;">
+            <div class="d-flex align-items-center gap-2 flex-grow-1">
+                <label class="fw-bold mb-0" style="white-space: nowrap;">Filter Cabang :</label>
+                 <select class="form-select select2" id="cabangTab1" name="cabangTab1" style="max-width: 250px;">
+                    <option value="">Semua Cabang</option>
+                    <th:block th:each="cabang : ${cabangList}">
+                        <option th:value="${cabang.id}" th:text="${cabang.namaCabang}"></option>
+                    </th:block>
+                </select>
+                <button class="btn btn-primary btn-sm" id="btnFilterCabang">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 6h18"/>
+                        <path d="M7 12h10"/>
+                        <path d="M10 18h4"/>
+                    </svg>
+                    Filter
+                </button>
+                <button class="btn btn-secondary btn-sm" id="btnResetFilterCabang">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 12a9 9 0 1 0 9-9m0 0v6m0-6h-6"/>
+                    </svg>
+                    Reset
+                </button>
+            </div>
+            <div class="flex-shrink-0">
+                <button  class="btn btn-primary btn-primary-yellow"  id="btn-tambah-tab1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M12 5l0 14" />
+                        <path d="M5 12l14 0" />
+                    </svg> TAMBAH PEMETAAN TC
+                </button>
+                <button class="btn btn-primary-grey"  id="btn-export1">Export</button> 
+            </div>
+        </div>
+        <div class="row row-deck row-cards">             
+            <div class="col-12">
+                <div class="card">
+                    <div class="table-responsive" style="overflow-x:hidden;padding-bottom: 20px;">
+                        <table id="table1" class="table card-table table-vcenter text-nowrap datatable">
+                            <thead>
+                                <tr>
+                                <th class="w-1">
+                                    NO
+                                </th>
+                                <th class="w-1">
+                                    KODE TC
+                                </th>
+                                <th>NAMA TRANSAKSI OPERASIONAL</th>
+                                <th>CABANG</th>
+                                <th>JOURNALID/CODE REF</th>                        
+                                <th>AKSI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

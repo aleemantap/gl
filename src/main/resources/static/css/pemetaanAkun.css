@@ -1,0 +1,276 @@
+/* .tab-pem-akun .nav-link.active {
+    font-weight: 600;
+    border-bottom: 3px solid #000;
+}
+.nav-tabs .nav-link {
+    border-radius: 0 !important;
+    border: none !important;
+    margin-bottom: 0 !important;
+} */
+
+/* Reset border bawaan */
+.nav-tabs .nav-link {
+    border: none !important;
+    border-radius: 0 !important;
+    margin-bottom: 0 !important;
+    border-bottom: 2px solid transparent !important;
+    background: transparent !important;
+    color: #6c757d !important;
+    padding: 10px 20px !important;
+}
+
+/* Style hover */
+.nav-tabs .nav-link:hover {
+    border-bottom: 2px transparent !important;
+    color: #755B00 !important;
+}
+
+/* Style aktif */
+.nav-tabs .nav-link.active {
+    font-weight: 600 !important;
+    border-bottom: 3px solid #755B00 !important;
+    color: #000 !important;
+    background: transparent !important;
+}
+
+/* Untuk Tabler/AdminLTE yang bandel */
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+    font-weight: 600 !important;
+    border-bottom: 3px solid #755B00 !important;
+    color: #000 !important;
+    background: transparent !important;
+}
+.card-header-tabs{
+    padding-left: 0;
+}
+.row-cards {
+  margin-top: 20px;
+  margin-left: -29px;
+  margin-right: -29px;
+  margin-bottom: -20px;
+}
+.btn-primary-text{
+    color : #152434;
+    font-weight: 600;
+    font-size: 14px;
+    
+}
+.btn-journal-new {
+    color: #152434;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 0;
+    /* border-bottom: 2px solid #152434; */
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.btn-journal-new:hover {
+    color: #0d1a26;
+    border-bottom-color: #0d1a26;
+    transform: translateY(-1px);
+    text-decoration: none;
+}
+
+.btn-journal-new i {
+    font-size: 16px;
+}
+.form-label {
+    color : #44474C;  
+    font-weight: bold;
+}
+/* select 2 */
+.select2-gl-account {
+    padding: 6px 4px;
+}
+
+.select2-gl-number {
+    font-weight: 600;
+    font-size: 14px;
+    color: #1f2937;
+    margin-bottom: 4px;
+}
+
+.select2-gl-detail {
+    display: flex;
+    gap: 18px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.select2-gl-category,
+.select2-gl-nama,
+.select2-gl-branch {
+    white-space: nowrap;
+}
+.select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option.select2-results__option--highlighted {
+  min-width: 600px;
+}
+/* gl card */
+/* =========================
+   GL CARD
+   ========================= */
+
+.gl-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    min-height: 80px;
+
+    padding: 12px 13px;
+
+    box-sizing: border-box;
+
+    border-radius: 3px;
+}
+
+
+/* =========================
+   DEBIT
+   ========================= */
+
+.gl-card.debit-card {
+    background: #eff6ff;
+    border: 1px solid #c8ddf7;
+}
+
+.gl-card.debit-card .gl-number {
+    color: #24488d;
+}
+
+.gl-card.debit-card .gl-name {
+    color: #1746b5;
+}
+
+.gl-type.debit {
+    background: #c4dcfa;
+    color: #24549a;
+}
+
+
+/* =========================
+   CREDIT
+   ========================= */
+
+.gl-card.credit-card {
+    background: #fffbed;
+    border: 1px solid #f5e3a6;
+}
+
+.gl-card.credit-card .gl-number {
+    color: #8b3f12;
+}
+
+.gl-card.credit-card .gl-name {
+    color: #a9470d;
+}
+
+.gl-type.credit {
+    background: #ffe58a;
+    color: #92530b;
+}
+
+
+/* =========================
+   CONTENT
+   ========================= */
+
+.gl-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.gl-number {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.gl-name {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.2;
+}
+
+.gl-type {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 7px 8px;
+
+    border-radius: 3px;
+
+    font-size: 13px;
+    font-weight: 500;
+}
+/* sdsds */
+.balance-status {
+    width: 100%;
+}
+
+.balance-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #454545;
+
+    margin-bottom: 8px;
+}
+
+.balance-alert {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    width: 24%;
+    min-height: 38px;
+
+    padding: 7px 12px;
+    box-sizing: border-box;
+    background: #f0fff6;
+    border: 1px solid #9be7bd;
+    border-radius: 3px;
+    color: #148342;
+    font-size: 14px;
+}
+.balance-icon {
+    width: 19px;
+    height: 19px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border: 2px solid #159447;
+    border-radius: 50%;
+
+    color: #159447;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.balance-alert i {
+    font-size: 21px;
+    color: #159447;
+}
+/* modal 2 */
+.modal2-dialog {
+    max-width: 95vw !important;
+    width: 95vw;
+}
+
+.modal2-body {
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}

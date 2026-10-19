@@ -1,0 +1,226 @@
+.filter-card {
+    background: #fff;
+    border: 1px solid #F0F0F0;
+    border-radius: 4px;
+    padding: 32px 30px 34px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.filter-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #45484d;
+    letter-spacing: .2px;
+}
+
+.form-control,
+.form-select {
+    height: 38px;
+    border: 1px solid #e1e3e6;
+    border-radius: 3px;
+    background-color: #fbfaf9;
+    font-size: 16px;
+    color: #292929;
+    padding-left: 14px;
+    padding-right: 14px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #9aa8b8;
+    box-shadow: 0 0 0 .15rem rgba(20, 43, 66, .08);
+    background-color: #fff;
+}
+
+/* Select */
+.form-select {
+    cursor: pointer;
+}
+
+/* Divider */
+.filter-divider {
+    border: 0;
+    border-top: 1px solid #e7e7e7;
+    opacity: 1;
+    margin: 31px 0 20px;
+}
+
+/* Reversal */
+.reversal-wrapper {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-top: 59px;
+}
+
+.reversal-label {
+    font-size: 17px;
+    font-weight: 600;
+    color: #252525;
+    white-space: nowrap;
+}
+
+.reversal-switch {
+    width: 47px;
+    height: 26px;
+    background-color: #c9ccd2;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    border-radius: 50px;
+    transition: .2s;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.reversal-switch::before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 3px;
+    left: 3px;
+    border-radius: 50%;
+    background: #fff;
+    transition: .2s;
+    box-shadow: 0 1px 2px rgba(0,0,0,.15);
+}
+
+.reversal-switch:checked {
+    background-color: #182c40;
+}
+
+.reversal-switch:checked::before {
+    left: 24px;
+}
+
+/* Bottom section */
+.filter-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.left-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Button filter */
+.btn-filter {
+    height: 41px;
+    min-width: 208px;
+    border: 1px solid #162b40;
+    border-radius: 3px;
+    background: #162b40;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: .2s;
+}
+
+.btn-filter:hover {
+    background: #0f2030;
+    border-color: #0f2030;
+    color: #fff;
+}
+
+/* Reset */
+.btn-reset {
+    height: 41px;
+    min-width: 110px;
+    border: 1px solid #162b40;
+    border-radius: 3px;
+    background: #fff;
+    color: #162b40;
+    font-size: 16px;
+    font-weight: 700;
+    transition: .2s;
+}
+
+.btn-reset:hover {
+    background: #162b40;
+    color: #fff;
+}
+
+/* Export */
+.btn-export {
+    height: 41px;
+    min-width: 186px;
+    border: none;
+    border-radius: 3px;
+    background: #ffd45a;
+    color: #6d5a14;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    transition: .2s;
+}
+
+.btn-export:hover {
+    background: #f7c83d;
+    color: #5c4b0e;
+}
+
+.btn-export i {
+    font-size: 17px;
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+    .filter-card {
+        padding: 25px 20px;
+    }
+
+    .reversal-wrapper {
+        padding-top: 0;
+        height: auto;
+        margin-top: 10px;
+    }
+
+    .filter-actions {
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .btn-export {
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .filter-card {
+        padding: 20px 15px;
+    }
+
+    .filter-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .left-actions {
+        width: 100%;
+    }
+
+    .btn-filter,
+    .btn-reset,
+    .btn-export {
+        width: 100%;
+    }
+
+    .btn-export {
+        margin-left: 0;
+    }
+}

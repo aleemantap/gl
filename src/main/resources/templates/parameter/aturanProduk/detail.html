@@ -1,0 +1,65 @@
+<div th:fragment="detail">
+    <div class="modal modal-blur fade" id="modal-detail" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitleDetail">                        
+                        DETAIL PRODUK KODE 
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formDetail">
+                    <div class="modal-body">
+                        
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label required">Bunga</label>
+                                <input type="text" class="form-control" id="bunga" name="bunga" placeholder="" required>
+                                <div class="invalid-feedback" id="bungaError"></div>
+                            </div>
+                            <input type="hidden" class="form-control" id="detail_id" name="gl_id"/>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label required">Admin Fee</label>
+                                <input type="text" class="form-control" id="adminFee" name="adminFee" placeholder="Admin Fee" required>
+                                <div class="invalid-feedback" id="adminFeeError"></div>
+                            </div>                           
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label required">Provisi</label>
+                                <input type="text" class="form-control" id="provisi" name="provisi" placeholder="Provisi" required>
+                                <div class="invalid-feedback" id="provisiError"></div>
+                            </div>                           
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label required">Tenor</label>
+                                <input type="text" class="form-control" id="tenor" name="tenor" placeholder="Tenor" required>
+                                <div class="invalid-feedback" id="tenorError"></div>
+                            </div>                           
+                        </div>
+                        
+                      
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link link-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary ms-auto" id="btn-submit-tc">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M12 5l0 14" />
+                                <path d="M5 12l14 0" />
+                            </svg>
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

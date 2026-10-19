@@ -1,0 +1,29 @@
+.persetujuan-tabs .nav-link {
+    border: none;
+    color: #6c757d;
+    font-weight: 500;
+    border-radius: 10px 10px 0 0;
+    transition: all 0.2s ease;
+}
+
+.persetujuan-tabs .nav-link:hover {
+    color: #212529;
+    background-color: #f8f9fa;
+}
+
+.persetujuan-tabs .nav-link.active {
+    color: #212529;
+    background-color: #fff;
+    font-weight: 600;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.persetujuan-tabs .nav-link i {
+    font-size: 16px;
+}
+
+.persetujuan-tabs .badge {
+    font-size: 11px;
+    min-width: 22px;
+    padding: 4px 7px;
+}

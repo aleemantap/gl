@@ -1,0 +1,174 @@
+<!doctype html>
+<html layout:decorate="~{layouts/main}">
+  <head>
+    <title>Mapping GL - JournalID</title>
+  </head>
+  <body>
+    
+    <div layout:fragment="header">
+        <!-- <div th:replace="~{layouts/header/header-gl :: header}"></div> -->
+         <div th:replace="~{layouts/header :: header}"></div>
+    </div>
+
+    <div layout:fragment="content">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+              <div class="col">
+                <div class="gl-container">
+                  <h2 class="gl-title">Mapping GL Account - JournalID </h2>
+                
+                </div>
+              </div>
+             
+              <div class="col-auto ms-auto d-print-none">
+                <div class="btn-list" style="margin-top:85px;">
+                  <a href="#" class="btn btn-primary d-none d-sm-inline-block btn-primary-text" id="btnTambah">
+                   + TAMBAH ACCOUNT GL
+                  </a>    
+                </div>
+              </div>
+              
+            </div>
+
+
+
+            <div class="row mb-3 align-items-end">
+
+                  <!-- BAGIAN KIRI -->
+                  <div class="col-md-12">
+                      <!-- Tombol Toggle Filter -->
+                      <div class="row mb-2">
+                          <div class="col-12">
+                              <button type="button" 
+                                      class="btn btn-outline-primary btn-sm" 
+                                      id="toggleFilterBtn">
+                                  <i class="ti ti-chevron-down" id="toggleIcon"></i>
+                                  <span id="toggleText">Sembunyikan Filter</span>
+                              </button>
+                          </div>
+                      </div>
+
+                      <!-- Container Filter -->
+                      <div id="filterContainer">
+                          <div class="row">
+                              <!-- Nomor GL -->
+                              <div class="col-md-4">
+                                  <label class="form-label">Nomor GL</label>
+                                  <input type="text"
+                                      class="form-control form-control"
+                                      id="filterNomorGl"
+                                      placeholder="Nomor GL">
+                              </div>
+
+                              <!-- Nama GL -->
+                              <div class="col-md-4">
+                                  <label class="form-label">Nama GL</label>
+                                  <input type="text"
+                                      class="form-control form-control"
+                                      id="filterNamaGl"
+                                      placeholder="Nama GL">
+                              </div>
+
+                              <!-- Kategori -->
+                              <div class="col-md-4">
+                                  <label class="form-label">Kategori</label>
+                                  <select class="form-select form-select"
+                                          id="filterKategori">
+                                       <option value="">Semua</option>
+                                      <th:block th:each="kategori : ${kategoriList}">
+                                          <option th:value="${kategori.id}"
+                                                  th:text="${kategori.name}">
+                                          </option>
+                                      </th:block>
+                                  </select>
+                              </div>
+                          </div>
+                          
+                          <div class="row mt-2">
+                              <!-- D/K -->
+                              <div class="col-md-4">
+                                  <label class="form-label">Saldo D/K</label>
+                                  <select class="form-select form-select"
+                                          id="filterDk">
+                                      <option value="">Semua</option>
+                                      <option value="DEBIT">Debit</option>
+                                      <option value="KREDIT">Kredit</option>
+                                  </select>
+                              </div>
+
+                              <!-- Cabang -->
+                              <div class="col-md-4">
+                                  <label class="form-label">Cabang</label>
+                                  <select class="form-select form-select select2"
+                                          id="cabangGL"
+                                          name="cabangGL">
+                                      <option value="">Semua Cabang</option>
+                                      <th:block th:each="cabang : ${cabangList}">
+                                          <option th:value="${cabang.id}"
+                                                  th:text="${cabang.namaCabang}">
+                                          </option>
+                                      </th:block>
+                                  </select>
+                              </div>
+
+                              <!-- Action -->
+                              <div class="col-md-4">
+                                  <div class="d-flex gap-2" style="margin-top: 2em;">
+                                      <button type="button"
+                                              class="btn btn-primary btn-md"
+                                              id="btnFilterGl">
+                                          <i class="ti ti-filter"></i>
+                                          Filter
+                                      </button>
+
+                                      <button type="button"
+                                              class="btn btn-outline-secondary btn-sm"
+                                              id="btnResetFilterGl">
+                                          <i class="ti ti-refresh"></i>
+                                          Reset
+                                      </button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+            </div>
+
+            <div class="row row-deck row-cards"  style="margin-top:20px;">
+          
+              <div class="col-12">
+                <div class="card">
+                  <div class="table-responsive">
+                    <table id="table-nogel" class="table table-striped card-table table-vcenter text-nowrap datatable">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th class="w-1">Nomor GL 
+                          </th>
+                          <th>Nama GL Account</th>
+                          <th>Kategori</th>
+                          <th>D/K</th>
+                          <th>Cabang</th>
+                          <th>Aksi</th> 
+                        </tr>
+                      </thead>
+                      <tbody>
+                      </tbody>
+                    </table>
+                  </div>         
+                </div>
+              </div>
+            </div>
+        </div>       
+        <div th:replace="~{parameter/nogel/add :: add}"></div>
+    </div>
+   
+   
+    <div layout:fragment="scripts">
+        <link th:href="@{/lib/DataTables/datatables.min.css}" rel="stylesheet">
+        <script th:src="@{/lib/DataTables/datatables.min.js}"></script>   
+        <script th:src="@{/js/parameter/nogel-list.js}"></script>
+    </div>
+  </body>
+</html>
