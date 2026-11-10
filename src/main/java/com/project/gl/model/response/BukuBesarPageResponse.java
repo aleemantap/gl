@@ -15,8 +15,9 @@ import lombok.Setter;
 public class BukuBesarPageResponse {
 
     private BigDecimal saldoAwal;
-
     private String normalBalance;
-
+    private BigDecimal debit;
+    private BigDecimal kredit;
+    private BigDecimal saldoBerjalan;
     private List<BukuBesarResponse> data;
 }

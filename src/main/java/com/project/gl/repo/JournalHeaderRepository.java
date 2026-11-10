@@ -3,6 +3,9 @@ package com.project.gl.repo;
 
 import com.project.gl.model.entity.JournalHeader;
 import com.project.gl.model.projection.JournalListProjection;
+import com.project.gl.model.projection.JournalPeriodSummaryProjection;
+import com.project.gl.model.projection.OjkProfitLossProjection;
+
 import java.time.LocalDateTime;
 import java.util.List;
 // import java.util.List;
@@ -218,5 +221,95 @@ public interface JournalHeaderRepository extends JpaRepository<JournalHeader, Lo
                 @Param("statusReversal") String statusReversal
         );
 
-        
+        @Query(value = """
+                SELECT COUNT(*)
+                FROM journal_header
+                WHERE idempotency_key = :idempotencyKey
+                AND status = 'POSTED'
+        """, nativeQuery = true)
+        long countPostedByIdempotencyKey(
+        @Param("idempotencyKey") String idempotencyKey
+        );
+
+
+       
+        // SUMMARY JURNAL UNTUK TUTUP BUKU
+        @Query(value = """
+        SELECT
+                COALESCE(
+                SUM(CASE WHEN jd.dk = 'D' THEN jd.amount ELSE 0 END),
+                0
+                ) AS totalDebit,
+
+                COALESCE(
+                SUM(CASE WHEN jd.dk = 'K' THEN jd.amount ELSE 0 END),
+                0
+                ) AS totalKredit,
+
+                COUNT(DISTINCT jh.id) AS totalJournal
+
+        FROM journal_header jh
+
+        LEFT JOIN journal_detail jd
+                ON jd.journal_header_id = jh.id
+
+        WHERE jh.status = 'POSTED'
+        AND jh.cabang_id = :cabangId
+        AND jh.transaction_date >= :tanggalMulai
+        AND jh.transaction_date < :tanggalSelesai
+        """, nativeQuery = true)
+        JournalPeriodSummaryProjection findPeriodSummary(
+        @Param("cabangId") Long cabangId,
+        @Param("tanggalMulai") LocalDateTime tanggalMulai,
+        @Param("tanggalSelesai") LocalDateTime tanggalSelesai
+        );
+
+        // PROFIT LOSS UNTUK PERHITUNGAN TOTAL EQUITY OJK
+        @Query(value = """
+        SELECT
+                COALESCE(
+                SUM(
+                        CASE
+                        WHEN gat.name = 'revenue' THEN
+                                CASE
+                                WHEN na.saldo_normal = 'K'
+                                        THEN jd.amount
+                                ELSE -jd.amount
+                                END
+                        ELSE 0
+                        END
+                ), 0
+                ) AS revenueAmount,
+
+                COALESCE(
+                SUM(
+                        CASE
+                        WHEN gat.name = 'expense' THEN
+                                CASE
+                                WHEN na.saldo_normal = 'D'
+                                        THEN jd.amount
+                                ELSE -jd.amount
+                                END
+                        ELSE 0
+                        END
+                ), 0
+                ) AS expenseAmount
+
+        FROM journal_header jh
+        JOIN journal_detail jd
+                ON jd.journal_header_id = jh.id
+        JOIN nomor_gl_account na
+                ON na.id = jd.gl_account_id
+        JOIN gl_account_type gat
+                ON gat.id = na.type_gl_account_id
+
+        WHERE jh.status = 'POSTED'
+        AND jh.transaction_date >= :tanggalMulai
+        AND jh.transaction_date < :tanggalSelesai
+        AND gat.name IN ('revenue', 'expense')
+        """, nativeQuery = true)
+        OjkProfitLossProjection findProfitLossForOjk(
+        @Param("tanggalMulai") LocalDateTime tanggalMulai,
+        @Param("tanggalSelesai") LocalDateTime tanggalSelesai
+        ); 
 }

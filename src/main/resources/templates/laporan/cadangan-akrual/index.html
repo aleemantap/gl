@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
+
+<head>
+    <title>Laporan Cadangan Akrual</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+    <div class="container-xl">
+
+        <div class="page-header mb-3">
+            <h2>Cadangan dan Akrual (CKPN)</h2>
+            <p class="text-muted">
+                Rekonsiliasi cadangan Gadai dengan saldo GL.
+            </p>
+        </div>
+
+        <!-- Form Proses -->
+        <div class="card mb-3">
+            <div class="card-body">
+
+               <form id="formProsesCkpn">
+
+                    <input type="hidden"
+                           th:name="${_csrf.parameterName}"
+                           th:value="${_csrf.token}"
+                           th:if="${_csrf != null}">
+
+                    <div class="row align-items-end">
+
+                        <div class="col-md-3">
+                            <label class="form-label">Periode</label>
+                            <input type="month"
+                                   name="periode"
+                                   id="periode"
+                                   class="form-control"
+                                   th:value="${periode}"
+                                   required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Cabang</label>
+                            <select name="kodeCabang"
+                                    id="kodeCabang"
+                                    class="form-select"
+                                    required>
+                                <option value="">Pilih Cabang</option>
+
+                                <option th:each="c : ${cabangList}"
+                                        th:value="${c.id}"
+                                        th:text="${c.namaCabang}"
+                                        th:attr="data-kode=${c.kodeCabang}"
+                                        th:selected="${cabangId != null and c.id == cabangId}">
+                                </option>
+                            </select>
+
+                            <input type="hidden"
+                                   name="kodeCabang"
+                                   id="kodeCabang">
+                        </div>
+
+                        <div class="col-md-2">
+                            <button type="submit"
+                                    class="btn btn-primary">
+                                <i class="ti ti-refresh"></i>
+                                Proses
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+        <div th:if="${info}"
+            class="alert alert-info alert-dismissible fade show"
+            role="alert">
+
+            <i class="ti ti-info-circle me-1"></i>
+            <strong>Tidak Ada Penyesuaian CKPN!</strong>
+            <span th:text="${info}"></span>
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close">
+            </button>
+        </div>
+
+        <!-- Alert Success -->
+        <div th:if="${success}"
+            class="alert alert-success alert-dismissible fade show"
+            role="alert">
+
+            <i class="ti ti-circle-check me-1"></i>
+            <strong>Posting Berhasil!</strong>
+            <span th:text="${success}"></span>
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close">
+            </button>
+        </div>
+
+        <!-- Alert Error -->
+        <div th:if="${error}"
+            class="alert alert-danger alert-dismissible fade show"
+            role="alert">
+
+            <i class="ti ti-alert-circle me-1"></i>
+            <strong>Posting Gagal!</strong>
+            <span th:text="${error}"></span>
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close">
+            </button>
+        </div>
+
+        <!-- Hasil Preview -->
+        <div class="card" th:if="${preview != null}">
+
+            <div class="card-header">
+                <h3 class="card-title">Hasil Preview CKPN</h3>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <small class="text-muted">Periode</small>
+                        <h4 th:text="${preview.periode}"></h4>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted">Cabang</small>
+                        <h4 th:text="${preview.namaCabang}"></h4>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted">Referensi Gadai</small>
+                        <h4 th:text="${preview.referensiLaporan}"></h4>
+                    </div>
+                </div>
+
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th>Total Cadangan Gadai</th>
+                        <td class="text-end"
+                            th:text="${#numbers.formatDecimal(preview.totalCadanganGadai, 0, 'COMMA', 2, 'POINT')}">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>Saldo Cadangan GL</th>
+                        <td class="text-end"
+                            th:text="${#numbers.formatDecimal(preview.saldoCadanganGl, 0, 'COMMA', 2, 'POINT')}">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>Selisih</th>
+                        <td class="text-end fw-bold"
+                            th:text="${#numbers.formatDecimal(preview.nominalJurnal, 0, 'COMMA', 2, 'POINT')}">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="alert alert-info"
+                     th:text="${preview.status}">
+                </div>
+
+                <h4 class="mt-4">Arah Jurnal</h4>
+
+                <p th:text="${preview.arahJurnal}"></p>
+
+                <!-- Form Posting -->
+                <form th:action="@{/laporan/cadangan-akrual/posting}"
+                      method="post">
+
+                    <!-- <input type="hidden"
+                           th:name="${_csrf.parameterName}"
+                           th:value="${_csrf.token}"
+                           th:if="${_csrf != null}"> -->
+
+                    <input type="hidden"
+                           name="periode"
+                           th:value="${preview.periode}">
+
+                    <input type="hidden"
+                           name="cabangId"
+                           th:value="${preview.cabangId}">
+
+                    <input type="hidden"
+                           name="kodeCabang"
+                           th:value="${preview.kodeCabang}">
+
+                    <button type="button"
+                            class="btn btn-success"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalPosting"
+                            th:disabled="${!preview.jurnalDiperlukan}">
+                        <i class="ti ti-check"></i>
+                        Posting Jurnal
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+
+        <!-- Modal Konfirmasi Posting CKPN -->
+        <div class="modal fade"
+            id="modalPosting"
+            tabindex="-1"
+            aria-labelledby="modalPostingLabel"
+            aria-hidden="true">
+
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <form th:action="@{/laporan/cadangan-akrual/posting}"
+                        method="post"
+                        id="formPostingCkpn">
+
+                        <!-- Hidden input diisi melalui JavaScript -->
+                        <input type="hidden" name="periode" id="postingPeriode">
+                        <input type="hidden" name="cabangId" id="postingCabangId">
+                        <input type="hidden" name="kodeCabang" id="postingKodeCabang">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalPostingLabel">
+                                Konfirmasi Posting Jurnal CKPN
+                            </h5>
+
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close">
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+
+                            <div class="alert alert-warning">
+                                <i class="ti ti-alert-triangle me-1"></i>
+                                Pastikan data pencadangan dan nominal jurnal
+                                sudah benar sebelum melanjutkan.
+                            </div>
+
+                            <table class="table table-sm table-borderless mb-0">
+                                <tr>
+                                    <th width="40%">Periode</th>
+                                    <td id="previewPeriode"></td>
+                                </tr>
+                                <tr>
+                                    <th>Cabang</th>
+                                    <td id="previewCabang"></td>
+                                </tr>
+                                <tr>
+                                    <th>Referensi Gadai</th>
+                                    <td id="previewReferensi"></td>
+                                </tr>
+                                <tr>
+                                    <th>Nominal Jurnal</th>
+                                    <td class="fw-bold text-danger"
+                                        id="previewNominal"></td>
+                                </tr>
+                                <tr>
+                                    <th>Arah Jurnal</th>
+                                    <td id="previewArahJurnal"></td>
+                                </tr>
+                            </table>
+
+                            <p class="text-muted mt-3 mb-0">
+                                Apakah Anda yakin ingin melanjutkan proses
+                                posting jurnal CKPN?
+                            </p>
+
+                        </div>
+
+                        <div class="modal-footer">
+
+                            <button type="button"
+                                    class="btn btn-outline-secondary"
+                                    data-bs-dismiss="modal">
+                                Batal
+                            </button>
+
+                            <button type="submit" class="btn btn-success">
+                                <i class="ti ti-check me-1"></i>
+                                Ya, Lanjutkan
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    
+    </div>
+
+  
+
+</div>
+
+   
+
+<!-- Fragment Scripts -->
+<th:block layout:fragment="scripts">
+
+    <link th:href="@{/css/select2.min.css}" rel="stylesheet">
+    <link th:href="@{/css/select2-bootstrap-5-theme.min.css}" rel="stylesheet">
+    <script th:src="@{/js/select2.min.js}"></script>
+    <script th:src="@{/js/laporan/cadangan-akrual.js}"></script> 
+    <script>
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     const cabang = document.getElementById('cabangId');
+        //     const kodeCabang = document.getElementById('kodeCabang');
+
+        //     function updateKodeCabang() {
+        //         const selected = cabang.options[cabang.selectedIndex];
+        //         kodeCabang.value = selected
+        //             ? selected.getAttribute('data-kode') || ''
+        //             : '';
+        //     }
+
+        //     cabang.addEventListener('change', updateKodeCabang);
+        //     updateKodeCabang();
+        // });
+    </script>
+
+</th:block>
+
+</body>
+</html>

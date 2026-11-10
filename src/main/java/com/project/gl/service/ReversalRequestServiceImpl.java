@@ -145,6 +145,91 @@ public class ReversalRequestServiceImpl implements ReversalRequestService {
     }
    
 
+    // @Override
+    // @Transactional
+    // public void approve(Long id, String approvedBy) {
+
+    //     // 1. Pastikan request masih MENUNGGU
+    //     ReversalRequest request = validateWaiting(id);
+
+    //     // 1.1 Validasi identitas penyetuju
+    //     if (approvedBy == null || approvedBy.isBlank()) {
+    //         throw new IllegalArgumentException(
+    //             "Identitas penyetuju tidak valid."
+    //         );
+    //     }
+
+    //     // 1.2. Pengaju tidak boleh menyetujui permintaannya sendiri
+    //     if (request.getRequestedBy() != null
+    //             && request.getRequestedBy().trim()
+    //                 .equalsIgnoreCase(approvedBy.trim())) {
+
+    //         throw new IllegalStateException(
+    //             "Pengaju tidak boleh menyetujui permintaannya sendiri."
+    //         );
+    //     }
+		
+	// 	String requestedBy = request.getRequestedBy();
+
+	// 	if (requestedBy == null || requestedBy.isBlank()) {
+	// 		throw new IllegalStateException(
+	// 			"Identitas pengaju tidak tersedia."
+	// 		);
+	// 	}
+
+    //     // 2. Ambil jurnal asli
+    //     JournalHeader original =
+    //             journalHeaderRepository.findById(request.getOriginalJournalId())
+    //                 .orElseThrow(() ->
+    //                     new IllegalStateException(
+    //                         "Jurnal asli tidak ditemukan dengan ID: "
+    //                         + request.getOriginalJournalId()
+    //                     )
+    //                 );
+
+    //     // 3. Validasi jurnal asli
+    //     validateOriginalJournal(original);
+
+    //     // 4. Ambil detail jurnal asli
+    //     List<JournalDetail> originalDetails =
+    //             journalDetailRepository
+    //                 .findByJournalHeaderId(original.getId());
+
+    //     if (originalDetails == null || originalDetails.isEmpty()) {
+    //         throw new IllegalStateException(
+    //             "Jurnal asli tidak memiliki detail."
+    //         );
+    //     }
+
+    //     // 5. Pastikan jurnal asli balance
+    //     validateJournalBalance(originalDetails);
+
+    //     // 6. Buat Journal Header reversal
+    //     JournalHeader reversal =
+    //             createReversalHeader(original);
+
+    //     // 7. Copy detail + balik D/K
+    //     createReversalDetails(
+    //         original,
+    //         reversal,
+    //         originalDetails
+    //     );
+
+    //     // 8. Copy cash movement + balik IN/OUT
+    //     createReversalCashMovements(
+    //         original,
+    //         reversal
+    //     );
+
+    //     // 9. Update request menjadi DISETUJUI
+    //     request.setStatus(ReversalRequestStatus.DISETUJUI);
+    //     request.setApprovedBy(approvedBy);
+    //     request.setApprovedAt(LocalDateTime.now());
+
+    //     reversalRequestRepository.save(request);
+    // }
+
+    
     @Override
     @Transactional
     public void approve(Long id, String approvedBy) {
@@ -152,20 +237,44 @@ public class ReversalRequestServiceImpl implements ReversalRequestService {
         // 1. Pastikan request masih MENUNGGU
         ReversalRequest request = validateWaiting(id);
 
-        // 2. Ambil jurnal asli
-        JournalHeader original =
-                journalHeaderRepository.findById(request.getOriginalJournalId())
-                    .orElseThrow(() ->
-                        new IllegalStateException(
-                            "Jurnal asli tidak ditemukan dengan ID: "
-                            + request.getOriginalJournalId()
-                        )
-                    );
+        // 2. Validasi identitas penyetuju
+        if (approvedBy == null || approvedBy.isBlank()) {
+            throw new IllegalArgumentException(
+                "Identitas penyetuju tidak valid."
+            );
+        }
 
-        // 3. Validasi jurnal asli
+        // 3. Validasi identitas pengaju
+        String requestedBy = request.getRequestedBy();
+
+        if (requestedBy == null || requestedBy.isBlank()) {
+            throw new IllegalStateException(
+                "Identitas pengaju tidak tersedia."
+            );
+        }
+
+        // 4. Pengaju tidak boleh menyetujui permintaannya sendiri
+        if (requestedBy.trim().equalsIgnoreCase(approvedBy.trim())) {
+            throw new IllegalStateException(
+                "Pengaju tidak boleh menyetujui permintaannya sendiri."
+            );
+        }
+
+        // 5. Ambil jurnal asli
+        JournalHeader original =
+                journalHeaderRepository.findById(
+                    request.getOriginalJournalId()
+                ).orElseThrow(() ->
+                    new IllegalStateException(
+                        "Jurnal asli tidak ditemukan dengan ID: "
+                        + request.getOriginalJournalId()
+                    )
+                );
+
+        // 6. Validasi jurnal asli
         validateOriginalJournal(original);
 
-        // 4. Ambil detail jurnal asli
+        // 7. Ambil detail jurnal asli
         List<JournalDetail> originalDetails =
                 journalDetailRepository
                     .findByJournalHeaderId(original.getId());
@@ -176,33 +285,34 @@ public class ReversalRequestServiceImpl implements ReversalRequestService {
             );
         }
 
-        // 5. Pastikan jurnal asli balance
+        // 8. Pastikan jurnal asli balance
         validateJournalBalance(originalDetails);
 
-        // 6. Buat Journal Header reversal
+        // 9. Buat Journal Header reversal
         JournalHeader reversal =
                 createReversalHeader(original);
 
-        // 7. Copy detail + balik D/K
+        // 10. Copy detail + balik D/K
         createReversalDetails(
             original,
             reversal,
             originalDetails
         );
 
-        // 8. Copy cash movement + balik IN/OUT
+        // 11. Copy cash movement + balik IN/OUT
         createReversalCashMovements(
             original,
             reversal
         );
 
-        // 9. Update request menjadi DISETUJUI
+        // 12. Update request menjadi DISETUJUI
         request.setStatus(ReversalRequestStatus.DISETUJUI);
-        request.setApprovedBy(approvedBy);
+        request.setApprovedBy(approvedBy.trim());
         request.setApprovedAt(LocalDateTime.now());
 
         reversalRequestRepository.save(request);
     }
+
 
     @Override
     @Transactional

@@ -17,7 +17,8 @@
                                  <input type="hidden" id="journalKode" name="journalKode"/>
                                   
                                 <div class="input-group mb-2">
-                                     <input type="text" class="form-control bg-readonly" id="journalIdDisplay" name="journalIdDisplay" placeholder="JournalId" readonly>
+                                    <!-- <input type="text" class="form-control bg-readonly" id="journalIdDisplay" name="journalIdDisplay" placeholder="JournalId" readonly> -->
+                                     <input type="text" class="form-control" id="journalIdDisplay" name="journalIdDisplay" placeholder="JournalId">
                                     <button class="btn btn-primary-yellow2" id="generate-id" type="button">Generate</button>
                                 </div>
                                 <div class="invalid-feedback" id="journalIdError"></div>
@@ -30,13 +31,21 @@
                             </div>
                             <div class="col-md-4 mb-3">                                    
                                 <label class="form-label">PRODUK-RULE</label>
-                                <select class="form-select select2" id="productRuleId" name="productRuleId">
+                                <!-- <select class="form-select select2" id="productRuleId" name="productRuleId">
                                        <option value="">-- Pilih Product Rule --</option>
                                         <option
                                             th:each="rule : ${productRules}"
                                             th:value="${rule.id}"
                                             th:text="${rule.productName + ' - Rule v' + rule.ruleVersion
                                                     + ' - Berlaku ' + rule.effectiveFrom}">
+                                        </option>
+                                </select> -->
+                                  <select class="form-select select2" id="productRuleId" name="productRuleId">
+                                       <option value="">-- Pilih Product Rule --</option>
+                                        <option
+                                            th:each="rule : ${productRules}"
+                                            th:value="${rule.id}"
+                                            th:text="${rule.productName}">
                                         </option>
                                 </select>
                                 <!-- <input type="text" class="form-control" id="produk_rule" name="produk_rule"/> -->

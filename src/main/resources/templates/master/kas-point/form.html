@@ -1,0 +1,76 @@
+<!-- ===================== MODAL FORM ===================== -->
+<div th:fragment="form">
+
+<div class="modal fade" id="modalForm" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formKasPoint">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Tambah Kas Point</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="id" name="id">
+
+                    <div class="mb-3">
+                        <label class="form-label">Code</label>
+                        <input type="text" class="form-control" id="kasPointCode" name="kasPointCode" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Nama</label>
+                        <input type="text" class="form-control" id="nama" name="nama" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Jenis</label>
+                        <select class="form-select" id="jenis" name="jenis" required>
+                            <option value="">Pilih</option>
+                            <option th:each="j : ${jenisList}"
+                                    th:value="${j.value}"
+                                    th:text="${j.label}"></option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Cabang</label>
+                        <select class="form-control select2" id="cabangId" name="cabangId" style="width: 100%;">
+                            <option value="">-- Pilih Cabang --</option>
+                            <option th:each="cabang : ${cabangList}" 
+                                    th:value="${cabang.id}" 
+                                    th:text="${cabang.namaCabang}"
+                                    >
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary" id="btnSave">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== MODAL CONFIRM DELETE ===================== -->
+<div class="modal fade" id="modalDelete" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Konfirmasi Hapus</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Yakin ingin menghapus data ini?
+                <input type="hidden" id="deleteId">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-danger" id="btnConfirmDelete">Hapus</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>

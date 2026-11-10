@@ -100,6 +100,7 @@ public class ExcelImportService {
             request.setProductCode(getString(row, "product_code"));
             request.setIdempotencyKey(getString(row, "idempotency_key"));
             request.setTypeTransaction(getString(row, "transactionType"));
+            request.setBankCode(getString(row, "bank_code"));
 
             String transactionType = getString(row, "transactionType");
             
@@ -142,6 +143,9 @@ public class ExcelImportService {
             
             // ===== Amounts =====
             JournalRequest.Amounts amounts = new JournalRequest.Amounts();
+
+            // ===== Flags =====
+            JournalRequest.Flags flags = new JournalRequest.Flags();
             
            
             
@@ -171,12 +175,16 @@ public class ExcelImportService {
                 amounts.setAdminCost(parseCurrency(getString(row, "admin_cost")));
                 amounts.setProvision(parseCurrency(getString(row, "provision")));
                 amounts.setCustomerCash(parseCurrency(getString(row, "customer_cash")));
+                amounts.setCustomerBank(parseCurrency(getString(row, "customer_bank")));
+
+                flags.setAdminInAdvance(Boolean.parseBoolean(getString(row, "admin_in_advance")));
+                flags.setProvisionInAdvance(Boolean.parseBoolean(getString(row, "provision_in_advance")));
 
                 // ===== Counterparty Information =====
                 JournalRequest.Collateral  collateral  = new JournalRequest.Collateral();
 
-                collateral.setLtv(parseCurrency(getString(row, "ltv")));
-                collateral.setAppraisedValue(parseCurrency(getString(row, "appraised_value")));
+                // collateral.setLtv(parseCurrency(getString(row, "ltv")));
+                // collateral.setAppraisedValue(parseCurrency(getString(row, "appraised_value")));
                 collateral.setCollateralType(getString(row, "collateral_type"));
                 request.setCollateral(collateral);
 
@@ -186,16 +194,17 @@ public class ExcelImportService {
                 amounts.setInterestAmount(parseCurrency(getString(row, "interest_amount")));
                 amounts.setPaymentAmount(parseCurrency(getString(row, "payment_amount")));
                 amounts.setPrincipalPayment(parseCurrency(getString(row, "principal_payment")));
-            } else {
-                amounts.setLoanAmount(parseCurrency(getString(row, "loan_amount")));
-                amounts.setRepaymentAmount(parseCurrency(getString(row, "repayment_amount")));
-                amounts.setInterestAmount(parseCurrency(getString(row, "interest_amount")));
-                amounts.setAdminCost(parseCurrency(getString(row, "admin_cost")));
-                amounts.setProvision(parseCurrency(getString(row, "provision")));
-                amounts.setCustomerCash(parseCurrency(getString(row, "customer_cash")));
-                amounts.setPaymentAmount(parseCurrency(getString(row, "payment_amount")));
-                amounts.setPrincipalPayment(parseCurrency(getString(row, "principal_payment")));
-            }
+            } 
+            // else {
+            //     amounts.setLoanAmount(parseCurrency(getString(row, "loan_amount")));
+            //     amounts.setRepaymentAmount(parseCurrency(getString(row, "repayment_amount")));
+            //     amounts.setInterestAmount(parseCurrency(getString(row, "interest_amount")));
+            //     amounts.setAdminCost(parseCurrency(getString(row, "admin_cost")));
+            //     amounts.setProvision(parseCurrency(getString(row, "provision")));
+            //     amounts.setCustomerCash(parseCurrency(getString(row, "customer_cash")));
+            //     amounts.setPaymentAmount(parseCurrency(getString(row, "payment_amount")));
+            //     amounts.setPrincipalPayment(parseCurrency(getString(row, "principal_payment")));
+            // }
 
             System.out.println("TEEE-"+getBigDecimal(row, "loan_amount"));
             

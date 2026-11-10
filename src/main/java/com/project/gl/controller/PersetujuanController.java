@@ -101,22 +101,14 @@ public class PersetujuanController extends BaseController {
             
          
                 List<ReversalRequestRow> requests = reversalRequestService.findAllRows();
-
                 long jumlahMenunggu = requests.stream()
                 .filter(r ->
                         r.status() == ReversalRequestStatus.MENUNGGU
                 )
                 .count();
-
-                model.addAttribute(
-                        "requests",
-                        requests
-                );
-
-                model.addAttribute(
-                        "jumlahMenunggu",
-                        jumlahMenunggu
-                );
+                model.addAttribute("requests", requests);				
+				model.addAttribute("currentUsername",getCurrentUsername());
+                model.addAttribute("jumlahMenunggu",jumlahMenunggu);
                 model.addAttribute("breadcrumbItems", new String[]{"OPERASIONAL", "PERSETUJUAN"});
             
         } catch (Exception e) {
@@ -131,46 +123,80 @@ public class PersetujuanController extends BaseController {
      /**
      * AJAX - approve reversal
      */
-    @PostMapping("/approve/{id}")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> approve(
-            @PathVariable Long id) {
+//     @PostMapping("/approve/{id}")
+//     @ResponseBody
+//     public ResponseEntity<Map<String, Object>> approve(
+//             @PathVariable Long id) {
 
-        Map<String, Object> response =
-                new HashMap<>();
+//         Map<String, Object> response =
+//                 new HashMap<>();
 
-        try {
+//         try {
 
-            // Sementara user approver kita hardcode.
-            // Nanti diganti dari Spring Security.
-            String approvedBy = "SYSTEM";
+//             // Sementara user approver kita hardcode.
+//             // Nanti diganti dari Spring Security.
+//             String approvedBy = "SYSTEM";
 
-            reversalRequestService.approve(
-                    id,
-                    approvedBy
-            );
+//             reversalRequestService.approve(
+//                     id,
+//                     approvedBy
+//             );
 
-            response.put("success", true);
-            response.put(
-                    "message",
-                    "Permintaan pembalikan berhasil disetujui."
-            );
+//             response.put("success", true);
+//             response.put(
+//                     "message",
+//                     "Permintaan pembalikan berhasil disetujui."
+//             );
 
-            return ResponseEntity.ok(response);
+//             return ResponseEntity.ok(response);
 
-        } catch (Exception e) {
+//         } catch (Exception e) {
 
-            response.put("success", false);
-            response.put(
-                    "message",
-                    e.getMessage()
-            );
+//             response.put("success", false);
+//             response.put(
+//                     "message",
+//                     e.getMessage()
+//             );
 
-            return ResponseEntity
-                    .badRequest()
-                    .body(response);
-        }
-    }
+//             return ResponseEntity
+//                     .badRequest()
+//                     .body(response);
+//         }
+//     }
+
+
+        @PostMapping("/approve/{id}")
+		@ResponseBody
+		public ResponseEntity<Map<String, Object>> approve(
+				@PathVariable Long id) {
+
+			Map<String, Object> response = new HashMap<>();
+
+			try {
+
+				String approvedBy = getCurrentUsername();
+
+				reversalRequestService.approve(
+					id,
+					approvedBy
+				);
+
+				response.put("success", true);
+				response.put(
+					"message",
+					"Permintaan pembalikan berhasil disetujui."
+				);
+
+				return ResponseEntity.ok(response);
+
+			} catch (Exception e) {
+
+				response.put("success", false);
+				response.put("message", e.getMessage());
+
+				return ResponseEntity.badRequest().body(response);
+			}
+		}
 
 
     /**
@@ -187,7 +213,7 @@ public class PersetujuanController extends BaseController {
 
         try {
 
-            String rejectedBy = "SYSTEM";
+            String rejectedBy =  getCurrentUsername();
 
             reversalRequestService.reject(
                     id,
@@ -242,53 +268,6 @@ public class PersetujuanController extends BaseController {
         }
 
 
-        // @PostMapping("/request")
-        // @ResponseBody
-        // public ResponseEntity<Map<String, Object>> createRequest(
-        //         @RequestParam Long journalId,
-        //         @RequestParam String reason,
-        //         @RequestParam(required = false) String description) {
-
-        // try {
-
-        //         String requestedBy = null; 
-        //         // 2. Jika dari FE kosong/null, ambil dari login
-        //         //if (requestedBy == null || requestedBy.trim().isEmpty()) {
-        //         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        //         if (auth != null && auth.isAuthenticated())
-        //         {
-        //                 Object principal = auth.getPrincipal();
-        //                 if (principal instanceof CustomUserPrincipal) {
-        //                         requestedBy = ((CustomUserPrincipal) principal).getUsername();
-        //                 }
-        //         }
-        //         //}
-        //         reversalRequestService.createRequest(
-        //                 journalId,
-        //                 requestedBy,
-        //                 reason,
-        //                 description
-        //         );
-
-        //         return ResponseEntity.ok(
-        //                 Map.of(
-        //                 "success", true,
-        //                 "message",
-        //                 "Permintaan pembalikan berhasil dikirim."
-        //                 )
-        //         );
-
-        // } catch (Exception e) {
-
-        //         return ResponseEntity.badRequest()
-        //                 .body(
-        //                 Map.of(
-        //                         "success", false,
-        //                         "message", e.getMessage()
-        //                 )
-        //                 );
-        // }
-        // }
 
 
         @PostMapping("/request")
@@ -332,6 +311,34 @@ public class PersetujuanController extends BaseController {
                         )
                 );
         }
-        }
+   }
+
+         private String getCurrentUsername() {
+
+			Authentication auth =
+					SecurityContextHolder.getContext().getAuthentication();
+
+			if (auth == null
+					|| !auth.isAuthenticated()
+					|| !(auth.getPrincipal() instanceof CustomUserPrincipal)) {
+
+				throw new IllegalStateException(
+					"User belum terautentikasi."
+				);
+			}
+
+			CustomUserPrincipal principal =
+					(CustomUserPrincipal) auth.getPrincipal();
+
+			String username = principal.getUsername();
+
+			if (username == null || username.isBlank()) {
+				throw new IllegalStateException(
+					"Username user tidak valid."
+				);
+			}
+
+			return username.trim();
+		}
    
 }

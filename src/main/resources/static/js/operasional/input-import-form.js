@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
     uploadedData = null;
     uploadedHeaders = [];
     uploadedFileName = "";
-    uploadedFileType = ""; // ✅ Reset tipe file
+    uploadedFileType = ""; //  Reset tipe file
 
     const newFileInput = document.getElementById("fileInput");
     if (newFileInput) {
@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /*
-   * ✅ TAMBAHAN: Deteksi tipe file berdasarkan nama
+   *  TAMBAHAN: Deteksi tipe file berdasarkan nama
    * Mengembalikan "pembayaran", "pencairan", atau "" jika tidak ditemukan
    */
   function detectFileType(fileName) {
@@ -226,7 +226,7 @@ document.addEventListener("DOMContentLoaded", function () {
       previewArea.innerHTML = `
                             <i class="ti ti-table preview-icon"></i>
                             <div class="preview-text" style="color: #dc3545;">
-                                ⚠️ File tidak memiliki data atau format tidak sesuai
+                                 File tidak memiliki data atau format tidak sesuai
                             </div>
                         `;
       previewArea.classList.remove("has-data");
@@ -294,7 +294,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (isTruncated) {
       infoHtml += `
                             <span style="color: #856404; background: #fff3cd; padding: 2px 10px; border-radius: 4px;">
-                                ⚠️ Menampilkan ${maxRows} dari ${data.length} baris
+                                 Menampilkan ${maxRows} dari ${data.length} baris
                             </span>
                         `;
     }
@@ -334,7 +334,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      // ✅ VALIDASI NAMA FILE: harus mengandung "pembayaran" atau "pencairan"
+      // VALIDASI NAMA FILE: harus mengandung "pembayaran" atau "pencairan"
       const fileType = detectFileType(file.name);
 
       if (!fileType) {
@@ -360,7 +360,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      // ✅ Simpan tipe file
+      //  Simpan tipe file
       uploadedFileType = fileType;
       console.log("Tipe file terdeteksi:", uploadedFileType);
 
@@ -521,7 +521,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      // ✅ Validasi ulang tipe file sebelum posting (safety check)
+      //  Validasi ulang tipe file sebelum posting (safety check)
       if (!uploadedFileType) {
         Swal.fire({
           icon: "error",
@@ -532,7 +532,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         return;
       }
-
       Swal.fire({
         title: "Konfirmasi Posting",
         html: `

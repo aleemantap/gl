@@ -23,70 +23,6 @@ $(document).ready(function () {
    });
 
 
-    //load kategori
-    // function loadtype_gl(id) {
-    //   $.ajax({
-    //     url: "/parameter/gl-type-account/list",
-    //     type: "GET",
-    //     dataType: "json",
-    //     success: function (response) {
-    //       var select = $("#type_gl");
-    //       select.empty();
-    //       select.append('<option value="">Pilih Type</option>');
-    //       if (response.content && response.content.length > 0) {
-    //         $.each(response.content, function (index, item) {
-    //           // select.append(
-    //           //   '<option value="' + item.id + '">' + item.name + "</option>",
-    //           // );
-    //             var selected = id && item.id == id ? "selected" : "";
-    //             select.append(
-    //               '<option value="' +
-    //                 item.id +
-    //                 '" ' +
-    //                 selected +
-    //                 ">" +
-    //                 item.name +
-    //                 "</option>",
-    //             );
-    //         });
-    //       }
-    //     },
-    //     error: function (xhr, status, error) {
-    //       console.error("Error loading kategori:", error);
-    //       showToast("error", "Gagal memuat data kategori");
-    //     },
-    //   });
-    // }
-
-    // function loadCabang() {
-    //    $.ajax({
-    //      url: "/parameter/cabang/list",
-    //      type: "GET",
-    //      dataType: "json",
-    //      success: function (response) {
-    //        var select = $("#cabangId");
-    //        select.empty();
-    //        select.append('<option value="">Pilih Cabang</option>');
-    //        if (response.content && response.content.length > 0) {
-    //          $.each(response.content, function (index, item) {
-    //            select.append(
-    //              '<option value="' +
-    //                item.id +
-    //                '">' +
-    //                item.kodeCabang + "-"
-    //                + item.namaCabang +
-    //                "</option>",
-    //            );
-    //          });
-    //        }
-    //      },
-    //      error: function (xhr, status, error) {
-    //        console.error("Error loading cabang:", error);
-    //        showToast("error", "Gagal memuat data cabang");
-    //      },
-    //    });
-    //  }
-
 
     const table = new DataTable("#table-nogel", {
       processing: true,
@@ -104,7 +40,7 @@ $(document).ready(function () {
           return {
             draw: d.draw,
             start: d.start,
-            length: 20,
+            length: 10,
             orderColumn: d.order[0] ? d.order[0].column : 1,
             orderDir: d.order[0] ? d.order[0].dir : "desc",
             // searchValue : "",
@@ -115,17 +51,10 @@ $(document).ready(function () {
             saldoNormal: $("#filterSaldoNormal").val() || null,
           };
         },
+
       },
 
       columns: [
-        // {
-        //   data: null,
-        //   defaultContent: "",
-        //   render: function (data, type, row, meta) {
-        //     return meta.row + 1 + (meta.settings._iDisplayStart || 0);
-        //   },
-        //   orderable: false, // Make row number not sortable
-        // },
         {
           data: null,
           orderable: false,
@@ -142,16 +71,7 @@ $(document).ready(function () {
         { data: "namaGlAccount" },
         { data: "glTypeName" },
         { data: "saldoNormal" },
-        // {
-        //   data: null,
-        //   render: function (data, type, row) {
-        //     return `
-        //           <div style="display: flex; gap: 15px;">
-        //               ${row.kodeCabang} - ${row.cabangName}
-        //           </div>
-        //       `;
-        //   },
-        // },
+
         {
           data: null,
           render: function (data, type, row) {

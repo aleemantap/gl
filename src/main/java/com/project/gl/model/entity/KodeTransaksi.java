@@ -35,6 +35,10 @@ public class KodeTransaksi {
     @Column(name = "category_id")
     private Integer categoryId;
 
+
+    @Column(name = "tipe_transaksi", length = 10)
+    private String tipeTransaksi;   
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

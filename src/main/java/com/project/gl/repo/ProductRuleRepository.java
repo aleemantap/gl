@@ -1,6 +1,8 @@
 package com.project.gl.repo;
 
 import com.project.gl.model.entity.ProductRule;
+import com.project.gl.model.projection.ProductRuleSummaryProjection;
+import com.project.gl.model.response.ProductRuleSummary;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -79,5 +81,25 @@ public interface ProductRuleRepository extends JpaRepository<ProductRule, Long> 
               @Param("transactionDate") LocalDate transactionDate
        );
 
+       // Fungsi untuk menghitung jumlah komponen berdasarkan product_id
+       @Query("""
+              SELECT COUNT(prc)
+              FROM ProductRule pr
+              JOIN ProductRuleComponent prc ON pr.id = prc.productRuleId
+              WHERE pr.productId = :productId
+              """)
+       long countComponentsByProductId(@Param("productId") Long productId);
+
+
+        @Query(value = """
+            SELECT 
+                COUNT(*) AS jumlahComponent, 
+                prc.product_rule_id AS productRuleId
+            FROM product_rule pr
+            JOIN product_rule_component prc ON pr.id = prc.product_rule_id
+            WHERE pr.product_id = :productId
+            GROUP BY prc.product_rule_id
+            """, nativeQuery = true)
+        List<ProductRuleSummaryProjection> getProductRuleSummaryByProductId(@Param("productId") Long productId);
        
 }

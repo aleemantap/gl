@@ -11,10 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.project.gl.model.entity.AmountSource;
 import com.project.gl.model.entity.Cabang;
 import com.project.gl.model.entity.Component;
 import com.project.gl.model.entity.Product;
+import com.project.gl.model.entity.ProductRule;
 import com.project.gl.model.projection.ProductRuleComponentProjection2;
+import com.project.gl.model.projection.ProductRuleSummaryProjection;
 import com.project.gl.model.request.ProductRequest;
 import com.project.gl.model.response.PageResponse;
 import com.project.gl.model.response.ProductDataTableResponse;
@@ -22,7 +26,9 @@ import com.project.gl.model.response.ProductResponse;
 import com.project.gl.model.response.ProductRuleComponentDTO;
 import com.project.gl.model.response.ProductRuleDTO;
 import com.project.gl.model.response.ProductRuleJournalDTO;
+import com.project.gl.model.response.ProductRuleSummary;
 import com.project.gl.repo.ComponentRepository;
+import com.project.gl.repo.ProductRuleRepository;
 // import com.project.gl.model.response.ProductRuleDTO;
 import com.project.gl.service.ProductService;
 import com.project.gl.service.ProductRuleService;
@@ -58,15 +64,44 @@ public class AturanProdukDetailController {
 
     @Autowired
     private ComponentRepository componentRepository;
+
+    @Autowired
+    private ProductRuleRepository productRuleRepository;
     
     
 
     @GetMapping("/{id}/{kode}")
     public String detail(Model model, @PathVariable Long id, @PathVariable String kode) {
         Product nama = productService.getProductEntityById(id);
+        // Long cn = productRuleRepository.countComponentsByProductId(id);
         model.addAttribute("breadcrumbItems", new String[]{"PARAMETER", "ATURAN PRODUK", "KODE PRODUK : "+kode,"Nama Product : "+nama.getProductName() });
         model.addAttribute("productId", id);
         model.addAttribute("namaProduk", nama.getProductName());
+        model.addAttribute("kodeProduk", kode);
+        // model.addAttribute("componentRuleJumlah", cn);
+        // model.addAttribute("productRuleId", 1);
+
+        // Mengambil hasil query dalam bentuk array Object
+        Long productId = id;
+       
+        List<ProductRuleSummaryProjection> results = productRuleRepository.getProductRuleSummaryByProductId(productId);
+
+        Long jumlahComponent = 0L;
+        Long productRuleId = null;
+
+        if (results != null && !results.isEmpty()) {
+            ProductRuleSummaryProjection r = results.get(0); // ambil baris pertama
+            jumlahComponent = r.getJumlahComponent() != null ? r.getJumlahComponent() : 0L;
+            productRuleId = r.getProductRuleId();
+        }
+
+        model.addAttribute("componentRuleJumlah", jumlahComponent);
+        model.addAttribute("productRuleId", productRuleId);
+
+        System.out.println("componentRuleJumlah :" + jumlahComponent);
+        System.out.println("productRuleId :" + productRuleId);
+        model.addAttribute("amountSourceList", AmountSource.OPTIONS);
+        
         List<Component> componentList = componentRepository.findAll();
         model.addAttribute("componentList", componentList);
         return "parameter/aturanProdukDetail/index";

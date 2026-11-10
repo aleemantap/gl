@@ -27,19 +27,44 @@ $(document).ready(function () {
      const branchCode = $("#branchCode").val();
 
      // Validate all required fields
+
+      if (!branchCode || branchCode === "" || branchCode === "0") {
+        //  alert("Silakan pilih akun terlebih dahulu");
+        Swal.fire({
+          icon: "warning",
+          title: "Warning",
+          text: "Silakan pilih Cabang",
+        });
+        return;
+      }
+
+
      if (!glAccountId || glAccountId === "" || glAccountId === "0") {
-       alert("Silakan pilih akun terlebih dahulu");
+      //  alert("Silakan pilih akun terlebih dahulu");
+        Swal.fire({
+          icon: "warning",
+          title: "Warning",
+          text: "Silakan pilih akun terlebih dahulu",
+        });
        return;
      }
 
      if (!tanggalDari) {
-       alert("Silakan pilih tanggal dari");
+       Swal.fire({
+         icon: "warning",
+         title: "Warning",
+         text: "Silakan pilih tanggal dari",
+       });
        return;
      }
 
      if (!tanggalSampai) {
-       alert("Silakan pilih tanggal sampai");
-       return;
+        Swal.fire({
+          icon: "warning",
+          title: "Warning",
+          text: "Silakan pilih tanggal sampai",
+        });
+        return;
      }
 
     $.ajax({
@@ -69,30 +94,50 @@ $(document).ready(function () {
         // HITUNG SALDO BERJALAN
         // ==========================================
 
+        // data.forEach(function (row) {
+        //   const amount = Number(row.amount || 0);
+
+        //   if (row.dk === "D") {
+        //     totalDebit += amount;
+        //   } else if (row.dk === "K") {
+        //     totalKredit += amount;
+        //   }
+
+        //   if (normalBalance === "D") {
+        //     if (row.dk === "D") {
+        //       saldoBerjalan += amount;
+        //     } else {
+        //       saldoBerjalan -= amount;
+        //     }
+        //   } else {
+        //     if (row.dk === "K") {
+        //       saldoBerjalan += amount;
+        //     } else {
+        //       saldoBerjalan -= amount;
+        //     }
+        //   }
+
+        //   // simpan saldo pada row
+        //   row.saldoBerjalan = saldoBerjalan;
+        // });
+
         data.forEach(function (row) {
           const amount = Number(row.amount || 0);
 
-          if (row.dk === "D") {
-            totalDebit += amount;
-          } else if (row.dk === "K") {
-            totalKredit += amount;
-          }
+          // Pisahkan mutasi debit dan kredit
+          row.debit = row.dk === "D" ? amount : 0;
+          row.kredit = row.dk === "K" ? amount : 0;
 
+          totalDebit += row.debit;
+          totalKredit += row.kredit;
+
+          // Hitung saldo berjalan berdasarkan normal balance
           if (normalBalance === "D") {
-            if (row.dk === "D") {
-              saldoBerjalan += amount;
-            } else {
-              saldoBerjalan -= amount;
-            }
-          } else {
-            if (row.dk === "K") {
-              saldoBerjalan += amount;
-            } else {
-              saldoBerjalan -= amount;
-            }
+            saldoBerjalan += row.debit - row.kredit;
+          } else if (normalBalance === "K") {
+            saldoBerjalan += row.kredit - row.debit;
           }
 
-          // simpan saldo pada row
           row.saldoBerjalan = saldoBerjalan;
         });
 
@@ -179,11 +224,26 @@ $(document).ready(function () {
               {
                 data: "transactionCode",
               },
+              // {
+              //   data: "dk",
+              // },
+              // {
+              //   data: "amount",
+              //   className: "text-end",
+              //   render: function (data) {
+              //     return formatRupiah(data);
+              //   },
+              // },
+
               {
-                data: "dk",
+                data: "debit",
+                className: "text-end",
+                render: function (data) {
+                  return formatRupiah(data);
+                },
               },
               {
-                data: "amount",
+                data: "kredit",
                 className: "text-end",
                 render: function (data) {
                   return formatRupiah(data);

@@ -2,7 +2,11 @@ package com.project.gl.repo;
 
 import com.project.gl.model.entity.JournalId;
 import com.project.gl.model.entity.TransactionCodeJournal;
+import com.project.gl.model.projection.CkpnJournalMappingProjection;
 import com.project.gl.model.response.JournaTransactionResponse;
+
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -60,4 +64,19 @@ public interface JournalKodeTransaksiRepository extends JpaRepository<Transactio
     );
 
     boolean existsByKodeTransaksiId(Long kodeTransaksiId);
+
+    @Query(value = """
+        SELECT
+            tcj.journal_id AS journalId,
+            tcj.kode_transaksi_id AS kodeTransaksiId
+        FROM transaction_code_journal tcj
+        JOIN kode_transaksi kt
+            ON kt.id = tcj.kode_transaksi_id
+        WHERE kt.kode = 'TX-CKPN'
+        AND tcj.cabang_id = :cabangId
+        LIMIT 1
+        """, nativeQuery = true)
+    Optional<CkpnJournalMappingProjection> findCkpnMapping(
+        @Param("cabangId") Integer cabangId
+    );
 }

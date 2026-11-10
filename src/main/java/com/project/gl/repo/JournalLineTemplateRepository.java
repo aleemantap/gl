@@ -50,11 +50,11 @@ public interface JournalLineTemplateRepository extends JpaRepository<JournalLine
 
     List<JournalLineTemplate> findByProductRuleComponentId(Long productRuleComponentId);
 
-    //  List<JournalLineTemplate>
-    // findByProductRuleComponent_Id(Long productRuleComponentId);
-
     @Modifying
     @Query("DELETE FROM JournalLineTemplate j WHERE j.journalId = :journalId")
     void deleteByJournalId(@Param("journalId") Long journalId);
+
+    //==== new ====
+    List<JournalLineTemplate> findByJournalIdAndIsActiveTrueOrderByLineOrderAsc(Long journalId);
 
 }

@@ -51,7 +51,7 @@
                             Cabang
                         </label>
                         <select id="branchCode" class="form-select select2">
-                            <option value="">Semua Cabang</option>                           
+                            <option value=""> --Pilih Cabang-- </option>                           
                             <option th:each="cabang : ${cabangList}" 
                                     th:value="${cabang.kodeCabang}" 
                                     th:text="${cabang.kodeCabang} + ' - ' + ${cabang.namaCabang}">
@@ -65,7 +65,7 @@
                            Akun GL   
                         </label>
                         <select id="glAccountId" class="form-select select2">
-                            <option value="">Semua Account</option>
+                            <option value="">-- Pilih Akun-- </option>
                             <th:block th:each="kt : ${glAccount}">
                                 <option th:value="${kt.id}" th:text="${kt.nomorGl + ' - ' + kt.namaGlAccount}"></option>
                             </th:block>
@@ -211,8 +211,10 @@
                           <th>Journal No</th>
                           <th>TransactionNo</th>
                           <th>transactionCode</th>
-                          <th>D/K</th>                          
-                          <th class="text-end">Jumlah</th>
+                          <!-- <th>D/K</th>                           -->
+                          <!-- <th class="text-end">Jumlah</th> -->
+                          <th class="text-end">Debit</th>
+                          <th class="text-end">Kredit</th>
                           <th class="text-end">Saldo Berjalan</th>
                           <!-- <th>Keterangan</th>   -->
                         </tr>

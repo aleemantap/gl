@@ -299,15 +299,33 @@ function renderReversalDetail(data) {
    * Tombol approval hanya aktif jika
    * request masih MENUNGGU.
    */
-  const isWaiting = data.status === "MENUNGGU";
+  //const isWaiting = data.status === "MENUNGGU";
 
-  document.getElementById("detailApproveButton").style.display = isWaiting
-    ? "inline-block"
-    : "none";
+  //document.getElementById("detailApproveButton").style.display = isWaiting
+  //  ? "inline-block"
+  //  : "none";
 
-  document.getElementById("detailRejectButton").style.display = isWaiting
-    ? "inline-block"
-    : "none";
+  //document.getElementById("detailRejectButton").style.display = isWaiting
+   // ? "inline-block"
+   // : "none";
+   
+    const isWaiting = data.status === "MENUNGGU";
+
+	const isOwn = isOwnRequest(data.requestedBy);
+
+	const approveButton = document.getElementById("detailApproveButton");
+
+	const rejectButton = document.getElementById("detailRejectButton");
+
+	approveButton.style.display = isWaiting ? "inline-block" : "none";
+
+	approveButton.disabled = isOwn;
+
+	approveButton.title = isOwn ? "Anda tidak dapat menyetujui pengajuan sendiri" : "";
+
+	rejectButton.style.display = isWaiting ? "inline-block" : "none";
+   
+   
 }
 
 document

@@ -22,7 +22,7 @@ $(document).ready(function() {
           return {
             draw: d.draw,
             start: d.start,
-            length: 20,
+            length: 10,
             orderColumn: d.order[0] ? d.order[0].column : 1,
             orderDir: d.order[0] ? d.order[0].dir : "desc",
             componentCode: $("#filterKode").val(),

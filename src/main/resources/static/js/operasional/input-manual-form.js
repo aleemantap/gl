@@ -6,8 +6,18 @@ $(document).ready(function () {
     allowClear: true,
   });
 
-  $("#counterparty_div").show();
+   $("#teller").select2({
+     theme: "bootstrap-5",
+     width: "100%",
+     allowClear: false,
+   });
+   $("#kasPoint").select2({
+     theme: "bootstrap-5",
+     width: "100%",
+     allowClear: false,
+   });
 
+  $("#counterparty_div").show();
   $("#am_inf_pembayaran").hide();
 
   // if (v == "pembayaran") {
@@ -109,8 +119,8 @@ $(document).ready(function () {
     var customerCash = $("#customer_cash").val();
     var customerBank = $("#customer_bank").val();
     var bankCode = $("#code_bank").val();
-    var admin_in_advance = $("#admin_in_advance").val();
-    var provision_in_advance = $("#provision_in_advance").val();
+    var admin_in_advance = $("#admin_in_advance").is(':checked');
+    var provision_in_advance = $("#provision_in_advance").is(':checked');
 
     // 
     var collateral_type = $("#collateral_type").val();
@@ -232,8 +242,16 @@ $(document).ready(function () {
       }
 
       // validasi collateral
-      if (!collateral_type || collateral_type.toString().trim() === "") {
-        showWarning("Collateral Type dipilih.");
+      //if (!collateral_type || collateral_type.toString().trim() === "") {
+      //  showWarning("Collateral Type dipilih.");
+      //  return;
+      //}
+
+      // var customerBank = $("#customer_bank").val();
+      // var b/ankCode = $("#code_bank").val();
+
+      if (getNumericValue(customerBank) > 0 && bankCode == "") {
+        showWarning("Code Bank Wajib diisi");
         return;
       }
 
@@ -337,6 +355,8 @@ $(document).ready(function () {
       formData.bankCode = bankCode
     }
 
+    console.log(formData);
+
     // =====================================================
     // AMOUNTS - PEMBAYARAN
     // =====================================================
@@ -371,7 +391,7 @@ $(document).ready(function () {
     // =====================================================
     
     $.ajax({
-      url: "/operasional/input-jurnal-manual/saveJurnal",
+      //url: "/operasional/input-jurnal-manual/saveJurnal",
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify(formData),

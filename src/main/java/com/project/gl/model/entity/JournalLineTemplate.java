@@ -43,7 +43,7 @@ public class JournalLineTemplate extends BaseEntity {
     )
     private ProductRuleComponent productRuleComponent;
 
-    @Column(name = "product_rule_component_id", nullable = false)
+    @Column(name = "product_rule_component_id", nullable = true)
     private Long productRuleComponentId;
 
   

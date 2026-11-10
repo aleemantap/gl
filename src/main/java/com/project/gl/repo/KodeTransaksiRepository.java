@@ -2,6 +2,8 @@ package com.project.gl.repo;
 
 
 import com.project.gl.model.entity.KodeTransaksi;
+import com.project.gl.model.projection.KodeTransaksiComboProjection;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -55,7 +57,57 @@ public interface KodeTransaksiRepository extends JpaRepository<KodeTransaksi, In
             @Param("nama") String nama
     );
 
+  
 
+//     @Query(value = """
+//         SELECT
+//                 kt.id AS id,
+//                 kt.kode AS kode,
+//                 kt.nama_transaksi AS namaTransaksi,
+//                 tcj.cabang_id AS cabangId
+//         FROM transaction_code_journal tcj
+//         JOIN kode_transaksi kt
+//                 ON kt.id = tcj.kode_transaksi_id
+//         WHERE
+//         kt.tipe_transaksi = :tipeTransaksi
+//         AND kt.tipe_transaksi IS NOT NULL
+//         AND EXISTS (
+//                 SELECT 1
+//                 FROM journal_line_template jlt
+//                 WHERE jlt.journal_id = tcj.journal_id
+//                 AND jlt.is_active = 1
+//                 AND jlt.cash_movement_type = :arahKas
+//         )
+//         ORDER BY kt.kode
+//         """, nativeQuery = true)
+//         List<KodeTransaksiComboProjection> findJenisTransaksiCombo(
+//                 @Param("tipeTransaksi") String tipeTransaksi,
+//                 @Param("arahKas") String arahKas
+//                 // @Param("cabangId") Integer cabangId
+//         );
     
-//      Optional<KodeTransaksi> findByKode(String code);
+
+       @Query(value = """
+        SELECT DISTINCT
+                kt.id AS id,
+                kt.kode AS kode,
+                kt.nama_transaksi AS namaTransaksi
+        FROM transaction_code_journal tcj
+        JOIN kode_transaksi kt
+                ON kt.id = tcj.kode_transaksi_id
+        WHERE kt.tipe_transaksi = :tipeTransaksi
+        AND kt.tipe_transaksi IS NOT NULL
+        AND EXISTS (
+                SELECT 1
+                FROM journal_line_template jlt
+                WHERE jlt.journal_id = tcj.journal_id
+                AND jlt.is_active = 1
+                AND jlt.cash_movement_type = :arahKas
+        )
+        ORDER BY kt.kode
+        """, nativeQuery = true)
+        List<KodeTransaksiComboProjection> findJenisTransaksiCombo(
+                @Param("tipeTransaksi") String tipeTransaksi,
+                @Param("arahKas") String arahKas
+        );
 }

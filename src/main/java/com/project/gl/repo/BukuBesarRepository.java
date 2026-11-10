@@ -41,7 +41,7 @@ public interface BukuBesarRepository
     INNER JOIN nomor_gl_account ga ON ga.id = jd.gl_account_id
     WHERE jh.status = 'POSTED'  
       AND (:idsEmpty = true OR jd.id IN (:ids))
-      AND jd.gl_account_id = :glAccountId
+      AND (:glAccountId IS NULL OR jd.gl_account_id = :glAccountId)
       AND jh.transaction_date >= :tanggalDari
       AND jh.transaction_date < :tanggalSampai
       AND (
@@ -64,12 +64,57 @@ public interface BukuBesarRepository
             @Param("branchCode") String branchCode
     );
 
+    // @Query(value = """
+    // SELECT
+
+    //     COALESCE(SUM(
+    //         CASE
+    //             WHEN jd.dk = 'D'
+    //             THEN jd.amount
+    //             ELSE 0
+    //         END
+    //     ), 0) AS totalDebit,
+
+    //     COALESCE(SUM(
+    //         CASE
+    //             WHEN jd.dk = 'K'
+    //             THEN jd.amount
+    //             ELSE 0
+    //         END
+    //     ), 0) AS totalCredit,
+
+    //     MAX(ga.saldo_normal) AS normalBalance
+
+    // FROM journal_detail jd
+
+    // INNER JOIN journal_header jh
+    //     ON jh.id = jd.journal_header_id
+
+    // INNER JOIN nomor_gl_account ga
+    //     ON ga.id = jd.gl_account_id
+
+    // WHERE jh.status = 'POSTED'
+
+    //   AND (:glAccountId IS NULL OR jd.gl_account_id = :glAccountId)
+
+    //   AND jh.transaction_date < :tanggalDari
+
+    //   AND (
+    //         :branchCode IS NULL
+    //         OR :branchCode = ''
+    //         OR jh.cabang_id = (
+    //             SELECT cb.id
+    //             FROM cabang cb
+    //             WHERE cb.kode_cabang = :branchCode
+    //         )
+    //       )
+    // """,
+    // nativeQuery = true)
     @Query(value = """
     SELECT
-
         COALESCE(SUM(
             CASE
-                WHEN jd.dk = 'D'
+                WHEN jh.id IS NOT NULL AND jd.dk = 'D'
                 THEN jd.amount
                 ELSE 0
             END
@@ -77,44 +122,43 @@ public interface BukuBesarRepository
 
         COALESCE(SUM(
             CASE
-                WHEN jd.dk = 'K'
+                WHEN jh.id IS NOT NULL AND jd.dk = 'K'
                 THEN jd.amount
                 ELSE 0
             END
         ), 0) AS totalCredit,
 
-        MAX(ga.saldo_normal) AS normalBalance
+        ga.saldo_normal AS normalBalance
 
-    FROM journal_detail jd
+    FROM nomor_gl_account ga
 
-    INNER JOIN journal_header jh
+    LEFT JOIN journal_detail jd
+        ON jd.gl_account_id = ga.id
+
+    LEFT JOIN journal_header jh
         ON jh.id = jd.journal_header_id
-
-    INNER JOIN nomor_gl_account ga
-        ON ga.id = jd.gl_account_id
-
-    WHERE jh.status = 'POSTED'
-
-      AND jd.gl_account_id = :glAccountId
-
-      AND jh.transaction_date < :tanggalDari
-
-      AND (
+        AND jh.status = 'POSTED'
+        AND jh.transaction_date < :tanggalDari
+        AND (
             :branchCode IS NULL
             OR :branchCode = ''
-            OR jh.cabang_id = (
-                SELECT cb.id
+            OR EXISTS (
+                SELECT 1
                 FROM cabang cb
-                WHERE cb.kode_cabang = :branchCode
+                WHERE cb.id = jh.cabang_id
+                  AND cb.kode_cabang = :branchCode
             )
-          )
-    """,
-    nativeQuery = true)
-SaldoAwalProjection findSaldoAwal(
-        @Param("glAccountId") Long glAccountId,
-        @Param("tanggalDari") LocalDateTime tanggalDari,
-        @Param("branchCode") String branchCode
-);
+        )
+
+    WHERE ga.id = :glAccountId
+
+    GROUP BY ga.id, ga.saldo_normal
+    """, nativeQuery = true)
+    SaldoAwalProjection findSaldoAwal(
+            @Param("glAccountId") Long glAccountId,
+            @Param("tanggalDari") LocalDateTime tanggalDari,
+            @Param("branchCode") String branchCode
+    );
 
     @Query(value = """
         SELECT

@@ -1,0 +1,176 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/main}"
+>
+  <head>
+    <title>Kas Point</title>
+  </head>
+  <body>
+    <div layout:fragment="content">
+    
+     <div class="container-xl">
+            <div class="row g-2 align-items-center">
+              <div class="col">
+                <!-- Page pre-title -->
+                <div class="page-title">
+                Master Kas
+                </div>
+                <h2 class="page-pretitle">
+                 
+                </h2>
+              </div>
+              <!-- Page title actions -->
+              <div class="col-auto ms-auto d-print-none">
+                <div class="btn-list">
+                  <a href="#" class="btn btn-primary d-none d-sm-inline-block"  id="btnAdd">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M12 3l8 4.5v9l-8 4.5l-8 -4.5v-9l8 -4.5" />
+                        <path d="M12 12l8 -4.5" />
+                        <path d="M12 12v9" />
+                        <path d="M12 12l-8 -4.5" />
+                    </svg>
+                    Tambah Kas Point
+                  </a>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div style="margin-top:20px;" class="row row-deck row-cards">
+                 <div class="row mb-3 align-items-end">
+                  <!-- BAGIAN KIRI -->
+                  <div class="col-md-12">
+                      <!-- Tombol Toggle Filter -->
+                      <div class="row mb-2">
+                          <div class="col-12">
+                              <button type="button" 
+                                      class="btn btn-outline-primary btn-sm" 
+                                      id="toggleFilterBtn">
+                                  <i class="ti ti-chevron-down" id="toggleIcon"></i>
+                                  <span id="toggleText">Sembunyikan Filter</span>
+                              </button>
+                          </div>
+                      </div>
+
+                      <!-- Container Filter -->
+                      <div id="filterContainer">
+                          <div class="row">
+                            
+                              <div class="col-md-4">
+                                  <label class="form-label">Code</label>
+                                  <input type="text"
+                                      class="form-control form-control"
+                                      id="filterCode"
+                                      placeholder="Code">
+                              </div>
+
+
+                              <div class="col-md-4">
+                                  <label class="form-label">Nama</label>
+                                  <input type="text"
+                                      class="form-control form-control"
+                                      id="filterNama"
+                                      placeholder="Nama">
+                              </div>
+
+                           
+                             
+                          </div>
+                          
+                          <div class="row mt-2">
+                             <!-- type -->
+                              <div class="col-md-4">
+                                   <label class="form-label">Jenis</label>
+                                    <select class="form-select" id="filterJenis" name="filterJenis">
+                                        <option value="">Pilih</option>
+                                        <option th:each="j : ${jenisList}"
+                                                th:value="${j.value}"
+                                                th:text="${j.label}"></option>
+                                    </select>
+                              </div>
+                              <!-- Cabang -->
+                               <div class="col-md-4">
+                                  <label class="form-label">Cabang</label>
+                                  <select class="form-select form-select select2"
+                                          id="filterCabang"
+                                          name="cabangGL">
+                                      <option value="">Semua Cabang</option>
+                                      <th:block th:each="cabang : ${cabangList}">
+                                          <option th:value="${cabang.id}"
+                                                  th:text="${cabang.namaCabang}">
+                                          </option>
+                                      </th:block>
+                                  </select>
+                              </div> 
+
+                              <!-- Action -->
+                              <div class="col-md-4">
+                                  <div class="d-flex gap-2" style="margin-top: 2em;">
+                                      <button type="button"
+                                              class="btn btn-primary btn-md"
+                                              id="btn-filter">
+                                          <i class="ti ti-filter"></i>
+                                          Filter
+                                      </button>
+
+                                      <button type="button"
+                                              class="btn btn-outline-secondary btn-sm"
+                                              id="btn-reset">
+                                          <i class="ti ti-refresh"></i>
+                                          Reset
+                                      </button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+            </div>
+              <div class="col-12">
+                <div class="card">
+                    <div class="table-responsive">
+                        <table id="tblKasPoint" class="table card-table table-striped table-vcenter text-nowrap datatable">
+                            <thead> 
+                                <tr>
+                                    <th>#</th>
+                                    <th>Kas Point Code</th>
+                                    <th>Nama</th>
+                                    <th>Jenis</th>
+                                    <th>Cabang</th>
+                                    <th width="120">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>                        
+                            </tbody>                    
+                        </table>
+                    </div>                
+                </div>
+              </div>
+            </div>
+          
+          </div>
+    <div th:replace="~{master/kas-point/form :: form}"></div>     
+    </div>
+    
+    <div layout:fragment="scripts">
+        <style>
+          .dt-paging {
+            margin-bottom: 20px !important;
+          }
+        </style>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet"/>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+       
+        <link th:href="@{/lib/DataTables/datatables.min.css}" rel="stylesheet">
+        <script th:src="@{/lib/DataTables/datatables.min.js}"></script>
+        <link th:href="@{/css/select2-custom.css}" rel="stylesheet">
+        <script th:src="@{/js/master/kas-point.js}"></script>          
+       
+    </div>
+  </body>
+</html>

@@ -45,68 +45,7 @@ $(document).ready(function () {
     });
   }
 
-  // function loadCabang(id) {
-  //   $.ajax({
-  //     url: "/cabang/list",
-  //     type: "GET",
-  //     dataType: "json",
-  //     success: function (response) {
-  //       var select = $(id);
-  //       select.empty();
-  //       select.append('<option value="">Pilih Cabang</option>');
-  //       if (response.content && response.content.length > 0) {
-  //         $.each(response.content, function (index, item) {
-  //           select.append(
-  //             '<option value="' +
-  //               item.id +
-  //               '">' +
-  //               item.namaCabang +
-  //               "</option>",
-  //           );
-  //         });
-  //       }
-  //     },
-  //     error: function (xhr, status, error) {
-  //       console.error("Error loading cabang:", error);
-  //       showToast("error", "Gagal memuat data cabang");
-  //     },
-  //   });
-  // }
-
-  // function loadKodeTC() {
-  //   $.ajax({
-  //     url: "/parameter/kode-transaksi/list",
-  //     type: "GET",
-  //     dataType: "json",
-  //     success: function (response) {
-  //       var select = $("#kodeTransaksi");
-  //       select.empty();
-  //       select.append('<option value="">Pilih Kode Transaksi</option>');
-
-  //       var dataList = response.content || response.data || response;
-
-  //       if (Array.isArray(dataList) && dataList.length > 0) {
-  //         $.each(dataList, function (index, item) {
-  //           select.append(
-  //             '<option value="' +
-  //               item.id +
-  //               '">' +
-  //               item.kode +
-  //               " - " +
-  //               item.namaTransaksi +
-  //               "</option>",
-  //           );
-  //         });
-  //       } else {
-  //         console.warn("Data Kode Transaksi kosong");
-  //       }
-  //     },
-  //     error: function (xhr, status, error) {
-  //       console.error("Error loading Kode Transaksi:", error);
-  //       showToast("error", "Gagal memuat data Kode Transaksi");
-  //     },
-  //   });
-  // }
+  
 
   // ==================== LOAD INITIAL DATA ====================
   // loadCabang("#cabangTab1");
@@ -158,7 +97,7 @@ $(document).ready(function () {
         return {
           draw: d.draw,
           start: d.start,
-          length: 20,
+          length: 10,
           orderColumn: d.order[0] ? d.order[0].column : 1,
           orderDir: d.order[0] ? d.order[0].dir : "desc",
           cabangId: cabangId,

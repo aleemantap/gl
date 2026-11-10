@@ -153,7 +153,7 @@ $(document).ready(function () {
       //       : '<span class="badge bg-secondary-lt">Inactive</span>';
       //   },
       // },
-      { data: "totalRules" },
+      { data: "totalRules",visible: false },
       {
         data: null,
         render: function (data, type, row) {

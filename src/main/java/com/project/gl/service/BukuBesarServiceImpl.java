@@ -31,113 +31,351 @@ public class BukuBesarServiceImpl implements BukuBesarService {
     private final Util util;
     
 
-    @Override
-    public BukuBesarPageResponse getBukuBesar(
-            String listIds, 
-            Long glAccountId,
-            LocalDateTime tanggalDari,
-            LocalDateTime tanggalSampai,
-            String branchCode
-    ) {
+//     @Override
+//     public BukuBesarPageResponse getBukuBesar(
+//             String listIds, 
+//             Long glAccountId,
+//             LocalDateTime tanggalDari,
+//             LocalDateTime tanggalSampai,
+//             String branchCode
+//     ) {
 
-    List<Long> ids = util.parseIdsJson(listIds);    
+//     List<Long> ids = util.parseIdsJson(listIds);    
 
-    // ==========================================
-    // 1. SALDO AWAL
-    // ==========================================
+//     // ==========================================
+//     // 1. SALDO AWAL
+//     // ==========================================
 
-    SaldoAwalProjection saldoData =
-            bukuBesarRepository.findSaldoAwal(
-                    glAccountId,
-                    tanggalDari,
-                    branchCode
-            );
+//     SaldoAwalProjection saldoData =  bukuBesarRepository.findSaldoAwal(
+//                                         glAccountId,
+//                                         tanggalDari,
+//                                         branchCode
+//                                 );
+           
 
-    BigDecimal totalDebitSebelum =
-            saldoData != null && saldoData.getTotalDebit() != null
-                    ? saldoData.getTotalDebit()
-                    : BigDecimal.ZERO;
+//     BigDecimal totalDebitSebelum =
+//             saldoData != null && saldoData.getTotalDebit() != null
+//                     ? saldoData.getTotalDebit()
+//                     : BigDecimal.ZERO;
 
-    BigDecimal totalCreditSebelum =
-            saldoData != null && saldoData.getTotalCredit() != null
-                    ? saldoData.getTotalCredit()
-                    : BigDecimal.ZERO;
+//     BigDecimal totalCreditSebelum =
+//             saldoData != null && saldoData.getTotalCredit() != null
+//                     ? saldoData.getTotalCredit()
+//                     : BigDecimal.ZERO;
 
-    String normalBalance =
-            saldoData != null
-                    ? saldoData.getNormalBalance()
-                    : null;
+//     String normalBalance =
+//             saldoData != null
+//                     ? saldoData.getNormalBalance()
+//                     : null;
 
-    BigDecimal saldoAwal;
+//     BigDecimal saldoAwal;
 
-    if ("D".equalsIgnoreCase(normalBalance)) {
+//     if ("D".equalsIgnoreCase(normalBalance)) {
 
-        saldoAwal =
-                totalDebitSebelum
-                        .subtract(totalCreditSebelum);
+//         saldoAwal =
+//                 totalDebitSebelum
+//                         .subtract(totalCreditSebelum);
 
-    } else {
+//     } else {
 
-        saldoAwal =
-                totalCreditSebelum
-                        .subtract(totalDebitSebelum);
-    }
+//         saldoAwal =
+//                 totalCreditSebelum
+//                         .subtract(totalDebitSebelum);
+//     }
 
-    // ==========================================
-    // 2. TRANSAKSI PERIODE
-    // ==========================================
+//     // ==========================================
+//     // 2. TRANSAKSI PERIODE
+//     // ==========================================
 
-    boolean idsEmpty = (ids == null || ids.isEmpty());
-    List<Long> safeIds = idsEmpty ? List.of(-1L) : ids; 
+//     boolean idsEmpty = (ids == null || ids.isEmpty());
+//     List<Long> safeIds = idsEmpty ? List.of(-1L) : ids; 
 
-    List<BukuBesarProjection> rows =  bukuBesarRepository.findBukuBesar(
-                    safeIds, 
-                    idsEmpty, 
-                    glAccountId,
-                    tanggalDari,
-                    tanggalSampai,
-                    branchCode
-            );
-        // System.out.println("glAccountId"+glAccountId);
-        // System.out.println("tanggalDari"+tanggalDari);
-        // System.out.println("tanggalSampai"+tanggalSampai);  
-        //  System.out.println("branchCode"+branchCode);    
-        //   System.out.println("rows"+rows.size());    
-    // ==========================================
-    // 3. MAPPING DTO
-    // ==========================================
-    List<BukuBesarResponse> data =
-            rows.stream()
-                    .map(p -> new BukuBesarResponse(
-                            p.getDetailId(),
-                            p.getJournalHeaderId(),
-                            p.getTransactionDate(),
-                            p.getJournalNo(),
-                            p.getTransactionNo(),
-                            p.getTransactionCode(),
-                            p.getBranchCode(),
-                            p.getBranchName(),
-                            p.getGlAccountId(),
-                            p.getAccountCode(),
-                            p.getAccountName(),
-                            p.getNormalBalance(),
-                            p.getDk(),
-                            p.getAmount(),
-                            p.getDescription()
-                    ))
-                    .toList();
+//     List<BukuBesarProjection> rows =  bukuBesarRepository.findBukuBesar(
+//                     safeIds, 
+//                     idsEmpty, 
+//                     glAccountId,
+//                     tanggalDari,
+//                     tanggalSampai,
+//                     branchCode
+//             );
+//         // System.out.println("glAccountId"+glAccountId);
+//         // System.out.println("tanggalDari"+tanggalDari);
+//         // System.out.println("tanggalSampai"+tanggalSampai);  
+//         //  System.out.println("branchCode"+branchCode);    
+//         //   System.out.println("rows"+rows.size());    
+//     // ==========================================
+//     // 3. MAPPING DTO
+//     // ==========================================
+// //     List<BukuBesarResponse> data =
+// //             rows.stream()
+// //                     .map(p -> new BukuBesarResponse(
+// //                             p.getDetailId(),
+// //                             p.getJournalHeaderId(),
+// //                             p.getTransactionDate(),
+// //                             p.getJournalNo(),
+// //                             p.getTransactionNo(),
+// //                             p.getTransactionCode(),
+// //                             p.getBranchCode(),
+// //                             p.getBranchName(),
+// //                             p.getGlAccountId(),
+// //                             p.getAccountCode(),
+// //                             p.getAccountName(),
+// //                             p.getNormalBalance(),
+// //                             p.getDk(),
+// //                             p.getAmount(),
+// //                             p.getDescription()
+// //                     ))
+// //                     .toList();
 
+//         BigDecimal saldoBerjalan = saldoAwal;
+
+//         List<BukuBesarResponse> data = new ArrayList<>();
+
+//         for (BukuBesarProjection p : rows) {
+
+//         BigDecimal amount = p.getAmount() != null
+//                 ? p.getAmount()
+//                 : BigDecimal.ZERO;
+
+//         BigDecimal debit = "D".equalsIgnoreCase(p.getDk())
+//                 ? amount
+//                 : BigDecimal.ZERO;
+
+//         BigDecimal kredit = "K".equalsIgnoreCase(p.getDk())
+//                 ? amount
+//                 : BigDecimal.ZERO;
+
+//         // Hitung saldo berjalan
+//         if ("D".equalsIgnoreCase(normalBalance)) {
+//                 saldoBerjalan = saldoBerjalan
+//                         .add(debit)
+//                         .subtract(kredit);
+//         } else if ("K".equalsIgnoreCase(normalBalance)) {
+//                 saldoBerjalan = saldoBerjalan
+//                         .add(kredit)
+//                         .subtract(debit);
+//         }
+
+//         BukuBesarResponse response = new BukuBesarResponse(
+//                 p.getDetailId(),
+//                 p.getJournalHeaderId(),
+//                 p.getTransactionDate(),
+//                 p.getJournalNo(),
+//                 p.getTransactionNo(),
+//                 p.getTransactionCode(),
+//                 p.getBranchCode(),
+//                 p.getBranchName(),
+//                 p.getGlAccountId(),
+//                 p.getAccountCode(),
+//                 p.getAccountName(),
+//                 p.getNormalBalance(),
+//                 p.getDk(),
+//                 amount,
+//                 p.getDescription()
+//         );
+
+//         response.setDebit(debit);
+//         response.setKredit(kredit);
+//         response.setSaldoBerjalan(saldoBerjalan);
+
+//         data.add(response);
  
 
-    // ==========================================
-    // 4. RESPONSE
-    // ==========================================
+//         // // ==========================================
+//         // // 4. RESPONSE
+//         // // ==========================================
 
-        return new BukuBesarPageResponse(
-                                saldoAwal,
-                                normalBalance,
-                                data
-                        );
-        }
+//         //         return new BukuBesarPageResponse(
+//         //                                 saldoAwal,
+//         //                                 normalBalance,
+//         //                                 data
+//         //                         );
+//         //         }
+
        
+//    }
+// } 
+
+
+        @Override
+        public BukuBesarPageResponse getBukuBesar(
+                String listIds,
+                Long glAccountId,
+                LocalDateTime tanggalDari,
+                LocalDateTime tanggalSampai,
+                String branchCode
+        ) {
+
+        // ==========================================
+        // 0. VALIDASI
+        // ==========================================
+
+        if (glAccountId == null) {
+                throw new IllegalArgumentException("Akun GL wajib dipilih");
+        }
+
+        if (tanggalDari == null || tanggalSampai == null) {
+                throw new IllegalArgumentException("Periode tanggal wajib diisi");
+        }
+
+        if (!tanggalSampai.isAfter(tanggalDari)) {
+                throw new IllegalArgumentException(
+                        "Tanggal sampai harus lebih besar dari tanggal mulai"
+                );
+        }
+
+        // ==========================================
+        // 1. PARSE IDS
+        // ==========================================
+
+        List<Long> ids = util.parseIdsJson(listIds);
+
+        boolean idsEmpty = (ids == null || ids.isEmpty());
+
+        List<Long> safeIds = idsEmpty
+                ? List.of(-1L)
+                : ids;
+
+        // ==========================================
+        // 2. SALDO AWAL
+        // ==========================================
+
+        SaldoAwalProjection saldoData =
+                bukuBesarRepository.findSaldoAwal(
+                        glAccountId,
+                        tanggalDari,
+                        branchCode
+                );
+
+        if (saldoData == null || saldoData.getNormalBalance() == null) {
+                throw new IllegalArgumentException(
+                        "Akun GL tidak ditemukan atau saldo normal belum diatur"
+                );
+        }
+
+        BigDecimal totalDebitSebelum =
+                saldoData.getTotalDebit() != null
+                        ? saldoData.getTotalDebit()
+                        : BigDecimal.ZERO;
+
+        BigDecimal totalCreditSebelum =
+                saldoData.getTotalCredit() != null
+                        ? saldoData.getTotalCredit()
+                        : BigDecimal.ZERO;
+
+        String normalBalance = saldoData.getNormalBalance();
+
+        BigDecimal saldoAwal;
+
+        if ("D".equalsIgnoreCase(normalBalance)) {
+
+                saldoAwal = totalDebitSebelum.subtract(totalCreditSebelum);
+
+        } else if ("K".equalsIgnoreCase(normalBalance)) {
+
+                saldoAwal = totalCreditSebelum.subtract(totalDebitSebelum);
+
+        } else {
+
+                throw new IllegalArgumentException(
+                        "Normal balance akun harus D atau K"
+                );
+        }
+
+        // ==========================================
+        // 3. TRANSAKSI PERIODE
+        // ==========================================
+
+        List<BukuBesarProjection> rows =
+                bukuBesarRepository.findBukuBesar(
+                        safeIds,
+                        idsEmpty,
+                        glAccountId,
+                        tanggalDari,
+                        tanggalSampai,
+                        branchCode
+                );
+
+        // ==========================================
+        // 4. MAPPING DTO + SALDO BERJALAN
+        // ==========================================
+
+        BigDecimal saldoBerjalan = saldoAwal;
+
+        BigDecimal totalDebit = BigDecimal.ZERO;
+        BigDecimal totalKredit = BigDecimal.ZERO;
+
+        List<BukuBesarResponse> data = new ArrayList<>();
+
+        for (BukuBesarProjection p : rows) {
+
+                BigDecimal amount = p.getAmount() != null
+                        ? p.getAmount()
+                        : BigDecimal.ZERO;
+
+                BigDecimal debit = "D".equalsIgnoreCase(p.getDk())
+                        ? amount
+                        : BigDecimal.ZERO;
+
+                BigDecimal kredit = "K".equalsIgnoreCase(p.getDk())
+                        ? amount
+                        : BigDecimal.ZERO;
+        
+                totalDebit = totalDebit.add(debit);
+                totalKredit = totalKredit.add(kredit);
+
+                // Hitung saldo berjalan berdasarkan normal balance
+                if ("D".equalsIgnoreCase(normalBalance)) {
+
+                saldoBerjalan = saldoBerjalan
+                        .add(debit)
+                        .subtract(kredit);
+
+                } else {
+
+                saldoBerjalan = saldoBerjalan
+                        .add(kredit)
+                        .subtract(debit);
+                }
+
+                BukuBesarResponse response = new BukuBesarResponse(
+                        p.getDetailId(),
+                        p.getJournalHeaderId(),
+                        p.getTransactionDate(),
+                        p.getJournalNo(),
+                        p.getTransactionNo(),
+                        p.getTransactionCode(),
+                        p.getBranchCode(),
+                        p.getBranchName(),
+                        p.getGlAccountId(),
+                        p.getAccountCode(),
+                        p.getAccountName(),
+                        p.getNormalBalance(),
+                        p.getDk(),
+                        amount,
+                        p.getDescription()
+                );
+
+                response.setDebit(debit);
+                response.setKredit(kredit);
+                response.setSaldoBerjalan(saldoBerjalan);
+
+                data.add(response);
+        }
+
+        // ==========================================
+        // 5. RESPONSE
+        // ==========================================
+
+       return new BukuBesarPageResponse(
+                saldoAwal,
+                normalBalance,
+                totalDebit,
+                totalKredit,
+                saldoBerjalan,
+                data
+        );
+    }
+
+
 }

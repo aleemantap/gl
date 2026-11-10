@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/main}"
+>
+<head>
+    <title>User Form</title>
+</head>
+<body>
+ <div layout:fragment="content">
+     <div class="container-xl">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0" id="title-group" th:text="${title}">
+                            Add Group
+                        </h4>
+                        <div>
+                            <a class="btn btn-secondary btn-sm"
+                               th:href="@{/management/groups}"> Kembali
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nama Group</label>
+                                <input type="text" class="form-control" id="namaGroup">
+                                <input type="hidden"  id="group-id" th:value="${idGroup}" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Keterangan</label>
+                                <input type="text" class="form-control" id="keterangan">
+                            </div>
+                            
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Active</label>
+                                <div>
+                                    <!-- Radio sebagai Button -->
+                                    <div class="btn-group" role="group" aria-label="Active status">
+                                        <input type="radio" class="btn-check" name="active" id="user-active-yes" value="Y" checked autocomplete="off">
+                                        <label class="btn btn-outline-success" for="user-active-yes">
+                                            <i class="fas fa-check-circle"></i> Yes
+                                        </label>
+                                        
+                                        <input type="radio" class="btn-check" name="active" id="user-active-no" value="N" autocomplete="off">
+                                        <label class="btn btn-outline-danger" for="user-active-no">
+                                            <i class="fas fa-times-circle"></i> No
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a th:href="@{/management/groups}" class="btn btn-secondary">
+                                <i class="fa fa-arrow-left"></i> Kembali
+                            </a>
+
+                            <button type="button" class="btn btn-primary" id="btn-submit-groups">
+                                <i class="fa fa-save"></i>
+                                <span th:text="${idUser != null ? 'Ubah' : 'Simpan'}">Simpan</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom JS for this page -->
+<div layout:fragment="scripts">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+<link th:href="@{/css/select2-custom.css}" rel="stylesheet">
+<script th:src="@{/js/management/groups-form.js}"></script>
+</div>
+</body>
+</html>

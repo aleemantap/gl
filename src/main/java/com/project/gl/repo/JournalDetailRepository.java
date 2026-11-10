@@ -1,7 +1,11 @@
 package com.project.gl.repo;
 
 import com.project.gl.model.entity.JournalDetail;
+import com.project.gl.model.projection.GlCashBalanceProjection;
+import com.project.gl.model.projection.GlCashMovementDetailProjection;
 import com.project.gl.model.projection.GlCashMovementProjection;
+import com.project.gl.model.projection.GlCashMovementTotalProjection;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -128,5 +132,93 @@ public interface JournalDetailRepository  extends JpaRepository<JournalDetail, L
             @Param("branchCode") String branchCode,
             @Param("direction") String direction,
             Pageable pageable
+    );
+
+
+    @Query(value = """
+        SELECT
+            jh.cabang_id AS cabangId,
+            jd.gl_account_id AS glAccountId,
+
+            SUM(
+                CASE
+                    WHEN jd.dk = 'D' THEN jd.amount
+                    WHEN jd.dk = 'K' THEN -jd.amount
+                    ELSE 0
+                END
+            ) AS saldo
+
+        FROM journal_detail jd
+
+        INNER JOIN journal_header jh
+            ON jh.id = jd.journal_header_id
+
+        WHERE jh.status = 'POSTED'
+        AND jh.cabang_id = :cabangId
+        AND jh.transaction_date < :batasWaktu
+        AND jd.gl_account_id IN (11, 34)
+
+        GROUP BY
+            jh.cabang_id,
+            jd.gl_account_id
+        """, nativeQuery = true)
+    List<GlCashBalanceProjection> findSaldoKasByCabang(
+        @Param("cabangId") Long cabangId,
+        @Param("batasWaktu") LocalDateTime batasWaktu
+    );
+
+
+    @Query(value = """
+    SELECT
+        gcm.direction AS direction,
+        SUM(gcm.amount) AS totalAmount
+    FROM gl_cash_movement gcm
+    INNER JOIN journal_header jh
+        ON jh.id = gcm.journal_header_id
+    WHERE jh.status = 'POSTED'
+      AND jh.cabang_id = :cabangId
+      AND jh.transaction_date >= :tanggalMulai
+      AND jh.transaction_date < :tanggalSelesai
+    GROUP BY gcm.direction
+    """, nativeQuery = true)
+    List<GlCashMovementTotalProjection> findTotalKasHarian(
+        @Param("cabangId") Long cabangId,
+        @Param("tanggalMulai") LocalDateTime tanggalMulai,
+        @Param("tanggalSelesai") LocalDateTime tanggalSelesai
+    );
+
+    @Query(value = """
+        SELECT
+            kt.kode AS transactionCode,
+            kt.nama_transaksi AS transactionName,
+            gcm.direction AS direction,
+            SUM(gcm.amount) AS totalAmount
+
+        FROM gl_cash_movement gcm
+
+        INNER JOIN journal_header jh
+            ON jh.id = gcm.journal_header_id
+
+        INNER JOIN kode_transaksi kt
+            ON kt.id = jh.transaction_code_id
+
+        WHERE jh.status = 'POSTED'
+        AND jh.cabang_id = :cabangId
+        AND jh.transaction_date >= :tanggalMulai
+        AND jh.transaction_date < :tanggalSelesai
+
+        GROUP BY
+            kt.kode,
+            kt.nama_transaksi,
+            gcm.direction
+
+        ORDER BY
+            kt.kode,
+            gcm.direction
+        """, nativeQuery = true)
+    List<GlCashMovementDetailProjection> findDetailKasHarian(
+        @Param("cabangId") Long cabangId,
+        @Param("tanggalMulai") LocalDateTime tanggalMulai,
+        @Param("tanggalSelesai") LocalDateTime tanggalSelesai
     );
 }

@@ -2,6 +2,7 @@ package com.project.gl.service;
 
 
 import com.project.gl.model.entity.KodeTransaksi;
+import com.project.gl.model.response.KodeTransaksiComboResponse;
 import com.project.gl.model.response.KodeTransaksiResponse;
 import com.project.gl.model.response.PageResponse;
 // import org.springframework.data.domain.Page;
@@ -32,5 +33,11 @@ public interface KodeTransaksiService {
             String orderDir,
             String kode,
             String namaTransaksi
+    );
+
+    List<KodeTransaksiComboResponse> getJenisTransaksi(
+        String tipeTransaksi,
+        String arahKas
+        // Integer cabangId
     );
 }

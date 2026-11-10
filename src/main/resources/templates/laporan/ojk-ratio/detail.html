@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
+
+<head>
+    <title>Detail Rasio OJK</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+    <div class="container-xl">
+
+        <!-- Header -->
+        <div class="page-header mb-3">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h2 class="page-title">Detail Laporan Rasio OJK</h2>
+                    <div class="text-secondary mt-1"
+                         th:text="${report.reportNo}">
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <a th:href="@{/laporan/ojk-ratio}"
+                       class="btn btn-outline-secondary">
+                        <i class="ti ti-arrow-left me-1"></i>
+                        Kembali
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informasi Laporan -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3 class="card-title">Informasi Laporan</h3>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-3 mb-3">
+                        <div class="text-secondary small">Nomor Laporan</div>
+                        <strong th:text="${report.reportNo}"></strong>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="text-secondary small">Periode</div>
+                        <strong th:text="${#temporals.format(report.periode, 'MM-yyyy')}"></strong>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="text-secondary small">Wilayah Usaha</div>
+                        <strong th:text="${report.regionScope}"></strong>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="text-secondary small">Status</div>
+                        <span class="badge bg-warning text-white"
+                              th:if="${report.status.name() == 'DRAFT'}"
+                              th:text="${report.status}">
+                        </span>
+
+                        <span class="badge bg-info"
+                              th:if="${report.status.name() == 'REVIEWED'}"
+                              th:text="${report.status}">
+                        </span>
+
+                        <span class="badge bg-success"
+                              th:if="${report.status.name() == 'APPROVED'}"
+                              th:text="${report.status}">
+                        </span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="text-secondary small">Modal Sendiri</div>
+                        <strong th:text="${'Rp ' + #numbers.formatDecimal(report.totalEquity, 0, 'POINT', 0, 'COMMA')}"></strong>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="text-secondary small">Modal Disetor</div>
+                        <strong th:text="${'Rp ' + #numbers.formatDecimal(report.paidUpCapital, 0, 'POINT', 0, 'COMMA')}"></strong>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="text-secondary small">Total Pinjaman</div>
+                        <strong th:text="${'Rp ' + #numbers.formatDecimal(report.totalLoanAmount, 0, 'POINT', 0, 'COMMA')}"></strong>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Hasil Rasio -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3 class="card-title">Hasil Perhitungan Rasio</h3>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-vcenter table-striped card-table">
+
+                    <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Kode Rasio</th>
+                        <th>Nama Rasio</th>
+                        <th class="text-end">Numerator</th>
+                        <th class="text-end">Denominator</th>
+                        <th class="text-end">Hasil</th>
+                        <th class="text-end">Ketentuan</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:each="detail, stat : ${details}">
+
+                        <td th:text="${stat.count}"></td>
+
+                        <td th:text="${detail.ratioCode}"></td>
+
+                        <td th:text="${detail.ratioName}"></td>
+
+                        <td class="text-end"
+                            th:text="${#numbers.formatDecimal(detail.numerator, 0, 'POINT', 2, 'COMMA')}">
+                        </td>
+
+                        <td class="text-end"
+                            th:text="${#numbers.formatDecimal(detail.denominator, 0, 'POINT', 2, 'COMMA')}">
+                        </td>
+
+                        <td class="text-end"
+                            th:text="${detail.unit.name() == 'PERCENT'
+                                ? #numbers.formatDecimal(detail.resultValue, 0, 'POINT', 2, 'COMMA') + '%'
+                                : 'Rp ' + #numbers.formatDecimal(detail.resultValue, 0, 'POINT', 0, 'COMMA')}">
+                        </td>
+
+                        <td class="text-end"
+                            th:text="${detail.comparisonOperator.name() == 'MIN' ? 'Minimal ' : 'Maksimal '}
+                                + ${detail.unit.name() == 'PERCENT'
+                                    ? #numbers.formatDecimal(detail.thresholdValue, 0, 'POINT', 2, 'COMMA') + '%'
+                                    : 'Rp ' + #numbers.formatDecimal(detail.thresholdValue, 0, 'POINT', 0, 'COMMA')}">
+                        </td>
+
+                        <td>
+                            <span class="badge bg-success text-white"
+                                  th:if="${detail.status.name() == 'SAFE'}">
+                                SAFE
+                            </span>
+
+                            <span class="badge bg-warning text-white"
+                                  th:if="${detail.status.name() == 'WARNING'}">
+                                WARNING
+                            </span>
+
+                            <span class="badge bg-danger text-white"
+                                  th:if="${detail.status.name() == 'BREACH'}">
+                                BREACH
+                            </span>
+                        </td>
+
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(details)}">
+                        <td colspan="8"
+                            class="text-center text-secondary py-4">
+                            Belum ada detail perhitungan rasio.
+                        </td>
+                    </tr>
+
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+
+        <!-- Catatan -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Catatan Perhitungan</h3>
+            </div>
+
+            <div class="card-body">
+                <p class="mb-0"
+                    style="white-space: pre-line;"
+                    th:text="${report.notes ?: 'Tidak ada catatan.'}">
+                    </p>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

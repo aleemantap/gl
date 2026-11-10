@@ -3,6 +3,8 @@ package com.project.gl.repo;
 import com.project.gl.model.entity.JournalId;
 import com.project.gl.model.response.JournalIDResponse;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +49,35 @@ public interface JournalRepository extends JpaRepository<JournalId, Long> {
         GROUP BY j.id, j.journalCode, j.description, j.isActive, j.createdAt, j.updatedAt
     """)
     Page<JournalIDResponse> findAllJournalIdWithDetails(Pageable pageable);
+
+
+
+
+    @Query(value = """
+        SELECT COALESCE(
+            SUM(
+                CASE
+                    WHEN jd.dk = 'K' THEN jd.amount
+                    WHEN jd.dk = 'D' THEN -jd.amount
+                    ELSE 0
+                END
+            ), 0
+        )
+        FROM journal_detail jd
+        JOIN journal_header jh
+            ON jh.id = jd.journal_header_id
+        WHERE jd.gl_account_id = :glAccountId
+        AND jh.status = 'POSTED'
+        AND jh.cabang_id = :cabangId
+        AND jh.transaction_date < :akhirPeriode
+        """, nativeQuery = true)
+    BigDecimal findSaldoCadanganKerugian(
+        @Param("glAccountId") Integer glAccountId,
+        @Param("cabangId") Integer cabangId,
+        @Param("akhirPeriode") LocalDateTime akhirPeriode
+    );
+
+    
 
 
 }

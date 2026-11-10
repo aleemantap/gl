@@ -27,7 +27,7 @@ $(document).ready(function () {
     paging: true,
     info: true,
     scrollX: true,
-    pageLength: 10,
+    pageLength: 20,
     lengthChange: false,
     ajax: {
       url: "/laporan/daftar-jurnal/datatables",

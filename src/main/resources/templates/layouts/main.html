@@ -11,6 +11,7 @@
     <link th:href="@{/img/logo-gadai.png}" rel="icon">
     <title layout:title-pattern="$CONTENT_TITLE"></title>
     <link th:href="@{/css/tabler.min.css}" rel="stylesheet">
+    <!-- <link th:href="@{/css/demo.min.css}" rel="stylesheet"> -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <link th:href="@{/css/custom.css}" rel="stylesheet">
     <link th:href="@{/css/button.css}" rel="stylesheet">
@@ -103,6 +104,7 @@
 <script th:src="@{/js/global.js}"></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/js/tabler.min.js}"></script>
+<!-- <script th:src="@{/js/demo.min.js}"></script> -->
 <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> -->
 <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
 <script>
@@ -246,8 +248,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
-</script>
 
+</script>
+<script>
+document.addEventListener('click', function (e) {
+    const toggle = e.target.closest('[data-bs-toggle="dropdown"]');
+    if (!toggle) return;
+
+    // Kalau belum di-init, init dulu
+    if (!bootstrap.Dropdown.getInstance(toggle)) {
+        new bootstrap.Dropdown(toggle);
+    }
+
+    // Trigger toggle manual
+    const instance = bootstrap.Dropdown.getInstance(toggle);
+    instance.toggle();
+}, true); 
+</script>
 
 <div layout:fragment="scripts"></div>
 

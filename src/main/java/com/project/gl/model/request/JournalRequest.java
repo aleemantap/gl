@@ -252,6 +252,9 @@ public class JournalRequest {
         @JsonProperty("customer_bank")
         private BigDecimal customerBank;
 
+        @JsonProperty("penalty_amount")
+        private BigDecimal penaltyAmount;
+
         public BigDecimal getCustomerBank() {
             return customerBank;
         }
@@ -328,6 +331,14 @@ public class JournalRequest {
 
         public void setCustomerCash(BigDecimal customerCash) {
             this.customerCash = customerCash;
+        }
+
+        public BigDecimal getPenaltyAmount() {
+            return penaltyAmount;
+        }
+
+        public void setPenaltyAmount(BigDecimal penaltyAmount) {
+            this.penaltyAmount = penaltyAmount;
         }
     }
 

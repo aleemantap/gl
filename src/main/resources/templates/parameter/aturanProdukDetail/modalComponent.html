@@ -6,7 +6,7 @@
                 
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h5 class="modal-title" id="viewModalLabel">Form Product Rule Component</h5>
+                    <h5 class="modal-title" id="viewModalLabel">Form Komponen Produk Rule</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 
@@ -37,7 +37,7 @@
                         </div>  -->
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="componenCode" class="form-label">Component Code *</label>
+                                <label for="componenCode" class="form-label">Kode Komponen *</label>
                                 <select class="form-select select2" id="componenCode" name="componenCode" required>
                                 <option value="" selected disabled>-- Pilih Component Code --</option>
                                 <th:block th:each="c : ${componentList}">
@@ -46,7 +46,7 @@
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label for="calculation_type" class="form-label">Calculation Type</label>
+                                <label for="calculation_type" class="form-label">Jenis Kalkulasi</label>
                                 <select class="form-select" id="calculation_type" name="calculation_type" required>
                                 <option value="INPUT">INPUT</option>
                                 <!-- <option value="CALCULATED">CALCULATED</option> -->
@@ -57,8 +57,8 @@
                        
                         <div class="row mb-3">
                             <div class="col-md-12" id="amount_source_div" >
-                                <label for="amount_source" class="form-label">Amount Source</label>
-                                <select class="form-select" id="amount_source" name="amountSource" required>
+                                <label for="amount_source" class="form-label">Parameter Nilai</label>
+                                <!-- <select class="form-select" id="amount_source" name="amountSource" required>
                                     <option value="" selected disabled>-- Pilih Amount Source --</option>
                                     <option value="loan_amount">loan_amount</option>
                                     <option value="repayment_amount">repayment_amount</option>
@@ -68,25 +68,39 @@
                                     <option value="customer_cash">customer_cash</option>
                                     <option value="principal_payment">principal_payment</option>
                                     <option value="payment_amount">payment_amount</option>
+                                </select> -->
+                                <select class="form-select"
+                                        id="amount_source"
+                                        name="amountSource"
+                                        required>
+
+                                    <option value="" selected disabled>
+                                        -- Pilih Parameter Nilai --
+                                    </option>
+
+                                    <option th:each="source : ${amountSourceList}"
+                                            th:value="${source}"
+                                            th:text="${source}">
+                                    </option>
                                 </select>
                             </div>
                             <div class="col-md-6" id="fixed_amount_div" style="display: none;">
-                                <label for="amount_source" class="form-label">Fixed Amount</label>
+                                <label for="amount_source" class="form-label">Jumlah Nilai Fix</label>
                                 <input type="number" class="form-control" id="fixed_amount" name="fixed_amount" />
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4" id="SourceComponent_div" style="display: none;">
-                                <label for="amount_source" class="form-label">Source Component</label>
+                                <label for="amount_source" class="form-label">Data Komponen</label>
                                 <select class="form-select select2" id="SourceComponent" name="SourceComponent">
-                                <option value="" selected disabled>-- Source Component  --</option>
+                                <option value="" selected disabled>-- Pilih  --</option>
                                     <th:block th:each="c : ${componentList}">
                                         <option th:value="${c.id}" th:text="${c.componentCode} + ' - ' + ${c.componentName}"></option>
                                     </th:block>
                                 </select>
                             </div>
                             <div class="col-md-4" id="CalculationRate_div" style="display: none;">
-                                <label for="CalculationRate" class="form-label">Calculation Rate</label>
+                                <label for="CalculationRate" class="form-label">Rate Kalkulasi</label>
                                 <input type="number" class="form-control" id="CalculationRate" name="CalculationRate" />
                             </div>
 
@@ -102,13 +116,13 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4" style="display: none;">
-                                <label for="CalculationRate" class="form-label">Calculation Period</label>
+                                <label for="CalculationRate" class="form-label">Periode Kalkulasi</label>
                                 <input type="number" class="form-control" id="CalculationPeriod" name="CalculationPeriod" />
                             </div>
                             <div class="col-md-4" style="display: none;">
-                                <label for="CalculationMethod" class="form-label">Calculation Method</label>                               
+                                <label for="CalculationMethod" class="form-label">Metode Kalkulasi</label>                               
                                 <select class="form-select" id="CalculationMethod" name="CalculationMethod" >
-                                    <option value="" selected disabled>-- Pilih Cash Movement Type --</option>
+                                    <option value="" selected disabled>-- Pilih Jenis --</option>
                                     <option value="FLAT">FLAT</option>
                                     <option value="EFFECTIVE">EFFECTIVE</option>
                                     <option value="FIXED">FIXED</option>

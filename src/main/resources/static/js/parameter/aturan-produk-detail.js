@@ -1,6 +1,19 @@
 var table2;
 
 $(document).ready(function () {
+  // $("#amount_source").select2({
+  //   theme: "bootstrap-5",
+  //   width: "100%",
+  //   allowClear: false,
+  //   // dropdownParent: $("#modal1"),
+  // });
+
+  // $("#componenCode").select2({
+  //   theme: "bootstrap-5",
+  //   width: "100%",
+  //   allowClear: false,
+  //   // dropdownParent: $("#modal1"),
+  // }); 
   table2 = new DataTable("#table-detail-produk-rule", {
     processing: true,
     serverSide: true,

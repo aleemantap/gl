@@ -62,13 +62,13 @@
 
                                 <!-- Idempotency Key -->
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label required">Idempotency Key</label>
+                                    <label class="form-label required">Kunci Idempotency</label>
                                     <input type="text" class="form-control" id="idempotencyKey" name="idempotencyKey" placeholder="idempotencyKey">
                                 </div>
 
                                 <!-- Product -->
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label required">Product</label>
+                                    <label class="form-label required">Produk</label>
                                     <select class="form-select select2" id="productCode" name="productCode">
                                         <option value="">Pilih Product</option>
                                         <th:block th:each="pr : ${productList}">
@@ -79,7 +79,7 @@
 
                                 <!-- Branch -->
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label required">Branch</label>
+                                    <label class="form-label required">Cabang</label>
                                     <select class="form-select select2" id="branchCode" name="branchCode">
                                         <option value="">Pilih Cabang</option>
                                         <th:block th:each="cabang : ${cabangList}">
@@ -174,7 +174,7 @@
                                     <label class="form-label required">Customer Bank</label>
                                     <div class="input-group">
                                         <span class="input-group-text">Rp</span>
-                                        <input type="text" class="form-control text-end currency-input rupiah-input" id="customer_bank" name="customer_bank" placeholder="0">
+                                        <input type="text" class="form-control text-end currency-input rupiah-input" id="customer_bank" name="customer_bank" value="0">
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -189,7 +189,7 @@
                                 <!-- Admin in Advance -->
                                 <div class="col-md-6 mb-3">
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="admin_in_advance" name="admin_in_advance" value="true">
+                                        <input class="form-check-input" type="checkbox" id="admin_in_advance" name="admin_in_advance" value="false">
                                         <label class="form-check-label" for="admin_in_advance">
                                             <strong>Admin in Advance</strong>
                                             <div class="text-muted small">Potong biaya admin di depan (saat pencairan)</div>
@@ -200,7 +200,7 @@
                                 <!-- Provision in Advance -->
                                 <div class="col-md-6 mb-3">
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="provision_in_advance" name="provision_in_advance" value="true">
+                                        <input class="form-check-input" type="checkbox" id="provision_in_advance" name="provision_in_advance" value="false">
                                         <label class="form-check-label" for="provision_in_advance">
                                             <strong>Provision in Advance</strong>
                                             <div class="text-muted small">Potong biaya provisi di depan (saat pencairan)</div>
@@ -219,7 +219,7 @@
                             </h4>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label required">Collateral Type (Barang Gadai)</label>
+                                    <label class="form-label">Collateral Type</label>
                                     <input type="text" class="form-control"  id="collateral_type" name="collateral_type" placeholder="Contoh : Emas">
                                 </div>
                                 <!-- <div class="col-md-6 mb-3">
@@ -272,16 +272,31 @@
                         <div class="mb-2">
                             <h4 class="mb-3">
                                 <i class="ti ti-user-dollar me-2"></i>
-                                Teller Information
+                                Kasir 
                             </h4>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label required">Teller ID</label>
-                                    <input type="number" class="form-control" id="teller" name="teller" placeholder="ID Teller">
+                                    <label class="form-label required">Kasir</label>
+                                    <!-- <input type="number" class="form-control" id="teller" name="teller" placeholder="ID Teller"> -->
+                                    <select class="form-select" id="teller" name="teller">
+                                        <option value="">Pilih Kasir</option>
+                                        <th:block th:each="kasir : ${kasirList}">
+                                            <option th:data-code="${kasir.userGadai}" th:value="${kasir.id}" th:text="${kasir.nama}"></option>
+                                        </th:block>                                       
+                                    </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label required">Kas Point</label>
-                                    <input type="text" class="form-control" id="kasPoint" name="kasPoint" placeholder="Kas Point">
+                                    <select class="form-select" id="kasPoint" name="kasPoint">
+                                        <!-- <option value="">Pilih Kas</option> -->
+                                        <option value="">Pilih Kas</option>
+                                        <option th:each="kas : ${kasList}"
+                                                th:data-code="${kas.kasPointCode}"
+                                                th:value="${kas.id}"
+                                                th:text="${kas.namaKas + ' - ' + kas.namaCabang}">
+                                        </option>
+                                    </select>
+                                    <!-- <input type="text" class="form-control" id="kasPoint" name="kasPoint" placeholder="Kas Point"> -->
                                 </div>
                             </div>
                         </div>

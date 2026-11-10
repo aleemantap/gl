@@ -65,7 +65,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     // Count active users
     long countByActive(String active);
-
+    long countByUserGroupId(Long userGroupId);
     @Query("SELECT u FROM User u " +
        "LEFT JOIN FETCH u.userGroup " +
        "LEFT JOIN FETCH u.cabang " +

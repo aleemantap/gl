@@ -27,6 +27,8 @@ public class BukuBesarResponse {
     private BigDecimal amount;
     private String description;
     private BigDecimal saldoBerjalan;
+    private BigDecimal debit;
+    private BigDecimal kredit;
 
     // Constructor dengan semua parameter (kecuali saldoBerjalan)
     public BukuBesarResponse(Long detailId, Long journalHeaderId, LocalDateTime transactionDate,
@@ -59,7 +61,13 @@ public class BukuBesarResponse {
                              String journalNo, String transactionNo, String transactionCode,
                              String branchCode, Long glAccountId, String accountCode,
                              String accountName, String normalBalance, String dk,
-                             BigDecimal amount, String description, BigDecimal saldoBerjalan) {
+                             BigDecimal amount, 
+                             String description, 
+                             BigDecimal saldoBerjalan,
+                             BigDecimal debit,
+                             BigDecimal kredit
+                            
+                            ) {
         this.detailId = detailId;
         this.journalHeaderId = journalHeaderId;
         this.transactionDate = transactionDate;
@@ -75,6 +83,8 @@ public class BukuBesarResponse {
         this.amount = amount;
         this.description = description;
         this.saldoBerjalan = saldoBerjalan;
+        this.debit = debit;
+        this.kredit = kredit;
     }
 
     // Getter dan Setter
@@ -204,5 +214,22 @@ public class BukuBesarResponse {
 
     public void setSaldoBerjalan(BigDecimal saldoBerjalan) {
         this.saldoBerjalan = saldoBerjalan;
+    }
+
+
+    public BigDecimal getKredit() {
+        return kredit;
+    }
+
+    public void setKredit(BigDecimal kredit) {
+        this.kredit = kredit;
+    }
+
+    public BigDecimal getDebit() {
+        return debit;
+    }
+
+    public void setDebit(BigDecimal debit) {
+        this.debit = debit;
     }
 }

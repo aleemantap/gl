@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
+
+<head>
+    <title>OJK RATIO</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+  
+      <div class="container-xl">
+
+        <!-- Page Header -->
+        <div class="page-header d-print-none mb-3">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h2 class="page-title">Laporan Rasio OJK</h2>
+                    <div class="text-secondary mt-1">
+                        Perhitungan dan monitoring rasio keuangan sesuai ketentuan OJK
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert -->
+        <div id="alertMessage" class="alert d-none" role="alert"></div>
+
+        <!-- Filter -->
+        <div class="card mb-3">
+
+            <div class="card-header">
+                <h3 class="card-title">Parameter Laporan</h3>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row align-items-end">
+
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Periode Laporan</label>
+                        <input type="month"
+                               id="periode"
+                               class="form-control"
+                               th:value="${periode}">
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Wilayah Usaha</label>
+
+                        <select id="regionScope" class="form-select">
+                            <option value="">Pilih Wilayah</option>
+
+                            <option th:each="region : ${regionOptions}"
+                                    th:value="${region}"
+                                    th:text="${region}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <button type="button"
+                                id="btnCalculate"
+                                class="btn btn-primary">
+                            <i class="ti ti-calculator me-1"></i>
+                            Hitung Rasio
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="text-secondary small">
+                    Sistem akan mengambil saldo berdasarkan mapping akun GL
+                    yang berlaku pada akhir periode laporan.
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Report History -->
+        <div class="card">
+
+            <div class="card-header">
+                <h3 class="card-title">Riwayat Laporan Rasio OJK</h3>
+
+                <div class="card-actions">
+                    <button type="button"
+                            class="btn btn-sm btn-outline-secondary"
+                            id="btnRefresh">
+                        <i class="ti ti-refresh me-1"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table table-vcenter card-table table-striped">
+
+                    <thead>
+                    <tr>
+                        <th width="50">No</th>
+                        <th>Nomor Laporan</th>
+                        <th>Periode</th>
+                        <th>Wilayah Usaha</th>
+                        <th class="text-end">Modal Sendiri</th>
+                        <th class="text-end">Modal Disetor</th>
+                        <th>Status</th>
+                        <th width="100" class="text-center">Aksi</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="reportTableBody">
+                    <tr>
+                        <td colspan="8" class="text-center text-secondary py-4">
+                            Memuat data...
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    
+</div>
+<div layout:fragment="scripts">     
+        <link th:href="@{/css/select2.min.css}" rel="stylesheet">
+        <link th:href="@{/css/select2-bootstrap-5-theme.min.css}" rel="stylesheet">
+      
+        <script th:inline="javascript">
+
+        $(document).ready(function () {
+
+            loadReports();
+
+            // Hitung Rasio
+            $('#btnCalculate').on('click', function () {
+
+                const periode = $('#periode').val();
+                const regionScope = $('#regionScope').val();
+
+                if (!periode) {
+                    showAlert('warning', 'Silakan pilih periode laporan.');
+                    return;
+                }
+
+                if (!regionScope) {
+                    showAlert('warning', 'Silakan pilih wilayah usaha.');
+                    return;
+                }
+
+                calculateRatio(periode, regionScope);
+            });
+
+            // Refresh data
+            $('#btnRefresh').on('click', function () {
+                loadReports();
+            });
+
+        });
+
+
+        /**
+         * Kalkulasi Rasio OJK
+         */
+        function calculateRatio(periode, regionScope) {
+
+            const button = $('#btnCalculate');
+
+            button.prop('disabled', true);
+            button.html('<span class="spinner-border spinner-border-sm me-1"></span> Menghitung...');
+
+            $.ajax({
+                url: '/laporan/ojk-ratio/calculate',
+                type: 'POST',
+                data: {
+                    periode: periode,
+                    regionScope: regionScope
+                },
+
+                success: function (response) {
+
+                    if (response.success) {
+
+                        showAlert(
+                            'success',
+                            response.message + ' Nomor: ' + response.reportNo
+                        );
+
+                        loadReports();
+
+                    } else {
+
+                        showAlert('danger', response.message);
+                    }
+
+                },
+
+                error: function (xhr) {
+
+                    let message = 'Terjadi kesalahan saat menghitung rasio.';
+
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        message = xhr.responseJSON.message;
+                    }
+
+                    showAlert('danger', message);
+
+                    console.error('Calculate error:', xhr.responseText);
+                },
+
+                complete: function () {
+
+                    button.prop('disabled', false);
+                    button.html('<i class="ti ti-calculator me-1"></i> Hitung Rasio');
+
+                }
+            });
+        }
+
+
+        /**
+         * Mengambil riwayat laporan
+         */
+        function loadReports() {
+
+            const tbody = $('#reportTableBody');
+
+            tbody.html(`
+                <tr>
+                    <td colspan="7" class="text-center py-4">
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                        Memuat data...
+                    </td>
+                </tr>
+            `);
+
+            $.ajax({
+                url: '/laporan/ojk-ratio/data',
+                type: 'GET',
+
+                success: function (response) {
+
+                    tbody.empty();
+
+                    if (!response || response.length === 0) {
+
+                        tbody.html(`
+                            <tr>
+                                <td colspan="7" class="text-center text-secondary py-4">
+                                    Belum ada laporan Rasio OJK.
+                                </td>
+                            </tr>
+                        `);
+
+                        return;
+                    }
+
+                    $.each(response, function (index, report) {
+
+                        const periode = report.periode
+                            ? report.periode.substring(0, 7)
+                            : '-';
+
+                        const row = `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${escapeHtml(report.reportNo || '-')}</td>
+                                <td>${periode}</td>
+                                <td>${escapeHtml(report.regionScope || '-')}</td>
+                                <td class="text-end">${formatCurrency(report.totalEquity)}</td>
+                                <td class="text-end">${formatCurrency(report.paidUpCapital)}</td>
+                                <td>${renderStatus(report.status)}</td>
+                                <td class="text-center">
+                                    <a href="/laporan/ojk-ratio/${report.id}"
+                                    class="btn btn-sm btn-outline-primary">
+                                        <i class="ti ti-eye me-1"></i>
+                                        Detail
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
+
+                        tbody.append(row);
+                    });
+
+                },
+
+                error: function (xhr) {
+
+                    tbody.html(`
+                        <tr>
+                            <td colspan="7" class="text-center text-danger py-4">
+                                Gagal mengambil data laporan.
+                            </td>
+                        </tr>
+                    `);
+
+                    console.error('Load reports error:', xhr.responseText);
+                }
+            });
+        }
+
+
+        /**
+         * Format Rupiah
+         */
+        function formatCurrency(value) {
+
+            if (value === null || value === undefined) {
+                return '-';
+            }
+
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                maximumFractionDigits: 0
+            }).format(value);
+        }
+
+
+        /**
+         * Status laporan
+         */
+        function renderStatus(status) {
+
+            let badgeClass = 'bg-secondary';
+
+            switch (status) {
+                case 'DRAFT':
+                    badgeClass = 'bg-warning text-dark';
+                    break;
+
+                case 'REVIEWED':
+                    badgeClass = 'bg-info text-white';
+                    break;
+
+                case 'APPROVED':
+                    badgeClass = 'bg-success text-white';
+                    break;
+            }
+
+            return `<span class="badge ${badgeClass}">${escapeHtml(status || '-')}</span>`;
+        }
+
+
+        /**
+         * Alert
+         */
+        function showAlert(type, message) {
+
+            const alert = $('#alertMessage');
+
+            alert.removeClass('d-none alert-success alert-danger alert-warning alert-info');
+
+            alert.addClass('alert-' + type);
+            alert.text(message);
+
+            $('html, body').animate({
+                scrollTop: 0
+            }, 300);
+        }
+
+
+        /**
+         * Escape HTML untuk menghindari rendering data sebagai markup
+         */
+        function escapeHtml(value) {
+
+            return $('<div>').text(value).html();
+        }
+
+    </script>
+
+</div>
+</body>
+</html>

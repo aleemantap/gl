@@ -105,7 +105,7 @@
             </button>
         </li>
 
-        <li class="nav-item">
+        <!--<li class="nav-item">
             <button class="nav-link d-flex align-items-center gap-2 px-3 py-2"
                     data-bs-toggle="tab"
                     data-bs-target="#disputeTab"
@@ -120,7 +120,7 @@
                 </span>
 
             </button>
-        </li>
+        </li>-->
 
     </ul>
 
@@ -314,9 +314,12 @@
                                         </button> 
 
                                         <button type="button"
-                                                class="btn btn-sm btn-success btn-approve"
-                                                th:data-id="${request.id}">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-check me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+												class="btn btn-sm btn-success btn-approve"
+												th:data-id="${request.id}"
+												th:disabled="${request.requestedBy != null and currentUsername != null and #strings.equalsIgnoreCase(request.requestedBy, currentUsername)}"
+												th:title="${request.requestedBy != null and currentUsername != null and #strings.equalsIgnoreCase(request.requestedBy, currentUsername)} ? 'Anda tidak dapat menyetujui pengajuan sendiri' : 'Setujui permintaan'">
+
+																						<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-check me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                                 <path d="M5 12l5 5l10 -10" />
                                                 </svg> 
@@ -393,6 +396,7 @@
             <div class="modal fade"
                 id="reversalDetailModal"
                 tabindex="-1"
+				th:data-current-username="${currentUsername}"
                 aria-hidden="true">
 
                 <div class="modal-dialog modal-xl modal-dialog-scrollable">

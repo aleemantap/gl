@@ -9,14 +9,7 @@ import java.util.List;
 
 public interface BukuBesarService {
 
-    // PageResponse<BukuBesarResponse> getBukuBesar(
-    //         Long glAccountId,
-    //         LocalDateTime tanggalDari,
-    //         LocalDateTime tanggalSampai,
-    //         String branchCode,
-    //         int page,
-    //         int size
-    // );
+   
 
     BukuBesarPageResponse getBukuBesar(
         String listIds, 

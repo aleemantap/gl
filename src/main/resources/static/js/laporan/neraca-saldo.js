@@ -1,119 +1,5 @@
 $(document).ready(function () {
-  // const table = $("#neracaSaldoTable").DataTable({
-  //   // processing: true,
-  //   // serverSide: true,
-  //   processing: true,
-  //   serverSide: true,
-  //   searching: false,
-  //   deferLoading: 0,
-  //   paging: true,
-  //   info: true,
-  //   scrollX: true,
-  //   pageLength: 10,
-  //   lengthChange: false,
-  //   language: {
-  //     emptyTable: "Silakan gunakan filter terlebih dahulu",
-  //   },
-  //   ajax: {
-  //     url: "/laporan/neraca-saldo/datatables",
-  //     type: "GET",
-  //     data: function (d) {
-  //       d.tanggalDari = $("#tanggalDari").val();
-  //       d.tanggalSampai = $("#tanggalSampai").val();
-  //       d.branchCode = $("#branchCode").val();
-  //     },
-  //   },
-  //   columns: [
-  //     {
-  //       data: "accountCode",
-  //     },
-
-  //     {
-  //       data: "accountName",
-  //     },
-  //     {
-  //       data: "normalBalance",
-  //       className: "text-center",
-  //     },
-
-  //     {
-  //       data: "saldoAwal",
-  //       className: "text-end",
-  //       render: formatNumber,
-  //     },
-
-  //     {
-  //       data: "totalDebit",
-  //       className: "text-end",
-  //       render: formatNumber,
-  //     },
-
-  //     {
-  //       data: "totalKredit",
-  //       className: "text-end",
-  //       render: formatNumber,
-  //     },
-
-  //     {
-  //       data: "saldoAkhirDebit",
-  //       className: "text-end",
-  //       render: formatNumber,
-  //     },
-
-  //     {
-  //       data: "saldoAkhirKredit",
-  //       className: "text-end",
-  //       render: formatNumber,
-  //     },
-  //   ],
-
-  //   order: [[0, "asc"]],
-  //   pageLength: 10,
-  //   lengthMenu: [
-  //     [10, 25, 50, 100],
-  //     [10, 25, 50, 100],
-  //   ],
-
-  //   footerCallback: function (row, data, start, end, display) {
-  //     let totalSaldoAwal = 0;
-  //     let totalDebit = 0;
-  //     let totalKredit = 0;
-  //     let totalSaldoDebit = 0;
-  //     let totalSaldoKredit = 0;
-
-  //     data.forEach(function (item) {
-  //       totalSaldoAwal += parseFloat(item.saldoAwal || 0);
-
-  //       totalDebit += parseFloat(item.totalDebit || 0);
-
-  //       totalKredit += parseFloat(item.totalKredit || 0);
-
-  //       totalSaldoDebit += parseFloat(item.saldoAkhirDebit || 0);
-
-  //       totalSaldoKredit += parseFloat(item.saldoAkhirKredit || 0);
-  //     });
-
-  //     // Kolom 3 = Saldo Awal
-  //     //$('th', this.api().table().footer()) .eq(3).html(formatNumber(totalSaldoAwal));
-  //     $(table.column(3).footer()).html(formatNumber(totalSaldoAwal));
-
-  //     $(table.column(4).footer()).html(formatNumber(totalDebit));
-
-  //     $(table.column(5).footer()).html(formatNumber(totalKredit));
-
-  //     $(table.column(6).footer()).html(formatNumber(totalSaldoDebit));
-
-  //     $(table.column(7).footer()).html(formatNumber(totalSaldoKredit));
-  //   },
-  // });
-
-  // // =====================================
-  // // FILTER
-  // // =====================================
-
-  // $("#btnFilter").on("click", function () {
-  //   table.ajax.reload();
-  // });
+  
 
    $("#branchCode").select2({
      theme: "bootstrap-5",
@@ -223,15 +109,15 @@ $(document).ready(function () {
                totalSaldoKredit += parseFloat(item.saldoAkhirKredit || 0);
              });
 
-             $(table.column(3).footer()).html(formatNumber(totalSaldoAwal));
+             $(table.column(4).footer()).html(formatNumber(totalSaldoAwal));
 
-             $(table.column(4).footer()).html(formatNumber(totalDebit));
+             $(table.column(5).footer()).html(formatNumber(totalDebit));
 
-             $(table.column(5).footer()).html(formatNumber(totalKredit));
+             $(table.column(6).footer()).html(formatNumber(totalKredit));
 
-             $(table.column(6).footer()).html(formatNumber(totalSaldoDebit));
+             $(table.column(7).footer()).html(formatNumber(totalSaldoDebit));
 
-             $(table.column(7).footer()).html(formatNumber(totalSaldoKredit));
+             $(table.column(8).footer()).html(formatNumber(totalSaldoKredit));
            },
          });
        } else {

@@ -1,0 +1,323 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/main}"
+>
+  <head>
+    <title>Approval</title>
+  </head>
+  <body>
+    <div layout:fragment="content">
+       <div class="container-fluid"
+         id="periodClosingCheckerPage"
+         th:data-list-url="@{/operasional/period-closing-checker/list}"
+         th:data-check-url="@{/operasional/period-closing-checker/check}"
+         th:data-approve-url="@{/operasional/period-closing-checker/approve}"
+         th:data-reject-url="@{/operasional/period-closing-checker/reject}"
+         >
+
+        <!-- Header -->
+        <div class="page-header d-print-none mb-3">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h2 class="page-title">
+                        Antrian Persetujuan Tutup Buku
+                    </h2>
+                    <div class="text-muted mt-1">
+                        Daftar pengajuan tutup buku yang menunggu persetujuan Checker.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3 class="card-title">Filter Pengajuan</h3>
+            </div>
+
+            <div class="card-body">
+                <div class="row align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label">Cabang</label>
+                        <select id="cabangId" class="form-select">
+                            <option value="">-- Pilih Cabang --</option>
+                            <option th:each="cabang : ${cabangList}"
+                                    th:value="${cabang.id}"
+                                    th:text="${cabang.namaCabang}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <button type="button"
+                                id="btnLoadPeriods"
+                                class="btn btn-primary">
+                            <i class="ti ti-search"></i>
+                            Tampilkan Pengajuan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pesan -->
+        <div id="messagePanel"
+             class="alert"
+             style="display:none;">
+        </div>
+
+        <!-- Daftar Pengajuan -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Daftar Menunggu Persetujuan</h3>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-vcenter card-table table-striped"
+                       id="tableChecker">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Periode</th>
+                            <th>Diajukan Oleh</th>
+                            <th>Waktu Pengajuan</th>
+                            <th>Total Debit</th>
+                            <th>Total Kredit</th>
+                            <th>Neraca</th>
+                            <th>Antrean Gadai</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="checkerBody">
+                        <tr>
+                            <td colspan="9" class="text-center text-muted">
+                                Pilih cabang terlebih dahulu.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+                
+        <!-- Detail Pengajuan Checker -->
+        <div class="card mt-3" id="checkerDetailPanel" style="display:none;">
+
+            <div class="card-header">
+                <h3 class="card-title">Detail Pengajuan Tutup Buku</h3>
+            </div>
+
+            <div class="card-body">
+
+                <h4 class="mb-3" id="detailPeriod">-</h4>
+
+                <!-- Informasi Pengajuan -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Informasi Pengajuan</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="text-muted">Status</label>
+                                <div id="detailStatus">-</div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="text-muted">Diajukan Oleh</label>
+                                <div id="detailSubmittedBy">-</div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="text-muted">Waktu Pengajuan</label>
+                                <div id="detailSubmittedAt">-</div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="text-muted">Cabang ID</label>
+                                <div id="detailCabang">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pemeriksaan Neraca -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Pemeriksaan Neraca</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="text-muted">Total Debit</label>
+                                <h3 id="detailDebit">Rp 0</h3>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="text-muted">Total Kredit</label>
+                                <h3 id="detailKredit">Rp 0</h3>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="text-muted">Status Neraca</label>
+                                <div id="detailNeraca">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pemeriksaan CKPN -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Pemeriksaan CKPN</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="text-muted">Jurnal CKPN</label>
+                                <div id="detailCkpn">-</div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="text-muted">Status CKPN</label>
+                                <div id="detailStatusCkpn">-</div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="text-muted">Cadangan Gadai</label>
+                                <div id="detailCadanganGadai">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Konfirmasi Gadai -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Konfirmasi Transaksi Gadai</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="text-muted">Antrean Belum Dibukukan</label>
+                                <h3 id="detailPendingGadai">0</h3>
+                            </div>
+
+                            <div class="col-md-8">
+                                <label class="text-muted">Catatan Finance</label>
+                                <div id="detailPendingNote">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error Pemeriksaan -->
+                <div id="detailErrorPanel"
+                    class="alert alert-danger"
+                    style="display:none;">
+                    <strong>Catatan Pemeriksaan:</strong>
+                    <ul id="detailErrorList" class="mb-0"></ul>
+                </div>
+                
+                                
+                <!-- Aksi Checker -->
+                <div id="checkerActionPanel" class="card mt-3" style="display:none;">
+                    <div class="card-header">
+                        <h3 class="card-title">Keputusan Checker</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <p class="text-muted">
+                            Pastikan seluruh hasil pemeriksaan sudah sesuai sebelum
+                            memberikan keputusan.
+                        </p>
+
+                        <div class="d-flex gap-2">
+                            <button type="button"
+                                    id="btnApprove"
+                                    class="btn btn-success">
+                                <i class="ti ti-check"></i>
+                                Setujui Tutup Buku
+                            </button>
+
+                            <button type="button"
+                                    id="btnReject"
+                                    class="btn btn-danger">
+                                <i class="ti ti-x"></i>
+                                Tolak Pengajuan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form alasan penolakan -->
+                <div class="modal fade"
+                    id="modalReject"
+                    tabindex="-1"
+                    aria-labelledby="modalRejectLabel"
+                    aria-hidden="true">
+
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalRejectLabel">
+                                    Tolak Pengajuan Tutup Buku
+                                </h5>
+                                <button type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal">
+                                </button>
+                            </div>
+
+                            <div class="modal-body">
+                                <label class="form-label">Alasan Penolakan</label>
+                                <textarea id="rejectionReason"
+                                          class="form-control"
+                                          rows="4"
+                                          maxlength="1000"
+                                          required
+                                          placeholder="Masukkan alasan penolakan..."></textarea>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button"
+                                        class="btn btn-secondary"
+                                        data-bs-dismiss="modal">
+                                    Batal
+                                </button>
+
+                                <button type="button"
+                                        id="btnConfirmReject"
+                                        class="btn btn-danger">
+                                    Konfirmasi Penolakan
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+    </div>
+    <div layout:fragment="scripts">
+        <link th:href="@{/css/select2.min.css}" rel="stylesheet">
+        <link th:href="@{/css/select2-bootstrap-5-theme.min.css}" rel="stylesheet">
+        <script th:src="@{/js/select2.min.js}"></script>
+        <link th:href="@{/css/select2-custom.css}" rel="stylesheet">
+        <script th:src="@{/js/operasional/periodClosingChecker.js}"></script> 
+        
+    </div>
+  </body>
+</html>

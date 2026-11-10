@@ -1,6 +1,7 @@
 package com.project.gl.service;
 
 
+import com.project.gl.model.response.KodeTransaksiComboResponse;
 import com.project.gl.model.response.KodeTransaksiResponse;
 import com.project.gl.model.response.PageResponse;
 import com.project.gl.helper.Util;
@@ -15,9 +16,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import com.project.gl.model.response.KodeTransaksiComboResponse;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -138,5 +142,39 @@ public class KodeTransaksiServiceImpl implements KodeTransaksiService {
                 resultPage.getTotalPages(),
                 resultPage.isLast()
         );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<KodeTransaksiComboResponse> getJenisTransaksi(
+            String tipeTransaksi,
+            String arahKas
+            // Integer cabangId
+        ) {
+
+        if (tipeTransaksi == null ||
+                (!tipeTransaksi.equals("GADAI") &&
+                !tipeTransaksi.equals("NON_GADAI"))) {
+            throw new IllegalArgumentException("Tipe transaksi tidak valid");
+        }
+
+        if (arahKas == null ||
+                (!arahKas.equals("IN") &&
+                !arahKas.equals("OUT"))) {
+            throw new IllegalArgumentException("Arah kas tidak valid");
+        }
+
+        // if (cabangId == null || cabangId <= 0) {
+        //     throw new IllegalArgumentException("Cabang wajib dipilih");
+        // }
+
+        return repository.findJenisTransaksiCombo(
+                        tipeTransaksi,
+                        arahKas
+                        // cabangId
+                )
+                .stream()
+                .map(KodeTransaksiComboResponse::new)
+                .collect(Collectors.toList());
     }
 }

@@ -23,6 +23,7 @@ import com.project.gl.model.response.JournalResponse;
 import com.project.gl.model.response.PreparedJournalLineDto;
 import com.project.gl.repo.CabangRepository;
 import com.project.gl.repo.GlCashMovementRepository;
+import com.project.gl.repo.GlDailyClosingRepository;
 import com.project.gl.repo.GlDisbursementDetailRepository;
 import com.project.gl.repo.JournalDetailRepository;
 import com.project.gl.repo.JournalHeaderRepository;
@@ -95,6 +96,8 @@ public class JournalServiceImpl implements JournalService {
     private  GlDisbursementDetailRepository  glDisbursementDetailRepository;
 
 
+    @Autowired
+    private GlDailyClosingRepository glDailyClosingRepository;
     //@Autowired
     //private TransactionCollateralService transactionCollateralService;
 
@@ -240,6 +243,40 @@ public class JournalServiceImpl implements JournalService {
                     "Branch tidak ditemukan: "
                             + request.getBranchCode()
             );
+        }
+
+        //===
+        // =========================================================
+        // 7.1 VALIDASI TUTUP HARIAN
+        // =========================================================
+
+        if (branch != null && request.getOccurredAt() != null) {
+
+        LocalDate transactionDate =
+                request.getOccurredAt()
+                        .toLocalDateTime()
+                        .toLocalDate();
+
+        boolean isClosed =
+                glDailyClosingRepository
+                        .existsByTanggalAndCabangIdAndStatus(
+                                transactionDate,
+                                branch.getId(),
+                                "DITUTUP"
+                        );
+
+        if (isClosed) {
+
+                errors.add(
+                                "Transaksi ditolak. Tanggal "
+                                        + transactionDate
+                                        + " untuk cabang "
+                                        + request.getBranchCode()
+                                        + " sudah ditutup. "
+                                        + "Silakan hubungi Kantor Pusat "
+                                        + "untuk membuka kembali tanggal tersebut."
+                        );
+                }
         }
 
         // =========================================================
@@ -499,20 +536,38 @@ public class JournalServiceImpl implements JournalService {
                 continue;
             }
 
+                // -----------------------------------------------------
+                // 11.7 SKIP ZERO AMOUNT
+                // -----------------------------------------------------
+
+                if (amount.compareTo(BigDecimal.ZERO) == 0) {
+                        continue;
+                }
+
+
             // -----------------------------------------------------
-            // 11.7 SIMPAN PREPARED LINE
+            // 11.8 SIMPAN PREPARED LINE
             // -----------------------------------------------------
 
-            PreparedLine preparedLine =
-                    new PreparedLine(
-                            template,
-                            component,
-                            glAccount,
-                            amount,
-                            dk.toUpperCase()
-                    );
+        //     PreparedLine preparedLine =
+        //             new PreparedLine(
+        //                     template,
+        //                     component,
+        //                     glAccount,
+        //                     amount,
+        //                     dk.toUpperCase()
+        //             );
 
-            preparedLines.add(preparedLine);
+        //     preparedLines.add(preparedLine);
+
+        PreparedLine preparedLine = new PreparedLine(
+                                        template,
+                                        component,
+                                        glAccount,
+                                        amount,
+                                        dk.toUpperCase()
+                                );
+                        preparedLines.add(preparedLine);
 
             // -----------------------------------------------------
             // 11.8 HITUNG DEBIT / CREDIT
@@ -544,27 +599,30 @@ public class JournalServiceImpl implements JournalService {
         // 13. VALIDASI BALANCE
         // =========================================================
 
-        // if (totalDebit.compareTo(totalKredit) != 0) {
+       
 
-        //     errors.add(
-        //             "Journal tidak balance. "
-        //                     + "Debit = "
-        //                     + totalDebit
-        //                     + ", Credit = "
-        //                     + totalKredit
-        //     );
-        // }
-        if (preparedLines.size() == templates.size()
-                && totalDebit.compareTo(totalKredit) != 0) {
+        if (totalDebit.compareTo(totalKredit) != 0) {
+                errors.add(
+                        "Journal tidak balance. "
+                                + "Debit = "
+                                + totalDebit
+                                + ", Credit = "
+                                + totalKredit
+                );
+        }
 
-                        errors.add(
-                                "Journal tidak balance. "
-                                        + "Debit = "
-                                        + totalDebit
-                                        + ", Credit = "
-                                        + totalKredit
-        );
-}
+
+        // if (preparedLines.size() == templates.size()
+        //         && totalDebit.compareTo(totalKredit) != 0) {
+
+        //                 errors.add(
+        //                         "Journal tidak balance. "
+        //                                 + "Debit = "
+        //                                 + totalDebit
+        //                                 + ", Credit = "
+        //                                 + totalKredit
+        // );
+        //}
 
         // =========================================================
         // 14. EVALUASI ERROR
@@ -990,8 +1048,10 @@ public class JournalServiceImpl implements JournalService {
                 return request.getAmounts()
                         .getInterestAmount();
 
-            // TIDAK DIKENALI  
-
+            case "penalty_amount":
+                return request.getAmounts().getPenaltyAmount() != null
+                        ? request.getAmounts().getPenaltyAmount()
+                        : BigDecimal.ZERO;
             default:
 
                 throw new IllegalArgumentException(
@@ -1214,22 +1274,16 @@ public class JournalServiceImpl implements JournalService {
                         return;
                 }
 
-                JournalRequest.Collateral collateral = request.getCollateral();
-                if (collateral == null) {
-                        errors.add("collateral wajib diisi untuk transaksi pencairan.");
-                        return;
-                }
-                if (collateral.getCollateralType() == null || collateral.getCollateralType().isBlank()) {
-                        errors.add("collateral_type wajib diisi.");
-                }
-
-                // if (collateral.getAppraisedValue() == null || collateral.getAppraisedValue().compareTo(BigDecimal.ZERO) <= 0) {
-                //         errors.add("appraised_value harus lebih besar dari 0.");
+                //JournalRequest.Collateral collateral = request.getCollateral();
+                // if (collateral == null) {
+                //         errors.add("collateral wajib diisi untuk transaksi pencairan.");
+                //         return;
+                // }
+                // if (collateral.getCollateralType() == null || collateral.getCollateralType().isBlank()) {
+                //         errors.add("collateral_type wajib diisi.");
                 // }
 
-                // if (collateral.getLtv() == null || collateral.getLtv().compareTo(BigDecimal.ZERO) < 0 || collateral.getLtv().compareTo(new BigDecimal("100")) > 0) {
-                //         errors.add("ltv harus berada antara 0 sampai 100.");
-                // }
+               
         }
 
 

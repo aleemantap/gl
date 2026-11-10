@@ -1,0 +1,229 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/main}"
+>
+  <head>
+    <title>Tutup Buku</title>
+  </head>
+  <body>
+    <div layout:fragment="content">
+         <div class="container-fluid"
+                    id="periodClosingPage"
+                    th:data-list-url="@{/operasional/period-closing/list}"
+                    th:data-check-url="@{/operasional/period-closing/check}"
+                    th:data-confirm-url="@{/operasional/period-closing/confirm-pending-gadai}"
+                    th:data-submit-url="@{/operasional/period-closing/submit}">
+                    
+                <div class="mb-4">
+                    <h2 class="mb-1">Tutup Buku</h2>
+                    <div class="text-muted">
+                        Monitoring dan pengajuan penutupan periode akuntansi.
+                    </div>
+                </div>
+
+                <!-- Filter Cabang -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row align-items-end">
+                            <div class="col-md-4">
+                                <label class="form-label">Cabang</label>
+                                <select class="form-select select2" id="cabangId">
+                                    <option value="">Pilih Cabang</option>
+                                    <option th:each="cabang : ${cabangList}"
+                                            th:value="${cabang.id}"
+                                            th:text="${cabang.kodeCabang + ' - ' + cabang.namaCabang}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <button type="button"
+                                        class="btn btn-primary"
+                                        id="btnLoadPeriods">
+                                    <i class="ti ti-search me-1"></i>
+                                    Tampilkan Periode
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daftar Periode -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3 class="card-title">Daftar Periode Tutup Buku</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-vcenter table-hover"
+                                id="tablePeriodClosing">
+
+                                <thead class="table-primary">
+                                <tr>
+                                    <th>Periode</th>
+                                    <th>Status</th>
+                                    <th>Neraca Saldo</th>
+                                    <th>Antrean Gadai</th>
+                                    <th>Ditutup oleh</th>
+                                    <th width="150">Aksi</th>
+                                </tr>
+                                </thead>
+
+                                <tbody id="periodClosingBody">
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">
+                                        Pilih cabang untuk menampilkan periode.
+                                    </td>
+                                </tr>
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel Pemeriksaan -->
+               
+
+                <div id="checkPanel" style="display: none;">
+
+                    <!-- Judul periode -->
+                    <h3 class="mb-3">
+                        Detail Tutup Buku:
+                        <span id="selectedPeriod">-</span>
+                    </h3>
+
+                    <!-- Informasi pengajuan -->
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h4 class="card-title mb-3">Informasi Tutup Buku</h4>
+
+                            <div class="mb-2">
+                                <strong>Status:</strong>
+                                <span id="closingStatus" class="badge bg-secondary" style="color:aliceblue;">-</span>
+                            </div>
+
+                            <div class="mb-2">
+                                <strong>Diajukan oleh:</strong>
+                                <span id="submittedBy">-</span>
+                            </div>
+
+                            <div class="mb-2">
+                                <strong>Waktu pengajuan:</strong>
+                                <span id="submittedAt">-</span>
+                            </div>
+
+                            <div class="mb-2">
+                                <strong>Disetujui oleh:</strong>
+                                <span id="approvedBy">-</span>
+                            </div>
+
+                            <div class="mb-2">
+                                <strong>Waktu persetujuan:</strong>
+                                <span id="approvedAt">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="statusMessage" class="alert" style="display:none;"></div>
+
+                    <!-- Pemeriksaan Neraca -->
+                    <div id="checkNeraca" class="alert"></div>
+
+                    <!-- Pemeriksaan CKPN -->
+                    <div id="checkCkpn" class="alert"></div>
+
+                    <!-- Pemeriksaan Gadai -->
+                    <div id="checkGadai" class="alert"></div>
+
+                    <!-- Panel Konfirmasi Gadai -->
+                    <div id="gadaiPanel" class="card mb-3" style="display:none;">
+                        <div class="card-header">
+                            <h3 class="card-title">Konfirmasi Antrean Gadai</h3>
+                        </div>
+
+                        <div class="card-body">
+                            <form id="formGadai">
+
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        Jumlah Transaksi Gadai Tertunda
+                                    </label>
+
+                                    <input type="number"
+                                        class="form-control"
+                                        id="pendingCount"
+                                        name="pendingCount"
+                                        min="0"
+                                        required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        Catatan Finance
+                                    </label>
+
+                                    <textarea class="form-control"
+                                            id="pendingNote"
+                                            name="note"
+                                            rows="3"
+                                            placeholder="Masukkan catatan konfirmasi..."
+                                            required></textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">
+                                    Simpan Konfirmasi Gadai
+                                </button>
+
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Panel Pengajuan Tutup Buku -->
+                    <div id="submitPanel" class="card mb-3" style="display:none;">
+                        <div class="card-body">
+                            <h3 class="card-title">Pengajuan Tutup Buku</h3>
+
+                            <p class="text-muted">
+                                Pastikan seluruh pemeriksaan sudah terpenuhi sebelum
+                                mengajukan tutup buku kepada Checker.
+                            </p>
+
+                            <div id="successPanel"
+                                class="alert alert-success"
+                                style="display:none;">
+                                Seluruh persyaratan tutup buku sudah terpenuhi.
+                            </div>
+
+                            <button type="button"
+                                    id="btnSubmit"
+                                    class="btn btn-success"
+                                    disabled>
+                                <i class="ti ti-send me-1"></i>
+                                Ajukan Tutup Buku
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Error -->
+                    <div id="errorPanel" style="display:none;">
+                        <ul id="errorList"></ul>
+                    </div>
+
+                </div>
+                
+            <div id="messagePanel"></div>
+        </div>
+    </div>
+    <div layout:fragment="scripts">
+        <link th:href="@{/css/select2.min.css}" rel="stylesheet">
+        <link th:href="@{/css/select2-bootstrap-5-theme.min.css}" rel="stylesheet">
+        <script th:src="@{/js/select2.min.js}"></script>
+        <script th:src="@{/js/operasional/periodClosing.js}"></script>
+
+        
+    </div>
+  </body>
+</html>

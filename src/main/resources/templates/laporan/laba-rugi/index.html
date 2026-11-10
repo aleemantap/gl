@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
+
+<head>
+    <title>Laporan Laba Rugi</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+  <div class="container-xl">
+    <div class="page-header mb-3">
+        <h2 class="page-title">Laporan Laba Rugi</h2>
+        <div class="text-muted">
+            Laporan pendapatan dan beban berdasarkan jurnal yang sudah diposting.
+        </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <form th:action="@{/laporan/laba-rugi}"
+                  method="get"
+                  class="row align-items-end g-3">
+
+                <div class="col-md-3">
+                    <label class="form-label">Periode</label>
+                    <input type="month"
+                           name="periode"
+                           class="form-control"
+                           th:value="${periode}">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Cabang</label>
+                    <select name="cabangId" class="form-select">
+                        <option value="">Semua Cabang (Konsolidasi)</option>
+
+                        <option th:each="cabang : ${cabangList}"
+                                th:value="${cabang.id}"
+                                th:text="${cabang.namaCabang}"
+                                th:selected="${cabangId != null and cabangId == cabang.id}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="ti ti-filter me-1"></i>
+                        Terapkan
+                    </button>
+                    <button type="button" class="btn btn-primary-blue" id="btnExportExcel">
+                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="9" y1="13" x2="15" y2="19"/>
+                            <line x1="15" y1="13" x2="9" y2="19"/>
+                        </svg>
+                        Export
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Laporan -->
+    <div class="card" id="card-laba-rugi">
+        <div class="card-header">
+            <h3 class="card-title">Rincian Laba Rugi</h3>
+            <div class="card-subtitle text-muted" style="margin-left:10px;"
+                 th:text="${'Periode: ' + periode}">
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table">
+                <thead>
+                <tr>
+                    <th style="width: 55%">Uraian</th>
+                    <th class="text-end">Bulan Berjalan</th>
+                    <th class="text-end">Tahun Berjalan (YTD)</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <th:block th:each="item : ${laporan}">
+
+                    <!-- Pos utama -->
+                    <!-- <tr class="table-light fw-bold">
+                        <td>
+                            <span th:text="${item.kodePos}"></span>
+                            -
+                            <span th:text="${item.namaPos}"></span>
+                        </td>
+                        <td class="text-end text-nowrap"
+                            th:text="${'Rp ' + #numbers.formatDecimal(item.bulanIni, 0, 'POINT', 2, 'COMMA')}">
+                        </td>
+
+                        <td class="text-end text-nowrap"
+                            th:text="${'Rp ' + #numbers.formatDecimal(item.tahunBerjalan, 0, 'POINT', 2, 'COMMA')}">
+                        </td>
+                    </tr> -->
+                    <tr th:classappend="${item.kodePos == 'LR-03'} ? 'table-success fw-bold' : 'table-light fw-bold'">
+                        <td>
+                            <span th:text="${item.kodePos}"></span>
+                            -
+                            <span th:text="${item.namaPos}"></span>
+                        </td>
+
+                        <td class="text-end text-nowrap"
+                            th:text="${'Rp ' + #numbers.formatDecimal(item.bulanIni, 0, 'POINT', 2, 'COMMA')}">
+                        </td>
+
+                        <td class="text-end text-nowrap"
+                            th:text="${'Rp ' + #numbers.formatDecimal(item.tahunBerjalan, 0, 'POINT', 2, 'COMMA')}">
+                        </td>
+                    </tr>
+
+                    <!-- Anak pos -->
+                    <tr th:each="child : ${item.children}"
+                        th:classappend="${child.isTotal} ? 'fw-bold table-secondary' : ''">
+
+                        <td class="ps-4">
+                            <span th:text="${child.kodePos}"></span>
+                            -
+                            <span th:text="${child.namaPos}"></span>
+                        </td>
+
+                        <!-- <td class="text-end text-nowrap"
+                            th:text="${'Rp ' + #numbers.formatDecimal(child.bulanIni, 0, 'POINT', 2, 'COMMA')}">
+                        </td> -->
+                        <td class="text-end text-nowrap">
+                            <button type="button"
+                                    class="btn btn-link p-0 text-decoration-none js-detail-laba-rugi"
+                                    th:text="${'Rp ' + #numbers.formatDecimal(child.bulanIni, 0, 'POINT', 2, 'COMMA')}"
+                                    th:attr="data-kode-pos=${child.kodePos},
+                                            data-nama-pos=${child.namaPos}">
+                            </button>
+                        </td>
+
+                        <td class="text-end text-nowrap"
+                            th:text="${'Rp ' + #numbers.formatDecimal(child.tahunBerjalan, 0, 'POINT', 2, 'COMMA')}">
+                        </td>
+                    </tr>
+
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- modal detail  -->
+    <div class="modal fade"
+        id="modalDetailLabaRugi"
+        tabindex="-1"
+        aria-hidden="true">
+
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-dark  text-white">
+                    <div>
+                        <h5 class="modal-title">Detail Jurnal</h5>
+                        <div class="text-muted small" id="detailSubtitle"></div>
+                    </div>
+                    <button type="button"
+                            class="btn-close-white-fix"
+                            data-bs-dismiss="modal">
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div id="detailLoading" class="text-center py-4">
+                        Memuat data jurnal...
+                    </div>
+                    <div id="detailEmpty"
+                        class="alert alert-info d-none">
+                        Tidak ada jurnal pada periode ini.
+                    </div>
+
+                    <div class="table-responsive d-none" id="detailTableWrapper">
+                        <table class="table table-sm table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>No. Jurnal</th>
+                                <th>No. Transaksi</th>
+                                <th>No. GL</th>
+                                <th>Nama Account</th>
+                                <th class="text-end">Debit</th>
+                                <th class="text-end">Kredit</th>
+                                <th class="text-end">Saldo</th>
+                            </tr>
+                            </thead>
+                            <tbody id="detailTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  </div> 
+    
+</div>
+<div layout:fragment="scripts">     
+        <link th:href="@{/css/select2.min.css}" rel="stylesheet">
+        <link th:href="@{/css/select2-bootstrap-5-theme.min.css}" rel="stylesheet">
+        <script th:src="@{/js/laporan/laba-rugi.js}"></script>  
+        <script th:src="@{/js/laporan/laba-rugi-exp.js}"></script>        
+</div>
+</body>
+</html>

@@ -20,7 +20,7 @@ public interface GroupRepository extends JpaRepository<UserGroup, Long> {
 
    
     Optional<UserGroup> findOneById(Long id);
-
+    boolean existsByName(String name);
     @Query("SELECT u FROM UserGroup u " +
       
        "WHERE " +

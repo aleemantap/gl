@@ -39,7 +39,7 @@ $(document).ready(function () {
         return {
           draw: d.draw,
           start: d.start,
-          length: 20,
+          length: 10,
           orderColumn: d.order[0] ? d.order[0].column : 1,
           orderDir: d.order[0] ? d.order[0].dir : "desc",
           kode: $("#kode").val(),
@@ -117,7 +117,7 @@ $(document).ready(function () {
 
   $("#btn-submit-tc").on("click", function (e) {
     e.preventDefault();
-
+    //alert("TES")
     var editId = $("#tc_id").val();
     var url = "/parameter/kode-transaksi/add";
     if (editId) {
@@ -130,13 +130,13 @@ $(document).ready(function () {
     // Validasi form
     var isValid = true;
 
-    var kode = $("#kode").val().trim();
+    var kode = $("#kodeTransaksi").val().trim();
     if (!kode) {
-      $("#kode").addClass("is-invalid");
-      $("#kodeError").text("Kode  wajib diisi");
+      $("#kodeTransaksi").addClass("is-invalid");
+      $("#kodeTransaksiError").text("Kode  wajib diisi");
       isValid = false;
     }
-
+//  alert(kode)
     var namaTransaksi = $("#namaTransaksi").val().trim();
     if (!namaTransaksi) {
       $("#namaTransaksi").addClass("is-invalid");
@@ -242,7 +242,7 @@ $(document).ready(function () {
       type: "GET",
       success: function (res) {
         $("#tc_id").val(res.id);
-        $("#kode").val(res.kode);
+        $("#kodeTransaksi").val(res.kode);
         $("#namaTransaksi").val(res.namaTransaksi);
         $("#modal-tc").modal("show");
       },

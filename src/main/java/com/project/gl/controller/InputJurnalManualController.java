@@ -15,11 +15,13 @@ import com.project.gl.exception.JournalValidationException;
 import com.project.gl.helper.JournalCodeGenerator;
 import com.project.gl.model.entity.Cabang;
 import com.project.gl.model.entity.Product;
+import com.project.gl.model.entity.Teller;
 import com.project.gl.model.enums.TransactionRejectionStatus;
 import com.project.gl.model.entity.JournalId;
 import com.project.gl.model.entity.JournalLineTemplate;
 import com.project.gl.model.entity.GlAccountType;
 import com.project.gl.model.entity.KodeTransaksi;
+import com.project.gl.model.projection.KasPointTellerProjection;
 import com.project.gl.model.projection.ProductRuleComponentOption;
 import com.project.gl.model.projection.ProductRuleOption;
 import com.project.gl.model.request.GlItemRequest;
@@ -40,6 +42,7 @@ import com.project.gl.service.CabangService;
 import com.project.gl.service.GlAccountTypeService;
 import com.project.gl.service.NomorGlAccountService;
 import com.project.gl.service.ProductService;
+import com.project.gl.service.TellerService;
 import com.project.gl.service.TransactionRejectionService;
 import com.project.gl.service.JournalIdService;
 import com.project.gl.service.JournalService;
@@ -47,6 +50,7 @@ import com.project.gl.model.response.ApiResponse;
 import com.project.gl.model.response.JournaTransactionResponse;
 import com.project.gl.model.response.JournalCodeOptionResponse;
 import com.project.gl.service.JournalTransaksiService;
+import com.project.gl.service.KasPointService;
 import com.project.gl.service.KodeTransaksiService;
 import com.project.gl.repo.ProductRepository;
 import java.time.LocalDate;
@@ -92,13 +96,18 @@ public class InputJurnalManualController extends BaseController{
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private TellerService tellerService;
+
+    @Autowired
+    private KasPointService kasPointService;
+
 
    
     @GetMapping
     public String index(Model model) {
         try {
        
-            
             List<Cabang> cabangList = cabangService.getAll(); 
             model.addAttribute("cabangList", cabangList);
            
@@ -106,7 +115,13 @@ public class InputJurnalManualController extends BaseController{
             model.addAttribute("kodeTransaksiList", kodeTransaksiList);         
             
             List<Product> prList = productService.getAll();
-            model.addAttribute("productList", prList);         
+            model.addAttribute("productList", prList);     
+            
+            List<Teller> kasirList = tellerService.getAll(); 
+            model.addAttribute("kasirList", kasirList);
+           
+            List<KasPointTellerProjection> kasList = kasPointService.getAll(); 
+            model.addAttribute("kasList", kasList);
         
             model.addAttribute("breadcrumbItems", new String[]{"OPERASIONAL", "INPUT JURNAL MANUAL"});
             

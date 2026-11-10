@@ -39,8 +39,8 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
     
-    // @Autowired
-    // private ProductRuleRepository productRuleRepository;
+    @Autowired
+    private ProductRuleRepository productRuleRepository;
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
@@ -159,6 +159,40 @@ public class ProductServiceImpl implements ProductService {
                 .build();
         
         productRepository.save(product);
+        
+        // Return response sederhana
+        return ProductResponse.builder()
+                .productCode(request.getProductCode())
+                .productName(request.getProductName())
+                .isActive(product.getIsActive())
+                .build();
+    }
+
+    @Override
+    public ProductResponse createProduct2(ProductRequest request) {
+        if (productRepository.existsByProductCode(request.getProductCode())) {
+            throw new RuntimeException("Product code already exists: " + request.getProductCode());
+        }
+        
+        Product product = Product.builder()
+                .productCode(request.getProductCode())
+                .productName(request.getProductName())
+                .isActive(request.getIsActive() != null ? request.getIsActive() : true)
+                .build();
+        
+        productRepository.save(product);
+
+
+        ProductRule rule = new ProductRule();
+        rule.setProductId(product.getId());
+        rule.setRuleVersion(1);
+        rule.setEffectiveFrom(LocalDate.now());
+        rule.setEffectiveTo(null);
+        rule.setIsActive(true);
+        rule.setApprovalStatus("APPROVED");
+        rule.setApprovedBy("SYSTEM");
+
+        productRuleRepository.save(rule);
         
         // Return response sederhana
         return ProductResponse.builder()

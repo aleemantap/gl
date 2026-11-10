@@ -1,0 +1,288 @@
+<!doctype html>
+<html
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/main}"
+>
+<head>
+    <title>Laporan Kas Harian</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="container-xl">
+
+        <!-- FILTER -->
+        <div class="filter-card">
+            <div class="row g-4 align-items-end">
+
+                <div class="col-lg-4 col-md-6">
+                    <label for="tanggal" class="filter-label">
+                        <i class="bi bi-calendar3"></i>
+                        Tanggal Laporan
+                    </label>
+                    <input
+                        type="date"
+                        id="tanggal"
+                        class="form-control"
+                        th:value="${tanggal}"
+                    >
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <label for="cabangId" class="filter-label">
+                        Cabang
+                    </label>
+                    <select id="cabangId" class="form-select select2">
+                        <option value="">-- Pilih Cabang --</option>
+                        <option
+                            th:each="cabang : ${cabangList}"
+                            th:value="${cabang.id}"
+                            th:text="${cabang.kodeCabang} + ' - ' + ${cabang.namaCabang}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-lg-4 col-md-12">
+                    <div class="filter-actions">
+                        <div class="left-actions">
+                            <button
+                                type="button"
+                                class="btn btn-filter btn-primary"
+                                id="btnCari"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4Z"/>
+                                </svg>
+                                Tampilkan
+                            </button>
+
+                            <button
+                                type="button"
+                                class="btn btn-primary-grey"
+                                id="btnExportPdf"
+                                disabled
+                            >
+                                <i class="bi bi-file-earmark-pdf"></i>
+                                Export PDF
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- INFORMASI LAPORAN -->
+        <div class="card mt-3" id="reportInfo" style="display:none;">
+            <div class="card-body">
+                <h3 class="card-title fw-bold mb-3">
+                    LAPORAN KAS HARIAN
+                </h3>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="text-muted">Cabang</div>
+                        <div class="fw-bold" id="namaCabang">-</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="text-muted">Tanggal Laporan</div>
+                        <div class="fw-bold" id="tanggalLaporan">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RINGKASAN -->
+        <div class="row row-cards mt-3" id="summarySection"
+             style="display:none;">
+
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-muted">Saldo Awal Kas</div>
+                        <div class="fs-3 fw-bold" id="saldoAwalKas">
+                            Rp0
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-muted">Kas Masuk</div>
+                        <div class="fs-3 fw-bold text-success" id="kasMasuk">
+                            Rp0
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-muted">Kas Keluar</div>
+                        <div class="fs-3 fw-bold text-danger" id="kasKeluar">
+                            Rp0
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-muted">Total Saldo Akhir</div>
+                        <div class="fs-3 fw-bold" id="totalSaldoAkhir">
+                            Rp0
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SALDO PER AKUN -->
+        <div class="card mt-3" id="balanceSection" style="display:none;">
+            <div class="card-header">
+                <h3 class="card-title fw-bold">Posisi Saldo Kas</h3>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-vcenter">
+                    <thead>
+                        <tr>
+                            <th>Akun</th>
+                            <th class="text-end">Saldo Awal</th>
+                            <th class="text-end">Saldo Akhir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>110101 - Kas</td>
+                            <td class="text-end" id="saldoAwalKasDetail">Rp0</td>
+                            <td class="text-end" id="saldoAkhirKas">Rp0</td>
+                        </tr>
+                        <tr>
+                            <td>110102 - Kas Kecil</td>
+                            <td class="text-end" id="saldoAwalKasKecil">Rp0</td>
+                            <td class="text-end" id="saldoAkhirKasKecil">Rp0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- DETAIL TRANSAKSI -->
+        <div class="row row-deck row-cards mt-3" id="detailSection"
+             style="display:none;">
+
+            <div class="col-12">
+                <div class="card">
+
+                    <div class="card-header">
+                        <h3 class="card-title fw-bold">
+                            Rincian Transaksi Kas
+                        </h3>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped card-table table-vcenter">
+                            <thead>
+                                <tr>
+                                    <th class="w-1">No</th>
+                                    <th>Kode Transaksi</th>
+                                    <th>Jenis Transaksi</th>
+                                    <th class="text-end">Kas Masuk</th>
+                                    <th class="text-end">Kas Keluar</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="detailTableBody">
+                            </tbody>
+
+                            <tfoot>
+                                <tr class="fw-bold">
+                                    <td colspan="3" class="text-end">
+                                        TOTAL
+                                    </td>
+                                    <td class="text-end" id="totalDetailMasuk">
+                                        Rp0
+                                    </td>
+                                    <td class="text-end" id="totalDetailKeluar">
+                                        Rp0
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                </div>
+
+              
+
+            </div>
+
+
+        </div>
+
+        <!-- TANDA TANGAN -->
+        <div class="card mt-3" id="signatureSection" style="display:none;">
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-6">
+                        <p class="fw-bold mb-2">Kasir</p>
+                        <div style="height: 100px;"></div>
+                        <div class="border-top mx-auto" style="width: 220px;"></div>
+                        <p class="mt-2 mb-0" id="namaKasir">________________</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="fw-bold mb-2">Kepala Cabang</p>
+                        <div style="height: 100px;"></div>
+                        <div class="border-top mx-auto" style="width: 220px;"></div>
+                        <p class="mt-2 mb-0" id="namaKepalaCabang">________________</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="alert alert-info mt-3" id="emptyMessage">
+            Pilih tanggal dan cabang, kemudian klik Tampilkan untuk melihat
+            Laporan Kas Harian.
+        </div>
+
+        <div class="alert alert-danger mt-3" id="errorMessage"
+             style="display:none;">
+        </div>
+
+    </div>
+</div>
+
+<div layout:fragment="scripts">
+    <style>
+        .signature-space {
+            height: 100px;
+        }
+
+        .signature-line {
+            border-top: 1px solid #adb5bd;
+            width: 220px;
+            margin: 0 auto;
+            padding-top: 8px;
+            font-weight: 500;
+            text-align: center;
+        }
+    </style>
+    <link th:href="@{/css/select2.min.css}" rel="stylesheet">
+    <link th:href="@{/css/select2-bootstrap-5-theme.min.css}" rel="stylesheet">
+    <script th:src="@{/js/select2.min.js}"></script>
+    <script th:src="@{/js/laporan/kas-harian.js}"></script>
+
+</div>
+
+</body>
+</html>

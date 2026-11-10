@@ -29,6 +29,7 @@ $(document).ready(function () {
           productRuleId: $("#productRuleId").val()
             ? $("#productRuleId").val()
             : 0,
+          //productRuleId : 0
         };
       },
     },

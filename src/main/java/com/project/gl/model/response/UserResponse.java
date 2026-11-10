@@ -24,7 +24,11 @@ public class UserResponse {
         this.name = user.getName();
         this.email = user.getEmail();
         this.active = user.getActive();
-        this.cabangName = user.getCabang().getNamaCabang();
+      
+        if (user.getCabang() != null) {
+            this.cabangName = user.getCabang().getNamaCabang();
+            this.cabangId = user.getCabang().getId(); 
+        }
       
         if (user.getUserGroup() != null) {
             this.userGroup = user.getUserGroup().getName();
